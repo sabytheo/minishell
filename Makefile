@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2025/04/08 19:14:40 by tsaby            ###   ########.fr        #
+#    Updated: 2025/04/14 12:49:16 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,8 @@ OBJS		:=	$(SRCS:%.c=$(OBJS_D)%.o)
 
 #*------------------------------------------------------------------------------*
 
-HEAD		:=	includes/minishell.h
+HEAD		:=	includes/minishell.h \
+				includes/error.h
 
 #HEAD_BONUS	:=	includes/minishell_bonus.h \
 

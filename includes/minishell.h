@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:03:40 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/14 12:44:37 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/18 12:06:55 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ typedef struct s_minishell
 enum e_launch_modes
 {
 	TTY_MODES,
-	SCRIPT_MODES
+	SCRIPT_MODES,
+	HERE_DOC_MODES
 };
 
 #endif

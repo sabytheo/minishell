@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/18 16:13:54 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/19 12:48:26 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 /*
 ** check args, and define launch_mode.
-** TTY_MODES, HERE_DOC_MODES and SCRIPT_MODES.
-** For SCRIPT_MODES and HERE_DOC_MODES, set input_fd.
+** TTY_MODES and SCRIPT_MODES.
+** For SCRIPT_MODES , set input_fd.
 */
 void	check_args_count(int argc, char **argv, t_minishell *minishell)
 {
@@ -31,11 +31,7 @@ void	check_args_count(int argc, char **argv, t_minishell *minishell)
 	}
 	else if (argc == 1)
 		minishell->launch_mode = TTY_MODES;
-	else
-	{
-		minishell->launch_mode = HERE_DOC_MODES;
-		minishell->input_fd = STDIN_FILENO;
-	}
+
 	return ;
 }
 

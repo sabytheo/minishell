@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/19 12:48:26 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/19 17:17:58 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ char	*get_entry(t_minishell *minishell)
 	if (minishell->launch_mode == TTY_MODES)
 	{
 		entry = readline("Minishell>");
+		entry = ft_strtrim(entry, " \t\n");
 		return (entry);
 	}
 	entry = get_next_line(minishell->input_fd);
@@ -67,6 +68,7 @@ int	main(int argc, char **argv,char **envp)
 {
 	char		*entry;
 	t_minishell	minishell;
+	t_token * token;
 
 	init_minishell(&minishell,envp);
 	check_args_count(argc, argv, &minishell);
@@ -74,6 +76,13 @@ int	main(int argc, char **argv,char **envp)
 	{
 		entry = get_entry(&minishell);
 		add_history(entry);
+		token = define_token(entry);
+		while (token)
+		{
+			printf("Token: %-15s | Type: %d\n", token->value, token->type);
+			token = token->next;
+		}
+
 		free(entry);
 	}
 	free_minishell(&minishell);

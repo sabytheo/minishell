@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2025/04/18 15:33:44 by tsaby            ###   ########.fr        #
+#    Updated: 2025/04/19 16:33:40 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ NC		:= \033[0m
 
 SRCS		:=	main.c \
 				clean.c \
+				token.c \
 				init.c
 
 #SRCS_BONUS	:=
@@ -40,7 +41,8 @@ OBJS		:=	$(SRCS:%.c=$(OBJS_D)%.o)
 #*------------------------------------------------------------------------------*
 
 HEAD		:=	includes/minishell.h \
-				includes/error.h
+				includes/error.h \
+				includes/token.h
 
 #HEAD_BONUS	:=	includes/minishell_bonus.h \
 

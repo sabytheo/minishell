@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/21 22:19:00 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/22 18:29:48 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,18 @@ int	main(int argc, char **argv,char **envp)
 	while (minishell.is_running)
 	{
 		entry = get_entry(&minishell);
+		if (!entry)
+			break;
+		if (has_closed_quotes(entry))
+		{
+				add_history(entry);
+				free(entry);
+				continue;
+		}
 		add_history(entry);
 		token = define_token(entry);
-		while (token)
-		{
-			printf("Token: %-15s | Type: %d\n", token->value, token->type);
-			token = token->next;
-		}
-
+		clean_token_quotes(token);
+		print_tokens(token);
 		free(entry);
 	}
 	free_minishell(&minishell);

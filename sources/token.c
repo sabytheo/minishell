@@ -6,18 +6,36 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:42:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/19 16:48:59 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/22 19:33:04 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool is_operator(char c)
+bool has_closed_quotes(char *str)
 {
-	if (c == '|' || c == '<' || c == '>')
-		return (true);
-	return (false);
+	int i;
+	bool squote;
+	bool dquote;
+
+	i = 0;
+	squote = false;
+	dquote = false;
+	while (str[i])
+	{
+		if (str[i] == '\'' && dquote == false)
+			squote = !squote;
+		else if (str[i] == '"' && squote == false)
+			dquote = !dquote;
+		i++;
+	}
+	if (squote)
+		ft_putendl_fd("minishell : syntax error : unclosed single quote ", 2);
+	else if (dquote)
+		ft_putendl_fd("minishell : syntax error : unclosed double quote ", 2);
+	return (squote || dquote);
 }
+
 static t_token_type	get_type(char *str)
 {
 	if (!str)
@@ -34,27 +52,11 @@ static t_token_type	get_type(char *str)
 		return (T_REDIR_OUT);
 	return (T_WORD);
 }
-
-static char *extract_token (char *entry, int *i)
+void explore_token(char *entry, int *i)
 {
-	int start;
 	char quote;
 
-	while (entry[*i] && entry[*i] == ' ')
-		(*i)++;
-	if (is_operator(entry[*i]) == true)
-	{
-		start = *i;
-		if ((entry[*i] == '<' || entry[*i] == '>' ) && entry[*i] == entry[*i + 1])
-		{
-			*i += 2;
-			return (ft_substr(entry,start, 2));
-		}
-		*i += 1;
-		return (ft_substr(entry,start, 1));
-	}
-	start = *i;
-	while(entry[*i])
+	while (entry[*i])
 	{
 		if (entry[*i] == '\'' || entry[*i] == '"')
 		{
@@ -66,62 +68,56 @@ static char *extract_token (char *entry, int *i)
 				(*i)++;
 		}
 		else if (entry[*i] == ' ' || is_operator(entry[*i]))
-			break;
+			break ;
 		else
 			(*i)++;
 	}
+	return ;
+}
+static char	*extract_token(char *entry, int *i)
+{
+	int		start;
+
+	while (entry[*i] && entry[*i] == ' ')
+		(*i)++;
+	if (is_operator(entry[*i]) == true)
+	{
+		start = *i;
+		if ((entry[*i] == '<' || entry[*i] == '>') && entry[*i] == entry[*i
+			+ 1])
+		{
+			*i += 2;
+			return (ft_substr(entry, start, 2));
+		}
+		*i += 1;
+		return (ft_substr(entry, start, 1));
+	}
+	start = *i;
+	explore_token(entry,i);
 	return (ft_substr(entry, start, *i - start));
 }
 
-t_token	*create_token(char *val, t_token_type type)
+t_token	*define_token(char *entry)
 {
-	t_token	*new;
+	t_token			*token;
+	t_token			*new;
+	char			*token_str;
+	t_token_type	type;
+	int				i;
 
-	new = malloc(sizeof(t_token));
-	if (!new)
-		return (NULL);
-	new->value = val;
-	new->type = type;
-	new->next = NULL;
-	return (new);
-}
-
-void	add_token_back(t_token **lst, t_token *new)
-{
-	t_token	*tmp;
-
-	if (!*lst)
-	{
-		*lst = new;
-		return ;
-	}
-	tmp = *lst;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-}
-
-t_token * define_token(char* entry)
-{
-	t_token *head;
-	t_token *new;
-	char *token_str;
-	t_token_type type;
-	int i;
-
-	head = NULL;
-	i = 0 ;
+	token = NULL;
+	i = 0;
 	while (entry[i])
 	{
 		token_str = extract_token(entry, &i);
 		if (!token_str || token_str[0] == '\0')
 		{
 			free(token_str);
-			continue;
+			continue ;
 		}
 		type = get_type(token_str);
 		new = create_token(token_str, type);
-		add_token_back(&head, new);
+		add_token_back(&token, new);
 	}
-	return (head);
+	return (token);
 }

@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token.h                                            :+:      :+:    :+:   */
+/*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/19 13:29:35 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/22 12:45:40 by tsaby            ###   ########.fr       */
+/*   Created: 2025/04/22 14:42:30 by tsaby             #+#    #+#             */
+/*   Updated: 2025/04/22 14:44:07 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TOKEN_H
-# define TOKEN_H
+#include "minishell.h"
 
-typedef enum e_token_type
+
+void print_tokens(t_token *tokens)
 {
-	T_WORD,
-	T_PIPE,
-	T_REDIR_IN,
-	T_REDIR_OUT,
-	T_APPEND,
-	T_HEREDOC
-}	t_token_type;
-
-typedef struct s_token
-{
-	char			*value;
-	t_token_type	type;
-	struct s_token	*next;
-}	t_token;
-
-#endif
+	while (tokens)
+		{
+			printf("Token: %-15s est de type: %d\n", tokens->value, tokens->type);
+			tokens = tokens->next;
+		}
+}

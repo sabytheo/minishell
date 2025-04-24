@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:03:40 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/22 17:24:16 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/24 18:05:39 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_minishell
 	int		input_fd;
 	char	**envp_copy;
 	bool	is_running;
+	t_token	*tokens;
 
 }			t_minishell;
 
@@ -59,15 +60,20 @@ void		init_minishell(t_minishell *minishell, char **envp);
 void		copy_envp(char **envp, t_minishell *minishell);
 
 // token.c --->
+void		tokens(t_minishell *minishell, char *entry);
 t_token		*define_token(char *line);
 bool		has_closed_quotes(char *str);
 
 // utils_token.c --->
 t_token		*create_token(char *val, t_token_type type);
 void		add_token_back(t_token **list_token, t_token *new);
-bool		is_operator(char c);
+// bool		is_operator(char c);
 char		*remove_quotes(const char *str);
-void		clean_token_quotes(t_token *tokens);
+void		clean_token_quotes(t_token *tokens, t_minishell *minishell);
+
+// expand.c --->
+char		*expand_variable(char *str, char **envp);
+size_t		get_len(char *str);
 
 // debug.c --->
 void		print_tokens(t_token *tokens);

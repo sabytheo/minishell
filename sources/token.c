@@ -6,17 +6,17 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:42:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/22 19:33:04 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/25 00:51:53 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool has_closed_quotes(char *str)
+bool	has_closed_quotes(char *str)
 {
-	int i;
-	bool squote;
-	bool dquote;
+	int		i;
+	bool	squote;
+	bool	dquote;
 
 	i = 0;
 	squote = false;
@@ -29,9 +29,9 @@ bool has_closed_quotes(char *str)
 			dquote = !dquote;
 		i++;
 	}
-	if (squote)
+	if (squote == true)
 		ft_putendl_fd("minishell : syntax error : unclosed single quote ", 2);
-	else if (dquote)
+	else if (dquote == true)
 		ft_putendl_fd("minishell : syntax error : unclosed double quote ", 2);
 	return (squote || dquote);
 }
@@ -52,9 +52,9 @@ static t_token_type	get_type(char *str)
 		return (T_REDIR_OUT);
 	return (T_WORD);
 }
-void explore_token(char *entry, int *i)
+void	explore_token(char *entry, int *i)
 {
-	char quote;
+	char	quote;
 
 	while (entry[*i])
 	{
@@ -67,7 +67,8 @@ void explore_token(char *entry, int *i)
 			if (entry[*i])
 				(*i)++;
 		}
-		else if (entry[*i] == ' ' || is_operator(entry[*i]))
+		else if (entry[*i] == ' ' || (entry[*i] == '|' || entry[*i] == '<'
+				|| entry[*i] == '>'))
 			break ;
 		else
 			(*i)++;
@@ -76,15 +77,14 @@ void explore_token(char *entry, int *i)
 }
 static char	*extract_token(char *entry, int *i)
 {
-	int		start;
+	int	start;
 
 	while (entry[*i] && entry[*i] == ' ')
 		(*i)++;
-	if (is_operator(entry[*i]) == true)
+	if (entry[*i] == '|' || entry[*i] == '<' || entry[*i] == '>')
 	{
 		start = *i;
-		if ((entry[*i] == '<' || entry[*i] == '>') && entry[*i] == entry[*i
-			+ 1])
+		if ((entry[*i] == '<' || entry[*i] == '>') && entry[*i] == entry[*i + 1])
 		{
 			*i += 2;
 			return (ft_substr(entry, start, 2));
@@ -93,7 +93,7 @@ static char	*extract_token(char *entry, int *i)
 		return (ft_substr(entry, start, 1));
 	}
 	start = *i;
-	explore_token(entry,i);
+	explore_token(entry, i);
 	return (ft_substr(entry, start, *i - start));
 }
 
@@ -120,4 +120,13 @@ t_token	*define_token(char *entry)
 		add_token_back(&token, new);
 	}
 	return (token);
+}
+
+void	tokens(t_minishell *minishell, char *entry)
+{
+	if (has_closed_quotes(entry))
+		return ;
+	minishell->tokens = define_token(entry);
+	clean_token_quotes(minishell->tokens,minishell);
+	print_tokens(minishell->tokens);
 }

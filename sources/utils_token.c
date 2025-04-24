@@ -6,19 +6,23 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:06:39 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/22 17:03:02 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/24 18:11:05 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void clean_token_quotes(t_token *tokens)
+void clean_token_quotes(t_token *tokens,t_minishell *minishell)
 {
 	char *cleaned;
+	char *expanded;
+
 	while (tokens)
 	{
-		cleaned = remove_quotes(tokens->value);
+		expanded = expand_variable(tokens->value, minishell->envp_copy);
 		free(tokens->value);
+		cleaned = remove_quotes(expanded);
+		free(expanded);
 		if (cleaned)
 			tokens->value = cleaned;
 		tokens = tokens->next;
@@ -54,12 +58,12 @@ char *remove_quotes(const char* str)
 	return (new);
 }
 
-bool	is_operator(char c)
-{
-	if (c == '|' || c == '<' || c == '>')
-		return (true);
-	return (false);
-}
+// bool	is_operator(char c)
+// {
+// 	if (c == '|' || c == '<' || c == '>')
+// 		return (true);
+// 	return (false);
+// }
 
 t_token	*create_token(char *val, t_token_type type)
 {

@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2025/04/22 14:45:25 by tsaby            ###   ########.fr        #
+#    Updated: 2025/04/24 10:49:52 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRCS		:=	main.c \
 				token.c \
 				init.c \
 				utils_token.c \
+				expand.c \
 				debug.c
 
 #SRCS_BONUS	:=

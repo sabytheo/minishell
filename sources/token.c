@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/19 13:42:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/29 10:37:37 by tsaby            ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/04/29 20:02:33 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ static char	*extract_token(char *entry, int *i)
 	if (entry[*i] == '|' || entry[*i] == '<' || entry[*i] == '>')
 	{
 		start = *i;
-		if ((entry[*i] == '<' || entry[*i] == '>') && entry[*i] == entry[*i + 1])
+		if ((entry[*i] == '<' || entry[*i] == '>') && entry[*i] == entry[*i
+			+ 1])
 		{
 			*i += 2;
 			return (ft_substr(entry, start, 2));
@@ -127,6 +128,6 @@ void	tokens(t_minishell *minishell, char *entry)
 	if (has_closed_quotes(entry))
 		return ;
 	minishell->tokens = define_token(entry);
-	format_tokens(minishell->tokens,minishell);
+	format_tokens(minishell->tokens, minishell);
 	print_tokens(minishell->tokens);
 }

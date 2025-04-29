@@ -3,19 +3,20 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
+#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2025/04/29 18:47:22 by tsaby            ###   ########.fr        #
+#    Created: Invalid date        by                   #+#    #+#              #
+#    Updated: 2025/04/29 20:43:11 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 .PHONY: all bonus clean fclean re re_bonus valgrind valgrindext
 
 YELLOW	:= \033[0;33m
 NC		:= \033[0m
 
-#*------------------------------------------------------------------------------*
+#*----------------------------------s--------------------------------------------*
 
 SRCS		:=	main.c \
 				clean.c \
@@ -24,7 +25,8 @@ SRCS		:=	main.c \
 				utils_token.c \
 				expand.c \
 				utils_expand.c \
-				debug.c
+				debug.c \
+				signals.c
 
 #SRCS_BONUS	:=
 

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:42:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/25 00:51:53 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/29 10:37:37 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,6 @@ void	tokens(t_minishell *minishell, char *entry)
 	if (has_closed_quotes(entry))
 		return ;
 	minishell->tokens = define_token(entry);
-	clean_token_quotes(minishell->tokens,minishell);
+	format_tokens(minishell->tokens,minishell);
 	print_tokens(minishell->tokens);
 }

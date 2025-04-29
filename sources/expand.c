@@ -6,55 +6,104 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/25 01:17:06 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/29 18:08:09 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_name(char *name, char **envp)
+static char	*append_and_free(char *base, char *addition)
 {
-	int	i;
-	size_t len_name;
+	char	*new;
 
-	i = 0;
-	len_name = ft_strlen(name);
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], name, len_name) == 0
-			&& envp[i][len_name] == '=')
-			return (envp[i] + len_name + 1);
-		i++;
-	}
-	return ("");
+	if (!base || !addition)
+		return (NULL);
+	new = ft_strjoin(base, addition);
+	free(base);
+	return (new);
 }
 
-char	*expand_variable(char *str, char **envp)
+static char	*extract_var_name(char *str, int *i)
+{
+	int	start;
+	int	len;
+
+	start = *i;
+	len = 0;
+	if (str[*i] == '?')
+	{
+		(*i)++;
+		return (ft_strdup("?"));
+	}
+	while (str[*i] && is_valid_var_char(str[*i], len))
+	{
+		len++;
+		(*i)++;
+	}
+	return (ft_substr(str, start, len));
+}
+
+static char	*get_values(char *name, char **envp)
 {
 	int		i;
-	int		j;
-	int		k;
-	char	name[256];
-	char	*expand;
+	size_t	len;
+
+	if (!name)
+		return (ft_strdup(""));
+	if (ft_strncmp(name, "?", 1) == 0)
+		return (ft_strdup("errorcode"));
+	len = ft_strlen(name);
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+			return (ft_strdup(envp[i] + len + 1));
+		i++;
+	}
+	return (ft_strdup(""));
+}
+
+static char	*handle_expand(char *str, int *i, char **envp, t_expand *expand)
+{
+	char	*name;
+	char	*value;
+	char	tmp[2];
+
+	if (str[*i] == '$' && str[*i + 1] && expand->in_squote == false)
+	{
+		(*i)++;
+		name = extract_var_name(str, i);
+		value = get_values(name, envp);
+		expand->expanded = append_and_free(expand->expanded, value);
+		free(name);
+		free(value);
+	}
+	else
+	{
+		tmp[0] = str[*i];
+		tmp[1] = '\0';
+		expand->expanded = append_and_free(expand->expanded, tmp);
+		(*i)++;
+	}
+	return (expand->expanded);
+}
+
+char	*expand_variable(char *str, t_minishell *minishell)
+{
+	int			i;
+	t_expand	expand;
 
 	i = 0;
-	k = 0;
-	expand = ft_calloc(4096, sizeof(char));
+	expand.in_squote = false;
+	expand.in_dquote = false;
+	expand.expanded = ft_strdup("");
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + i] && (ft_isalpha(str[i + 1]) || str[i
-				+ 1] == '_'))
-		{
-			i++;
-			j = 0;
-			while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-				name[j++] = str[i++];
-			name[j] = '\0';
-			ft_strlcat(expand, get_name(name, envp), 4096);
-			// /j += ft_strlen(get_name(name, envp));
-		}
-		else
-			expand[k++] = str[i++];
+		if (str[i] == '\'' && expand.in_dquote == false)
+			expand.in_squote = !expand.in_squote;
+		else if (str[i] == '"' && expand.in_squote == false)
+			expand.in_dquote = !expand.in_dquote;
+		expand.expanded = handle_expand(str, &i, minishell->envp_copy, &expand);
 	}
-	return (expand);
+	return (expand.expanded);
 }

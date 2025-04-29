@@ -6,9 +6,11 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2025/04/24 10:49:52 by tsaby            ###   ########.fr        #
+#    Updated: 2025/04/29 18:47:22 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+.PHONY: all bonus clean fclean re re_bonus valgrind valgrindext
 
 YELLOW	:= \033[0;33m
 NC		:= \033[0m
@@ -21,6 +23,7 @@ SRCS		:=	main.c \
 				init.c \
 				utils_token.c \
 				expand.c \
+				utils_expand.c \
 				debug.c
 
 #SRCS_BONUS	:=
@@ -45,6 +48,7 @@ OBJS		:=	$(SRCS:%.c=$(OBJS_D)%.o)
 
 HEAD		:=	includes/minishell.h \
 				includes/error.h \
+				includes/expand.h \
 				includes/token.h
 
 #HEAD_BONUS	:=	includes/minishell_bonus.h \
@@ -74,6 +78,12 @@ all			:
 
 #bonus		:
 #				@$(MAKE) --no-print-directory $(NAME_B)
+
+#*------------------------------------------------------------------------------*
+
+VFLAGS			=	--leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes
+VFLAGS			+=	--suppressions=ignore_readline.supp -s
+VFLAGS			+=	--log-socket=127.0.0.1:4242
 
 #*------------------------------------------------------------------------------*
 
@@ -116,6 +126,15 @@ fclean		:	clean
 
 re			:	fclean all
 
+
+valgrind		:
+				@echo "\033[31m\033[1mNow launch make valgrindext in another console"
+				@echo "Errors will appear here CTRL+C to stop\033[0m"
+				valgrind-listener 4242
+
+valgrindext		:
+				valgrind $(VFLAGS) ./$(NAME)
+
 #re_bonus	:	fclean bonus
 
-.PHONY: all bonus clean fclean re re_bonus
+

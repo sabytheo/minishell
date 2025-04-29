@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/25 00:11:56 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/29 17:08:22 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,13 @@ void copy_envp(char **envp, t_minishell *minishell)
 void	init_minishell(t_minishell *minishell, char **envp)
 {
 	t_token * token;
+	t_expand * expand;
 
 	token = NULL;
+	expand = NULL;
 	ft_bzero(minishell,sizeof(t_minishell));
 	minishell->tokens = token;
+	minishell->expand = expand;
 	minishell->is_running = true;
 	minishell->input_fd = STDIN_FILENO;
 	minishell->launch_mode = 0;

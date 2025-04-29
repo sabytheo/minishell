@@ -6,20 +6,20 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:06:39 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/24 18:11:05 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/29 18:06:30 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void clean_token_quotes(t_token *tokens,t_minishell *minishell)
+void format_tokens(t_token *tokens,t_minishell *minishell)
 {
 	char *cleaned;
 	char *expanded;
 
 	while (tokens)
 	{
-		expanded = expand_variable(tokens->value, minishell->envp_copy);
+		expanded = expand_variable(tokens->value, minishell);
 		free(tokens->value);
 		cleaned = remove_quotes(expanded);
 		free(expanded);

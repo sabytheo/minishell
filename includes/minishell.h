@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:03:40 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/29 18:09:29 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/29 19:37:10 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 # define MINISHELL_H
 
 # include "error.h"
+# include "expand.h"
 # include "ft_printf.h"
 # include "get_next_line.h"
 # include "libft.h"
 # include "token.h"
-# include "expand.h"
-
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -34,16 +33,16 @@
 
 typedef struct s_minishell
 {
-	int		launch_mode;
-	int		input_fd;
-	char	**envp_copy;
-	bool	is_running;
-	t_token	*tokens;
-	t_expand *expand;
+	int			launch_mode;
+	int			input_fd;
+	char		**envp_copy;
+	bool		is_running;
+	t_token		*tokens;
+	t_expand	*expand;
 
-}			t_minishell;
+}				t_minishell;
 
-enum		e_launch_modes
+enum			e_launch_modes
 {
 	TTY_MODES,
 	SCRIPT_MODES,
@@ -51,36 +50,36 @@ enum		e_launch_modes
 };
 
 // clean.c --->
-void		free_minishell(t_minishell *minishell);
+void			free_minishell(t_minishell *minishell);
 
 // main.c --->
-void		clean_error(char *error_message, t_minishell *minishell);
-void		check_args_count(int argc, char **argv, t_minishell *minishell);
-char		*get_entry(t_minishell *minishell);
+void			clean_error(char *error_message, t_minishell *minishell);
+void			check_args_count(int argc, char **argv, t_minishell *minishell);
+char			*get_entry(t_minishell *minishell);
 
 // init.c --->
-void		init_minishell(t_minishell *minishell, char **envp);
-void		copy_envp(char **envp, t_minishell *minishell);
+void			init_minishell(t_minishell *minishell, char **envp);
+void			copy_envp(char **envp, t_minishell *minishell);
 
 // token.c --->
-void		tokens(t_minishell *minishell, char *entry);
-t_token		*define_token(char *line);
-bool		has_closed_quotes(char *str);
+void			tokens(t_minishell *minishell, char *entry);
+t_token			*define_token(char *line);
+bool			has_closed_quotes(char *str);
 
 // utils_token.c --->
-t_token		*create_token(char *val, t_token_type type);
-void		add_token_back(t_token **list_token, t_token *new);
+t_token			*create_token(char *val, t_token_type type);
+void			add_token_back(t_token **list_token, t_token *new);
 // bool		is_operator(char c);
-char		*remove_quotes(const char *str);
-void		format_tokens(t_token *tokens, t_minishell *minishell);
+char			*remove_quotes(const char *str);
+void			format_tokens(t_token *tokens, t_minishell *minishell);
 
 // expand.c --->
-char		*expand_variable(char *str, t_minishell *minishell);
+char			*expand_variable(char *str, t_minishell *minishell);
 
 // utils_expand.c --->
-int	is_valid_var_char(char c, int len);
+int				is_valid_var_char(char c, int len);
 
 // debug.c --->
-void		print_tokens(t_token *tokens);
+void			print_tokens(t_token *tokens);
 
 #endif

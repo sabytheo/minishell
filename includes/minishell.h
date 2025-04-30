@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/30 16:16:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/30 20:01:50 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,5 +118,8 @@ void							signal_handler(int signum);
 void							disable_control_echo(void);
 void							signal_initialisation(void);
 void							signal_handler(int signum);
+
+// builtins.c --->
+char							*ft_echo(t_token *tokens);
 
 #endif

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
+#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/04/30 09:59:50 by tsaby            ###   ########.fr        #
+#    Updated: 2025/04/30 17:51:56 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,8 @@ SRCS		:=	main.c \
 				expand.c \
 				utils_expand.c \
 				debug.c \
-				signals.c
+				signals.c \
+				echo.c
 
 #SRCS_BONUS	:=
 

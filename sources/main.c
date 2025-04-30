@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/30 16:16:50 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/30 20:02:49 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*entry;
 	t_minishell	minishell;
+	char		*output;
 
 	init_minishell(&minishell, envp);
 	check_args_count(argc, argv, &minishell);
@@ -83,6 +84,9 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		add_history(entry);
 		tokens(&minishell, entry);
+		output = ft_echo(minishell.tokens);
+		printf("%s\n", output);
+		free(output);
 		free_tokens(&minishell.tokens);
 		free(entry);
 	}

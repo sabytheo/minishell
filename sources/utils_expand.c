@@ -6,11 +6,11 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:07:22 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/29 18:08:14 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/30 12:40:17 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 int	is_valid_var_char(char c, int len)
 {

@@ -6,16 +6,16 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:06:39 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/29 18:06:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/30 12:42:56 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void format_tokens(t_token *tokens,t_minishell *minishell)
+void	format_tokens(t_token *tokens, t_minishell *minishell)
 {
-	char *cleaned;
-	char *expanded;
+	char	*cleaned;
+	char	*expanded;
 
 	while (tokens)
 	{
@@ -29,12 +29,12 @@ void format_tokens(t_token *tokens,t_minishell *minishell)
 	}
 }
 
-char *remove_quotes(const char* str)
+char	*remove_quotes(const char *str)
 {
-	int i;
-	int j;
-	char quote;
-	char *new;
+	int		i;
+	int		j;
+	char	quote;
+	char	*new;
 
 	i = 0;
 	j = 0;
@@ -58,12 +58,29 @@ char *remove_quotes(const char* str)
 	return (new);
 }
 
-// bool	is_operator(char c)
-// {
-// 	if (c == '|' || c == '<' || c == '>')
-// 		return (true);
-// 	return (false);
-// }
+bool	has_closed_quotes(char *str)
+{
+	int		i;
+	bool	squote;
+	bool	dquote;
+
+	i = 0;
+	squote = false;
+	dquote = false;
+	while (str[i])
+	{
+		if (str[i] == '\'' && dquote == false)
+			squote = !squote;
+		else if (str[i] == '"' && squote == false)
+			dquote = !dquote;
+		i++;
+	}
+	if (squote == true)
+		ft_putendl_fd("minishell : syntax error : unclosed single quote ", 2);
+	else if (dquote == true)
+		ft_putendl_fd("minishell : syntax error : unclosed double quote ", 2);
+	return (squote || dquote);
+}
 
 t_token	*create_token(char *val, t_token_type type)
 {

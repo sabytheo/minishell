@@ -3,38 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/29 20:02:33 by egache           ###   ########.fr       */
+/*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
+/*   Updated: 2025/04/30 12:44:20 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool	has_closed_quotes(char *str)
-{
-	int		i;
-	bool	squote;
-	bool	dquote;
-
-	i = 0;
-	squote = false;
-	dquote = false;
-	while (str[i])
-	{
-		if (str[i] == '\'' && dquote == false)
-			squote = !squote;
-		else if (str[i] == '"' && squote == false)
-			dquote = !dquote;
-		i++;
-	}
-	if (squote == true)
-		ft_putendl_fd("minishell : syntax error : unclosed single quote ", 2);
-	else if (dquote == true)
-		ft_putendl_fd("minishell : syntax error : unclosed double quote ", 2);
-	return (squote || dquote);
-}
 
 static t_token_type	get_type(char *str)
 {
@@ -52,6 +28,7 @@ static t_token_type	get_type(char *str)
 		return (T_REDIR_OUT);
 	return (T_WORD);
 }
+
 void	explore_token(char *entry, int *i)
 {
 	char	quote;
@@ -75,6 +52,7 @@ void	explore_token(char *entry, int *i)
 	}
 	return ;
 }
+
 static char	*extract_token(char *entry, int *i)
 {
 	int	start;
@@ -84,8 +62,8 @@ static char	*extract_token(char *entry, int *i)
 	if (entry[*i] == '|' || entry[*i] == '<' || entry[*i] == '>')
 	{
 		start = *i;
-		if ((entry[*i] == '<' || entry[*i] == '>') && entry[*i] == entry[*i
-			+ 1])
+		if ((entry[*i] == '<' || entry[*i] == '>')
+			&& entry[*i] == entry[*i + 1])
 		{
 			*i += 2;
 			return (ft_substr(entry, start, 2));

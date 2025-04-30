@@ -6,49 +6,71 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/29 17:08:22 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/30 12:41:12 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void copy_envp(char **envp, t_minishell *minishell)
+t_envp	*create_node(char *val)
 {
-	int i;
-	int size;
+	t_envp	*new;
+
+	new = malloc(sizeof(t_envp));
+	if (!new)
+		return (new);
+	new->value = val;
+	new->next = NULL;
+	return (new);
+}
+
+void	add_node_back(t_envp **list_envp, t_envp *new)
+{
+	t_envp	*tmp;
+
+	if (!*list_envp)
+	{
+		*list_envp = new;
+		return ;
+	}
+	tmp = *list_envp;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+}
+
+void	copy_envp(char **envp, t_minishell *minishell)
+{
+	int		i;
+	t_envp	*new;
 
 	if (!envp)
 		return ;
-	size = 0;
-	while (envp[size] != NULL)
-		size++;
-	minishell->envp_copy = (char **)malloc((size + 1) * sizeof(char *));
-	if (minishell->envp_copy == NULL)
-		return(clean_error(E_MALLOC,minishell));
 	i = 0;
-	while(envp[i])
+	while (envp[i])
 	{
-		minishell->envp_copy[i] = ft_strdup(envp[i]);
-		// printf("%s\n",minishell->envp_copy[i]);
-		if (minishell->envp_copy[i] == NULL)
-			return (clean_error(E_MALLOC,minishell));
+		new = create_node(ft_strdup(envp[i]));
+		add_node_back(&minishell->envp, new);
 		i++;
 	}
-	minishell->envp_copy[i] = NULL;
 }
 
 void	init_minishell(t_minishell *minishell, char **envp)
 {
-	t_token * token;
-	t_expand * expand;
+	t_token		*token;
+	t_expand	*expand;
+	t_envp		*envp_copy;
 
 	token = NULL;
 	expand = NULL;
-	ft_bzero(minishell,sizeof(t_minishell));
+	envp_copy = NULL;
+	ft_bzero(minishell, sizeof(t_minishell));
 	minishell->tokens = token;
 	minishell->expand = expand;
+	minishell->envp = envp_copy;
 	minishell->is_running = true;
 	minishell->input_fd = STDIN_FILENO;
 	minishell->launch_mode = 0;
-	copy_envp(envp,minishell);
+	copy_envp(envp, minishell);
+	// print_envp(minishell->envp);
 }

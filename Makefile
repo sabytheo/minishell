@@ -3,17 +3,18 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
+#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/04/29 20:43:11 by egache           ###   ########.fr        #
+#    Updated: 2025/04/30 09:59:50 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-.PHONY: all bonus clean fclean re re_bonus valgrind valgrindext
+.PHONY: all bonus clean fclean re re_bonus valgrind run
 
 YELLOW	:= \033[0;33m
+RED	:= \033[31m
 NC		:= \033[0m
 
 #*----------------------------------s--------------------------------------------*
@@ -130,11 +131,10 @@ re			:	fclean all
 
 
 valgrind		:
-				@echo "\033[31m\033[1mNow launch make valgrindext in another console"
-				@echo "Errors will appear here CTRL+C to stop\033[0m"
+				@echo "type$(RED) ---> 'make run' <--- $(NC) in an another console."
 				valgrind-listener 4242
 
-valgrindext		:
+run:
 				valgrind $(VFLAGS) ./$(NAME)
 
 #re_bonus	:	fclean bonus

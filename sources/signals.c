@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:19:44 by egache            #+#    #+#             */
-/*   Updated: 2025/04/29 21:32:16 by egache           ###   ########.fr       */
+/*   Updated: 2025/04/30 13:55:29 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	signal_initialisation(void)
 {
 	t_sigaction	action;
 
+	sigemptyset(&action.sa_mask);
+	action.sa_flags = SA_SIGINFO;
 	action.sa_handler = signal_handler;
 	sigaction(SIGINT, &action, NULL);
 	sigaction(SIGQUIT, &action, NULL);

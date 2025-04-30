@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/30 12:03:54 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/30 16:16:50 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		add_history(entry);
 		tokens(&minishell, entry);
+		free_tokens(&minishell.tokens);
 		free(entry);
 	}
 	free_minishell(&minishell);

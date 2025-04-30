@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/30 12:43:21 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/30 16:16:01 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ typedef struct sigaction		t_sigaction;
 
 // clean.c --->
 void							free_minishell(t_minishell *minishell);
+void							free_tokens(t_token **tokens);
 
 // main.c --->
 void							clean_error(char *error_message,

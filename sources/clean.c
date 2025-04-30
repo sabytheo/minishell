@@ -6,13 +6,13 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/30 13:19:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/04/30 16:15:28 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	free_tokens(t_token **tokens)
+void	free_tokens(t_token **tokens)
 {
 	t_token	*current;
 	t_token	*next;

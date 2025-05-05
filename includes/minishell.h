@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/30 20:01:50 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/05 16:08:38 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ typedef struct s_minishell
 {
 	int							launch_mode;
 	int							input_fd;
+	int							error_code;
+	char						**envp_tab;
+	int							envp_countline;
 	bool						is_running;
 	t_token						*tokens;
 	t_expand					*expand;
@@ -71,6 +74,7 @@ typedef struct sigaction		t_sigaction;
 // clean.c --->
 void							free_minishell(t_minishell *minishell);
 void							free_tokens(t_token **tokens);
+void							free_tab(char **tab);
 
 // main.c --->
 void							clean_error(char *error_message,
@@ -106,6 +110,9 @@ char							*expand_variable(char *str,
 
 // utils_expand.c --->
 int								is_valid_var_char(char c, int len);
+void							chainedlst_to_tab(t_minishell *minishell,
+									t_envp *envp);
+int								envp_size(t_envp *envp);
 
 // debug.c --->
 void							print_tokens(t_token *tokens);
@@ -121,5 +128,12 @@ void							signal_handler(int signum);
 
 // builtins.c --->
 char							*ft_echo(t_token *tokens);
+
+// before_exec.c --->
+int								check_before_exec(t_minishell *minishell,
+									t_token *tokens);
+
+// exec.c --->
+char							*find_path(char *arg, char **envp, int i);
 
 #endif

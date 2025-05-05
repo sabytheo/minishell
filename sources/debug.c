@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:42:30 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/30 13:18:11 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/05 10:49:31 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	print_tokens(t_token *tokens)
 {
 	while (tokens)
 	{
-		printf("Token: %-15s est de type: %d\n", tokens->value, tokens->type);
+		printf("---Token: %-15s est de type: %d---\n", tokens->value, tokens->type);
 		tokens = tokens->next;
 	}
 }

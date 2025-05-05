@@ -6,11 +6,24 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/30 16:15:28 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/05 16:14:02 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	if (tab)
+	{
+		while (tab[i])
+			free(tab[i++]);
+		free(tab);
+	}
+}
 
 void	free_tokens(t_token **tokens)
 {
@@ -62,6 +75,9 @@ void	clean_error(char *error_message, t_minishell *minishell)
 
 void	free_minishell(t_minishell *minishell)
 {
+	int line ;
+
+	line = 0;
 	if (!minishell)
 		return ;
 	if (minishell->envp)

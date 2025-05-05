@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/05 09:54:53 by tsaby            ###   ########.fr        #
+#    Updated: 2025/05/05 13:20:56 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,8 @@ SRCS		:=	main.c \
 				utils_expand.c \
 				debug.c \
 				signals.c \
+				before_exec.c \
+				exec.c \
 				$(SRCS_BUILTINS)
 
 #SRCS_BONUS	:=

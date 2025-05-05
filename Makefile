@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
+#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/04/30 17:51:56 by egache           ###   ########.fr        #
+#    Updated: 2025/05/05 09:54:53 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,8 @@ NC		:= \033[0m
 
 #*----------------------------------s--------------------------------------------*
 
+SRCS_BUILTINS  :=  builtins/echo.c
+
 SRCS		:=	main.c \
 				clean.c \
 				token.c \
@@ -28,7 +30,7 @@ SRCS		:=	main.c \
 				utils_expand.c \
 				debug.c \
 				signals.c \
-				echo.c
+				$(SRCS_BUILTINS)
 
 #SRCS_BONUS	:=
 
@@ -111,7 +113,7 @@ $(LIBFT_A):
 				@$(MAKE) -s --no-print-directory -C $(LIBFT)
 
 $(OBJS_D)	:
-				@mkdir -p $(OBJS_D)
+				@mkdir -p $(dir $(OBJS))
 
 #$(OBJS_B_D)	:
 #				@mkdir -p $(OBJS_B_D)

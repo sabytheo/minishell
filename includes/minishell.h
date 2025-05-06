@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/05/05 16:08:38 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/06 14:00:09 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "error.h"
 # include "expand.h"
 # include "ft_printf.h"
+# include "ft_printf_fd.h"
 # include "get_next_line.h"
 # include "libft.h"
 # include "token.h"

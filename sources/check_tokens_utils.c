@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   before_exec.c                                      :+:      :+:    :+:   */
+/*   check_tokens_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:27:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/06 14:13:53 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/06 18:25:55 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,51 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 	return (false);
 }
 
-int	check_before_exec(t_minishell *minishell, t_token *tokens)
+bool	check_first_token(t_minishell *minishell, t_token **current)
 {
-	t_token	*current;
+	bool	ret;
 
-	current = tokens;
-	chainedlst_to_tab(minishell, minishell->envp);
+	ret = false;
+	if (is_valid_cmd((*current)->value, minishell) == false
+		&& (*current)->type == T_WORD)
+	{
+		ft_printf_fd(2, E_PARS_CMD_NF, (*current)->value);
+		ret = true;
+	}
+	else if ((*current)->type == T_PIPE)
+	{
+		ft_printf_fd(2, E_PARS_PIPE);
+		ret = true;
+		if ((*current)->next != NULL)
+			(*current) = (*current)->next;
+	}
+	return (ret);
+}
+
+bool	operator_error(t_token *current, bool errfound)
+{
+	if (current->next == NULL && errfound == false)
+	{
+		ft_printf_fd(2, E_PARS_OPE_E);
+		errfound = true;
+	}
+	else if (current->next != NULL && current->next->type != T_WORD
+		&& errfound == false)
+	{
+		ft_printf_fd(2, E_PARS_OPE_D, current->next->value);
+		errfound = true;
+	}
+	return (errfound);
+}
+
+bool	pipe_error(t_minishell *minishell, t_token *current, bool errfound)
+{
+	if (current->next == NULL && errfound == false)
+		ft_printf_fd(2, E_PARS_PIPE);
+	else if (current->next != NULL)
+	{
+		errfound = false;
+		check_tokens(minishell, current->next);
+	}
+	return (errfound);
 }

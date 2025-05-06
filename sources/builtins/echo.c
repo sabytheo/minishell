@@ -6,31 +6,47 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/04/30 20:04:21 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/06 14:58:54 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_echo(t_token *tokens)
+static bool	find_newline(char *str)
 {
-	char	*str;
+	int	len;
 
-	str = malloc(1 * sizeof(char));
-	str[0] = '\0';
-	if (!tokens || !tokens->next)
-		return (NULL);
+	len = ft_strlen(str);
+	if (ft_strncmp(str, "-n", len) == 0 && len == 2)
+		return (true);
+	return (false);
+}
+
+void	ft_echo(t_token *tokens)
+{
+	int	newline;
+
+	newline = 0;
+	if (tokens == NULL || tokens->next == NULL)
+		return ;
 	tokens = tokens->next;
+	newline = find_newline(tokens->value);
+	if (newline == true && tokens->next != NULL)
+		tokens = tokens->next;
 	while (tokens && tokens->type == T_WORD)
 	{
-		str = ft_strjoin(str, tokens->value);
+		ft_putstr_fd(tokens->value, STDOUT_FILENO);
 		if (tokens->next != NULL)
 		{
-			str = ft_strjoin(str, " ");
+			ft_putstr_fd(" ", STDOUT_FILENO);
 			tokens = tokens->next;
 		}
 		else
-			return (str);
+		{
+			if (newline == false)
+				ft_putstr_fd("\n", STDOUT_FILENO);
+			return ;
+		}
 	}
-	return (str);
+	return ;
 }

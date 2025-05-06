@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_expand.c                                     :+:      :+:    :+:   */
+/*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:07:22 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/05 16:08:13 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/06 18:43:15 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ int	is_valid_var_char(char c, int len)
 		return (ft_isalpha(c) || c == '_' || c == '?');
 	return (ft_isalnum(c) || c == '_');
 }
-int envp_size(t_envp *envp)
+
+int	envp_size(t_envp *envp)
 {
 	t_envp	*tmp;
-	int len;
+	int		len;
 
 	len = 0;
 	tmp = envp;
@@ -33,9 +34,10 @@ int envp_size(t_envp *envp)
 	free(tmp);
 	return (len);
 }
-void chainedlst_to_tab(t_minishell *minishell,t_envp *envp)
+
+void	chainedlst_to_tab(t_minishell *minishell, t_envp *envp)
 {
-	char **envp_tab_copy;
+	char	**envp_tab_copy;
 	t_envp	*current;
 	int		i;
 

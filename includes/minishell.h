@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/05/06 14:00:09 by tsaby            ###   ########.fr       */
+/*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
+/*   Updated: 2025/05/06 18:45:14 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,19 +91,33 @@ void							copy_envp(char **envp, t_minishell *minishell);
 void							copy_envp_bis(char **envp,
 									t_minishell *minishell);
 
-// token.c --->
+// tokens.c --->
+bool							has_closed_quotes(char *str);
+t_token							*define_tokens(char *line);
+void							format_tokens(t_token *tokens,
+									t_minishell *minishell);
+int								check_tokens(t_minishell *minishell,
+									t_token *tokens);
 void							tokens(t_minishell *minishell, char *entry);
-t_token							*define_token(char *line);
 
-// utils_token.c --->
+// format_tokens_utils.c --->
+char							*remove_quotes(const char *str);
+
+// check_tokens_utils.c
+bool							is_a_builtins(char *cmd);
+bool							is_valid_cmd(char *cmd, t_minishell *minishell);
+bool							check_first_token(t_minishell *minishell,
+									t_token **current);
+bool							operator_error(t_token *current, bool errfound);
+bool							pipe_error(t_minishell *minishell,
+									t_token *current, bool errfound);
+
+// define_tokens_utils.c
+char							*extract_token(char *entry, int *i);
+t_token_type					get_type(char *str);
 t_token							*create_token(char *val, t_token_type type);
 void							add_token_back(t_token **list_token,
 									t_token *new);
-bool							has_closed_quotes(char *str);
-// bool		is_operator(char c);
-char							*remove_quotes(const char *str);
-void							format_tokens(t_token *tokens,
-									t_minishell *minishell);
 
 // expand.c --->
 char							*expand_variable(char *str,
@@ -120,21 +134,15 @@ void							print_tokens(t_token *tokens);
 void							print_envp(t_envp *envp);
 
 // signals.c --->
-void							signal_handler(int signum);
-
-// signals.c --->
 void							disable_control_echo(void);
 void							signal_initialisation(void);
 void							signal_handler(int signum);
 
 // builtins.c --->
-char							*ft_echo(t_token *tokens);
-
-// before_exec.c --->
-int								check_before_exec(t_minishell *minishell,
-									t_token *tokens);
+void							ft_echo(t_token *tokens);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);
+void							exec_builtins(t_minishell *minishell);
 
 #endif

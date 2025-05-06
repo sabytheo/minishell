@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:34:58 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/29 16:58:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/06 18:41:52 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 
 typedef struct s_expand
 {
-	char *expanded;
-	bool in_squote;
-	bool in_dquote;
+	char	*expanded;
+	bool	in_squote;
+	bool	in_dquote;
 
 }			t_expand;
 

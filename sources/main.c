@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/06 14:11:49 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/06 18:15:54 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*entry;
 	t_minishell	minishell;
-	// char		*output;
 
 	init_minishell(&minishell, envp);
 	check_args_count(argc, argv, &minishell);
@@ -84,13 +83,13 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		add_history(entry);
 		tokens(&minishell, entry);
-		check_before_exec(&minishell, minishell.tokens);
-		// output = ft_echo(minishell.tokens);
-		// printf("%s\n", output);
-		// free(output);
-		free_tokens(&minishell.tokens); // FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
-		free(minishell.envp_tab); // FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
-		free(entry); // FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
+		// ft_echo(minishell.tokens);
+		free_tokens(&minishell.tokens);
+		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
+		free(minishell.envp_tab);
+		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
+		free(entry);
+		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
 	}
 	free_minishell(&minishell);
 	return (0);

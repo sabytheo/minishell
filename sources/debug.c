@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:42:30 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/05 10:49:31 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/06 18:45:37 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ void	print_tokens(t_token *tokens)
 {
 	while (tokens)
 	{
-		printf("---Token: %-15s est de type: %d---\n", tokens->value, tokens->type);
+		printf("---Token: %-15s est de type: %d---\n", tokens->value,
+			tokens->type);
 		tokens = tokens->next;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/05 16:04:14 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/06 14:31:49 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,28 @@ char	*find_path(char *arg, char **envp, int i)
 	}
 	free_tab(path_arg);
 	return (NULL);
+}
+
+void	exec_builtins(t_minishell *minishell)
+{
+	int		len;
+	t_token	*tokens;
+
+	tokens = minishell->tokens;
+	len = ft_strlen(tokens->value);
+	if (ft_strncmp(tokens->value, "cd", len) == 0 && len == 2)
+		return ;
+	else if (ft_strncmp(tokens->value, "echo", len) == 0 && len == 4)
+		ft_echo(tokens);
+	else if (ft_strncmp(tokens->value, "env", len) == 0 && len == 3)
+		return ;
+	else if (ft_strncmp(tokens->value, "exit", len) == 0 && len == 4)
+		return ;
+	else if (ft_strncmp(tokens->value, "export", len) == 0 && len == 6)
+		return ;
+	else if (ft_strncmp(tokens->value, "pwd", len) == 0 && len == 3)
+		return ;
+	else if (ft_strncmp(tokens->value, "unset", len) == 0 && len == 5)
+		return ;
+	return ;
 }

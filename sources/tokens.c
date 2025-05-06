@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/06 18:07:57 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/06 20:03:37 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,14 @@ int	check_tokens(t_minishell *minishell, t_token *tokens)
 	while (current != NULL)
 	{
 		if (current->type != T_WORD && current->type != T_PIPE)
-			errfound = operator_error(current, errfound);
+		{
+			errfound = operator_error(minishell, current, errfound);
+			if (errfound == true)
+				return (1); // ON DOIT RIEN FAIRE SI ERREUR OPERATEURS
+		}
 		else if (current->type == T_PIPE)
 			errfound = pipe_error(minishell, current, errfound);
+		printf("current->value in check->tokens : %s\n", current->value);
 		current = current->next;
 	}
 	return (0);

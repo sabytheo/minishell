@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/06 18:45:14 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/06 18:54:13 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,8 @@ bool							is_a_builtins(char *cmd);
 bool							is_valid_cmd(char *cmd, t_minishell *minishell);
 bool							check_first_token(t_minishell *minishell,
 									t_token **current);
-bool							operator_error(t_token *current, bool errfound);
+bool							operator_error(t_minishell *minishell,
+									t_token *current, bool errfound);
 bool							pipe_error(t_minishell *minishell,
 									t_token *current, bool errfound);
 

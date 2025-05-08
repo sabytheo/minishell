@@ -1,4 +1,4 @@
-#Check Erreurs : NOT DONE ./ ./
+#Check Erreurs : DONE ./ ./
 	Parcourir une premiere fois la liste\
 			- CHECKER ERREURS DE SYNTAXE
 			- Checker doublons de variables ou operateurs (par exemple : <<<<<, <<|)
@@ -34,3 +34,5 @@ if pipe == yes
 
 bash-5.1$ caca | caca | >
 bash: syntax error near unexpected token `newline'
+
+caca | echo salut

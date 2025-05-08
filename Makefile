@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
+#    By: teatime <teatime@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/06 18:46:15 by egache           ###   ########.fr        #
+#    Updated: 2025/05/08 14:02:13 by teatime          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRCS		:=	main.c \
 				init.c \
 				clean.c \
 				tokens.c \
+				check_tokens.c \
 				format_tokens_utils.c \
 				define_tokens_utils.c \
 				check_tokens_utils.c \

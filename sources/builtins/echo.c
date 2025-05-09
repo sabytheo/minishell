@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/05/06 14:58:54 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/09 14:21:42 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,25 @@ static bool	find_newline(char *str)
 	return (false);
 }
 
-void	ft_echo(t_token *tokens)
+void	ft_echo(t_token **tokens)
 {
 	int	newline;
 
 	newline = 0;
-	if (tokens == NULL || tokens->next == NULL)
+	if ((*tokens) == NULL || (*tokens)->next == NULL)
 		return ;
-	tokens = tokens->next;
-	newline = find_newline(tokens->value);
-	if (newline == true && tokens->next != NULL)
-		tokens = tokens->next;
-	while (tokens && tokens->type == T_WORD)
+	(*tokens) = (*tokens)->next;
+	newline = find_newline((*tokens)->value);
+	if (newline == true && (*tokens)->next != NULL)
+		(*tokens) = (*tokens)->next;
+	while ((*tokens) && (*tokens)->type == T_WORD)
 	{
-		ft_putstr_fd(tokens->value, STDOUT_FILENO);
-		if (tokens->next != NULL)
+		ft_putstr_fd((*tokens)->value, STDOUT_FILENO);
+		if ((*tokens)->next != NULL)
 		{
 			ft_putstr_fd(" ", STDOUT_FILENO);
-			tokens = tokens->next;
+			(*tokens) = (*tokens)->next;
+		//ft_printf("\nvaleur token dans echo : %s\n\n", (*tokens)->value);
 		}
 		else
 		{

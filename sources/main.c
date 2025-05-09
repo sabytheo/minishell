@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/06 18:15:54 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/09 15:39:55 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,15 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		add_history(entry);
 		tokens(&minishell, entry);
-		// ft_echo(minishell.tokens);
+		exec_builtins(&minishell);
+		ft_printf("valeur token dans main : %s\n", minishell.tokens->value);
 		free_tokens(&minishell.tokens);
 		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
-		free(minishell.envp_tab);
 		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
 		free(entry);
 		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
 	}
+	free(minishell.envp_tab);
 	free_minishell(&minishell);
 	return (0);
 }

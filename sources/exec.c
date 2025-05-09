@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/06 14:31:49 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/09 16:22:04 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,17 +67,17 @@ void	exec_builtins(t_minishell *minishell)
 	tokens = minishell->tokens;
 	len = ft_strlen(tokens->value);
 	if (ft_strncmp(tokens->value, "cd", len) == 0 && len == 2)
-		return ;
+		ft_cd(minishell, &tokens);
 	else if (ft_strncmp(tokens->value, "echo", len) == 0 && len == 4)
-		ft_echo(tokens);
+		ft_echo(&tokens);
 	else if (ft_strncmp(tokens->value, "env", len) == 0 && len == 3)
-		return ;
+		ft_env(minishell);
 	else if (ft_strncmp(tokens->value, "exit", len) == 0 && len == 4)
 		return ;
 	else if (ft_strncmp(tokens->value, "export", len) == 0 && len == 6)
 		return ;
 	else if (ft_strncmp(tokens->value, "pwd", len) == 0 && len == 3)
-		return ;
+		ft_pwd();
 	else if (ft_strncmp(tokens->value, "unset", len) == 0 && len == 5)
 		return ;
 	return ;

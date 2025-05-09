@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teatime <teatime@student.42.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/05/08 15:04:38 by teatime          ###   ########.fr       */
+/*   Updated: 2025/05/09 15:57:31 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *check_operators(t_token *tokens, t_minishell *minishell)
+static char	*check_operators(t_token *tokens, t_minishell *minishell)
 {
 	if (tokens->next == NULL)
 		return (E_PARS_OPE_E);
@@ -31,7 +31,7 @@ static char *check_operators(t_token *tokens, t_minishell *minishell)
 	return (NULL);
 }
 
-static char *check_pipes(t_token *tokens)
+static char	*check_pipes(t_token *tokens)
 {
 	if (tokens->next == NULL)
 		return (E_PARS_PIPE);
@@ -40,10 +40,10 @@ static char *check_pipes(t_token *tokens)
 	return (NULL);
 }
 
-char *check_syntax(t_minishell *minishell)
+char	*check_syntax(t_minishell *minishell)
 {
-	t_token *current;
-	char *syntax_error;
+	t_token	*current;
+	char	*syntax_error;
 
 	current = minishell->tokens;
 	if (current->type == T_PIPE)
@@ -67,19 +67,22 @@ char *check_syntax(t_minishell *minishell)
 	return (NULL);
 }
 
-int check_cmd(t_minishell *minishell)
+int	check_cmd(t_minishell *minishell)
 {
-	t_token *current;
-	bool errfound;
+	t_token	*current;
+	bool	errfound;
+	bool	cmdfound;
 
 	current = minishell->tokens;
-	chainedlst_to_tab(minishell, minishell->envp);
 	errfound = false;
+	cmdfound = false;
 	while (current != NULL)
 	{
-		if (current->type == T_WORD)
+		if (current->type == T_WORD && cmdfound == false && errfound == false)
 		{
-			if (is_valid_cmd(current->value, minishell) == false && errfound == false)
+			if (is_valid_cmd(current->value, minishell) == true)
+				cmdfound = true;
+			else
 			{
 				minishell->error_code = 127;
 				errfound = true;
@@ -87,15 +90,18 @@ int check_cmd(t_minishell *minishell)
 			}
 		}
 		if (current->type == T_PIPE)
+		{
+			cmdfound = false;
 			errfound = false;
+		}
 		current = current->next;
 	}
 	return (0);
 }
 
-void check_tokens(t_minishell *minishell)
+void	check_tokens(t_minishell *minishell)
 {
-	char *syntax_error;
+	char	*syntax_error;
 
 	syntax_error = check_syntax(minishell);
 	if (syntax_error != NULL)
@@ -104,5 +110,5 @@ void check_tokens(t_minishell *minishell)
 		clean_error(syntax_error, minishell);
 	}
 	check_cmd(minishell);
-	return;
+	return ;
 }

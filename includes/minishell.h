@@ -3,67 +3,67 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teatime <teatime@student.42.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/08 15:35:39 by teatime          ###   ########.fr       */
+/*   Updated: 2025/05/09 16:22:14 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
-#include "error.h"
-#include "expand.h"
-#include "ft_printf.h"
-#include "ft_printf_fd.h"
-#include "get_next_line.h"
-#include "libft.h"
-#include "token.h"
-#include <limits.h>
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <unistd.h>
+# include "error.h"
+# include "expand.h"
+# include "ft_printf.h"
+# include "ft_printf_fd.h"
+# include "get_next_line.h"
+# include "libft.h"
+# include "token.h"
+# include <limits.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <unistd.h>
 
 /*open*/
-#include <fcntl.h>
+# include <fcntl.h>
 
 /*signals*/
-#include <signal.h>
-#include <termios.h>
+# include <signal.h>
+# include <termios.h>
 
-#ifndef ECHOCTL
-#define ECHOCTL 0001000
-#endif
+# ifndef ECHOCTL
+#  define ECHOCTL 0001000
+# endif
 
-extern volatile sig_atomic_t g_signal_value;
+extern volatile sig_atomic_t	g_signal_value;
 
 typedef struct s_envp
 {
-	char *value;
-	struct s_envp *next;
-} t_envp;
+	char						*value;
+	struct s_envp				*next;
+}								t_envp;
 
 typedef struct s_minishell
 {
-	int launch_mode;
-	int input_fd;
-	int error_code;
-	char *error_item;
-	char **envp_tab;
-	int envp_countline;
-	bool is_running;
-	t_token *tokens;
-	t_expand *expand;
-	t_envp *envp;
+	int							launch_mode;
+	int							input_fd;
+	int							error_code;
+	char						*error_item;
+	char						**envp_tab;
+	int							envp_countline;
+	bool						is_running;
+	t_token						*tokens;
+	t_expand					*expand;
+	t_envp						*envp;
 
-} t_minishell;
+}								t_minishell;
 
-enum e_launch_modes
+enum							e_launch_modes
 {
 	TTY_MODES,
 	SCRIPT_MODES,
@@ -71,83 +71,86 @@ enum e_launch_modes
 };
 
 /*signals*/
-typedef struct sigaction t_sigaction;
+typedef struct sigaction		t_sigaction;
 
 // clean.c --->
-void free_minishell(t_minishell *minishell);
-void free_tokens(t_token **tokens);
-void free_tab(char **tab);
+void							free_minishell(t_minishell *minishell);
+void							free_tokens(t_token **tokens);
+void							free_tab(char **tab);
 
 // main.c --->
-void clean_error(char *error_message,
-				 t_minishell *minishell);
-void check_args_count(int argc, char **argv,
-					  t_minishell *minishell);
-char *get_entry(t_minishell *minishell);
+void							clean_error(char *error_message,
+									t_minishell *minishell);
+void							check_args_count(int argc, char **argv,
+									t_minishell *minishell);
+char							*get_entry(t_minishell *minishell);
 
 // init.c --->
-void init_minishell(t_minishell *minishell,
-					char **envp);
-void copy_envp(char **envp, t_minishell *minishell);
-void copy_envp_bis(char **envp,
-				   t_minishell *minishell);
+void							init_minishell(t_minishell *minishell,
+									char **envp);
+void							copy_envp(char **envp, t_minishell *minishell);
+void							copy_envp_bis(char **envp,
+									t_minishell *minishell);
 
 // tokens.c --->
-bool has_closed_quotes(char *str);
-t_token *define_tokens(char *line);
-void format_tokens(t_token *tokens,
-				   t_minishell *minishell);
-void tokens(t_minishell *minishell, char *entry);
+bool							has_closed_quotes(char *str);
+t_token							*define_tokens(char *line);
+void							format_tokens(t_token *tokens,
+									t_minishell *minishell);
+void							tokens(t_minishell *minishell, char *entry);
 
 // format_tokens_utils.c --->
-char *remove_quotes(const char *str);
+char							*remove_quotes(const char *str);
 
 // check_tokens.c --->
-void check_tokens(t_minishell *minishell);
-int check_cmd(t_minishell *minishell);
-char *check_syntax(t_minishell *minishell);
+void							check_tokens(t_minishell *minishell);
+int								check_cmd(t_minishell *minishell);
+char							*check_syntax(t_minishell *minishell);
 
 // check_tokens_utils.c
-bool is_a_builtins(char *cmd);
-bool is_valid_cmd(char *cmd, t_minishell *minishell);
+bool							is_a_builtins(char *cmd);
+bool							is_valid_cmd(char *cmd, t_minishell *minishell);
 // NOT USED --- bool check_first_token(t_minishell *minishell,
-// 					   t_token **current);
+// 						t_token **current);
 // NOT USED --- bool operator_error(t_minishell *minishell,
 // 					t_token *current, bool errfound);
 // NOT USED --- bool pipe_error(t_minishell *minishell,
 // 				t_token *current, bool errfound);
 
 // define_tokens_utils.c
-char *extract_token(char *entry, int *i);
-t_token_type get_type(char *str);
-t_token *create_token(char *val, t_token_type type);
-void add_token_back(t_token **list_token,
-					t_token *new);
+char							*extract_token(char *entry, int *i);
+t_token_type					get_type(char *str);
+t_token							*create_token(char *val, t_token_type type);
+void							add_token_back(t_token **list_token,
+									t_token *new);
 
 // expand.c --->
-char *expand_variable(char *str,
-					  t_minishell *minishell);
+char							*expand_variable(char *str,
+									t_minishell *minishell);
 
 // utils_expand.c --->
-int is_valid_var_char(char c, int len);
-void chainedlst_to_tab(t_minishell *minishell,
-					   t_envp *envp);
-int envp_size(t_envp *envp);
+int								is_valid_var_char(char c, int len);
+void							chainedlst_to_tab(t_minishell *minishell,
+									t_envp *envp);
+int								envp_size(t_envp *envp);
 
 // debug.c --->
-void print_tokens(t_token *tokens);
-void print_envp(t_envp *envp);
+void							print_tokens(t_token *tokens);
+void							print_envp(t_envp *envp);
 
 // signals.c --->
-void disable_control_echo(void);
-void signal_initialisation(void);
-void signal_handler(int signum);
+void							disable_control_echo(void);
+void							signal_initialisation(void);
+void							signal_handler(int signum);
 
 // builtins.c --->
-void ft_echo(t_token *tokens);
+void							ft_echo(t_token **tokens);
+void							ft_cd(t_minishell *minishell, t_token **tokens);
+void							ft_pwd(void);
+void							ft_env(t_minishell *minishell);
 
 // exec.c --->
-char *find_path(char *arg, char **envp, int i);
-void exec_builtins(t_minishell *minishell);
+char							*find_path(char *arg, char **envp, int i);
+void							exec_builtins(t_minishell *minishell);
 
 #endif

@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teatime <teatime@student.42.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:27:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/08 14:21:41 by teatime          ###   ########.fr       */
+/*   Updated: 2025/05/09 16:00:02 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool is_a_builtins(char *cmd)
+bool	is_a_builtins(char *cmd)
 {
-	int len;
+	int	len;
 
 	len = ft_strlen(cmd);
 	if (ft_strncmp(cmd, "cd", len) == 0 && len == 2)
@@ -34,13 +34,15 @@ bool is_a_builtins(char *cmd)
 	return (false);
 }
 
-bool is_valid_cmd(char *cmd, t_minishell *minishell)
+bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 {
-	char *path;
+	char	*path;
 
 	if (is_a_builtins(cmd))
 		return (true);
+	chainedlst_to_tab(minishell, minishell->envp);
 	path = find_path(cmd, minishell->envp_tab, 0);
+	printf("path : %s\n", path);
 	if (path != NULL)
 	{
 		free(path);
@@ -49,6 +51,10 @@ bool is_valid_cmd(char *cmd, t_minishell *minishell)
 	free(path);
 	return (false);
 }
+
+
+
+//--------------------------------------------------------------------------------
 
 // bool	check_first_token(t_minishell *minishell, t_token **current)
 // {
@@ -81,10 +87,12 @@ bool is_valid_cmd(char *cmd, t_minishell *minishell)
 // 		minishell->error_code = 2;
 // 		errfound = true;
 // 	}
-// 	else if (current->next != NULL && current->next->type != T_WORD && errfound == false)
+// 	else if (current->next != NULL && current->next->type != T_WORD
+//		&& errfound == false)
 // 	{
 // 		ft_printf_fd(2, E_PARS_OPE_D, current->next->value);
-// 		// printf("current->next->value in operator error : %s\n", current->next->value);
+// 		// printf("current->next->value in operator error : %s\n",
+//			current->next->value);
 // 		minishell->error_code = 2;
 // 		errfound = true;
 // 	}

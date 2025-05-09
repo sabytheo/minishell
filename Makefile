@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: teatime <teatime@student.42.fr>            +#+  +:+       +#+         #
+#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/08 14:02:13 by teatime          ###   ########.fr        #
+#    Updated: 2025/05/09 16:22:22 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,22 +19,25 @@ NC		:= \033[0m
 
 #*----------------------------------s--------------------------------------------*
 
-SRCS_BUILTINS  :=  builtins/echo.c
+SRCS_BUILTINS  :=	builtins/echo.c \
+					builtins/cd.c \
+					builtins/pwd.c \
+					builtins/env.c
 
-SRCS		:=	main.c \
-				init.c \
-				clean.c \
-				tokens.c \
-				check_tokens.c \
-				format_tokens_utils.c \
-				define_tokens_utils.c \
-				check_tokens_utils.c \
-				expand.c \
-				expand_utils.c \
-				debug.c \
-				signals.c \
-				exec.c \
-				$(SRCS_BUILTINS)
+SRCS		:=		main.c \
+					init.c \
+					clean.c \
+					tokens.c \
+					check_tokens.c \
+					format_tokens_utils.c \
+					define_tokens_utils.c \
+					check_tokens_utils.c \
+					expand.c \
+					expand_utils.c \
+					debug.c \
+					signals.c \
+					exec.c \
+					$(SRCS_BUILTINS)
 
 #SRCS_BONUS	:=
 

@@ -36,3 +36,8 @@ bash-5.1$ caca | caca | >
 bash: syntax error near unexpected token `newline'
 
 caca | echo salut
+
+
+#A VOIR
+
+- errno.h / Une variable errno existe deja !!!

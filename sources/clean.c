@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teatime <teatime@student.42.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/08 14:07:28 by teatime          ###   ########.fr       */
+/*   Updated: 2025/05/09 15:38:20 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_tab(char **tab)
+void	free_tab(char **tab)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (tab)
@@ -25,13 +25,13 @@ void free_tab(char **tab)
 	}
 }
 
-void free_tokens(t_token **tokens)
+void	free_tokens(t_token **tokens)
 {
-	t_token *current;
-	t_token *next;
+	t_token	*current;
+	t_token	*next;
 
 	if (!tokens || !*tokens)
-		return;
+		return ;
 	current = *tokens;
 	while (current)
 	{
@@ -43,13 +43,13 @@ void free_tokens(t_token **tokens)
 	*tokens = NULL;
 }
 
-static void free_envp(t_envp **envp)
+static void	free_envp(t_envp **envp)
 {
-	t_envp *current;
-	t_envp *next;
+	t_envp	*current;
+	t_envp	*next;
 
 	if (!envp || !*envp)
-		return;
+		return ;
 	current = *envp;
 	while (current)
 	{
@@ -65,7 +65,7 @@ static void free_envp(t_envp **envp)
 ** Clean and exit function.
 ** Print error message,clean then exit.
 */
-void clean_error(char *error_message, t_minishell *minishell)
+void	clean_error(char *error_message, t_minishell *minishell)
 {
 	// besoin de completer cette fonction pour tout bien clean,free.
 	ft_printf_fd(2, error_message, minishell->error_item);
@@ -73,13 +73,12 @@ void clean_error(char *error_message, t_minishell *minishell)
 	exit(EXIT_FAILURE);
 }
 
-void free_minishell(t_minishell *minishell)
+void	free_minishell(t_minishell *minishell)
 {
 	// int line;
-
 	// line = 0;
 	if (!minishell)
-		return;
+		return ;
 	if (minishell->envp)
 		free_envp(&minishell->envp);
 	if (minishell->tokens)

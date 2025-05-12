@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:42:30 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/06 18:45:37 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:41:51 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,24 @@ void	print_tokens(t_token *tokens)
 		printf("---Token: %-15s est de type: %d---\n", tokens->value,
 			tokens->type);
 		tokens = tokens->next;
+	}
+}
+
+void	print_cmds(t_cmds *cmds)
+{
+	int	i;
+
+	i = 0;
+	while (cmds)
+	{
+		printf("\n NEW NODE \n");
+		while (cmds->args[i] != NULL)
+		{
+			printf("\nargs[%d] : (%s)\n", i, cmds->args[i]);
+			i++;
+		}
+		cmds = cmds->next;
+		i = 0;
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:29:35 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/22 12:45:40 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/12 15:45:00 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,19 @@ typedef enum e_token_type
 	T_REDIR_OUT,
 	T_APPEND,
 	T_HEREDOC
-}	t_token_type;
+}					t_token_type;
 
 typedef struct s_token
 {
 	char			*value;
 	t_token_type	type;
 	struct s_token	*next;
-}	t_token;
+}					t_token;
+
+typedef struct s_cmds
+{
+	char			**args;
+	struct s_cmds	*next;
+}					t_cmds;
 
 #endif

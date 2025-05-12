@@ -6,7 +6,7 @@
 #    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/09 16:22:22 by egache           ###   ########.fr        #
+#    Updated: 2025/05/12 15:44:23 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SRCS		:=		main.c \
 					debug.c \
 					signals.c \
 					exec.c \
+					exec_tokens.c \
 					$(SRCS_BUILTINS)
 
 #SRCS_BONUS	:=

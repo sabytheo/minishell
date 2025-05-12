@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/09 15:38:20 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/12 18:23:18 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void	free_tab(char **tab)
 	if (tab)
 	{
 		while (tab[i])
-			free(tab[i++]);
+		{
+			free(tab[i]);
+			i++;
+		}
 		free(tab);
 	}
 }
@@ -41,6 +44,24 @@ void	free_tokens(t_token **tokens)
 		current = next;
 	}
 	*tokens = NULL;
+}
+
+void	free_cmds(t_cmds **cmds)
+{
+	t_cmds	*current;
+
+	t_cmds	*next;
+	if (!cmds || !*cmds)
+		return ;
+	current = *cmds;
+	while (current)
+	{
+		next = current->next;
+		free_tab(current->args);
+		free(current);
+		current = next;
+	}
+	*cmds = NULL;
 }
 
 static void	free_envp(t_envp **envp)
@@ -83,6 +104,8 @@ void	free_minishell(t_minishell *minishell)
 		free_envp(&minishell->envp);
 	if (minishell->tokens)
 		free_tokens(&minishell->tokens);
+	if (minishell->cmds)
+		free_cmds(&minishell->cmds);
 	rl_clear_history();
 	if (minishell->input_fd > 2)
 		close(minishell->input_fd);

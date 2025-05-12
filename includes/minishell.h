@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/09 16:22:14 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/12 18:06:56 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_minishell
 	t_token						*tokens;
 	t_expand					*expand;
 	t_envp						*envp;
+	t_cmds						*cmds;
 
 }								t_minishell;
 
@@ -77,6 +78,7 @@ typedef struct sigaction		t_sigaction;
 void							free_minishell(t_minishell *minishell);
 void							free_tokens(t_token **tokens);
 void							free_tab(char **tab);
+void							free_cmds(t_cmds **cmds);
 
 // main.c --->
 void							clean_error(char *error_message,
@@ -137,6 +139,7 @@ int								envp_size(t_envp *envp);
 // debug.c --->
 void							print_tokens(t_token *tokens);
 void							print_envp(t_envp *envp);
+void							print_cmds(t_cmds *cmds);
 
 // signals.c --->
 void							disable_control_echo(void);
@@ -152,5 +155,12 @@ void							ft_env(t_minishell *minishell);
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);
 void							exec_builtins(t_minishell *minishell);
+
+// exec_tokens.
+
+void							split_tokens(t_token *tokens,
+									t_minishell *minishell);
+t_cmds							*create_cmds(char **val);
+void							add_cmds_back(t_cmds **list_cmds, t_cmds *new);
 
 #endif

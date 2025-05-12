@@ -1,7 +1,3 @@
-#Check Erreurs : DONE ./ ./
-	Parcourir une premiere fois la liste\
-			- CHECKER ERREURS DE SYNTAXE
-			- Checker doublons de variables ou operateurs (par exemple : <<<<<, <<|)
 #Exec :
 	Avant toute commande -> parcourir la liste (c'est surement du parsing)
 		- Si on trouve un heredoc << -> Exec en premier.
@@ -13,6 +9,20 @@
 	Reparcourir a partir du pipe
 		- Redirection pipe THEO
 		- Si un pipe fail, qd meme executer le suivant
+
+Ordre de shell :
+	- heredoc en premier
+	- verifier les binaires dans l'ordre -> check path et existence
+	- ouvrir les fd
+	- exec tout en meme temps
+
+
+	Structure commande :
+		- Avec double tableau qui contient chaque arg entre pipe
+
+		noeud 1 -> noeud 2 -> noeud 3
+		  DT1       DT2        DT3			=== RESULT
+				    RES1	   RES2
 
 #En fonction  :
 

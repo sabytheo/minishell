@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 09:37:33 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 13:36:45 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 17:13:43 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,16 @@ int	get_cmds_size(t_token *tokens)
 	size = 0;
 	while (tokens && tokens->type != T_PIPE)
 	{
+		if (tokens->type >= T_REDIR_IN && tokens->type <= T_HEREDOC)
+			tokens = tokens->next;
+		else
+			size++;
 		tokens = tokens->next;
-		size++;
 	}
 	return (size);
 }
 
-t_cmds	*create_cmds(int *type, char **val)
+t_cmds	*create_cmds(char **val)
 {
 	t_cmds	*new;
 
@@ -33,7 +36,6 @@ t_cmds	*create_cmds(int *type, char **val)
 	if (new == NULL)
 		return (NULL);
 	new->args = val;
-	new->type = type;
 	new->next = NULL;
 	return (new);
 }

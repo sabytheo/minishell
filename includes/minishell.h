@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 15:34:47 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/13 16:37:49 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,8 +149,8 @@ void							signal_initialisation(void);
 void							signal_handler(int signum);
 
 // builtins.c --->
-void							ft_echo(t_token **tokens);
-void							ft_cd(t_minishell *minishell, t_token **tokens);
+// void							ft_echo(t_cmds **cmds);
+// void							ft_cd(t_minishell *minishell, t_cmds **cmds);
 void							ft_pwd(void);
 void							ft_env(t_minishell *minishell);
 
@@ -165,7 +165,7 @@ void							split_tokens(t_token *tokens,
 									t_minishell *minishell);
 
 // exec_tokens_utils.c --->
-t_cmds							*create_cmds(int *type, char **val);
+t_cmds							*create_cmds(char **val);
 void							add_cmds_back(t_cmds **list_cmds, t_cmds *new);
 int								get_cmds_size(t_token *tokens);
 

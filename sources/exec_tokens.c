@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 16:24:38 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/13 17:15:51 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,33 +26,18 @@ static char	**fill_args(t_token **current)
 	args[size] = NULL;
 	while ((*current) != NULL && (*current)->type != T_PIPE)
 	{
-		args[i] = ft_strdup((*current)->value);
-		if (args[i] == NULL)
-			return (NULL); // NEED FREE ?
+		if ((*current)->type >= T_REDIR_IN && (*current)->type <= T_HEREDOC)
+			(*current) = (*current)->next;
+		else
+		{
+			args[i] = ft_strdup((*current)->value);
+			if (args[i] == NULL)
+				return (NULL); // NEED FREE ?
+			i++;
+		}
 		(*current) = (*current)->next;
-		i++;
 	}
 	return (args);
-}
-
-static int	*fill_type(t_token *current)
-{
-	int	*type;
-	int	i;
-	int	size;
-
-	i = 0;
-	size = get_cmds_size(current);
-	type = malloc(sizeof(int) * (size + 1));
-	if (type == NULL)
-		return (NULL); // NEED FREE ?
-	while (current != NULL && current->type != T_PIPE)
-	{
-		type[i] = current->type;
-		current = current->next;
-		i++;
-	}
-	return (type);
 }
 
 void	split_tokens(t_token *tokens, t_minishell *minishell)
@@ -60,14 +45,12 @@ void	split_tokens(t_token *tokens, t_minishell *minishell)
 	t_token	*current;
 	t_cmds	*new;
 	char	**args;
-	int		*type;
 
 	current = tokens;
 	while (current != NULL)
 	{
-		type = fill_type(current);
 		args = fill_args(&current);
-		new = create_cmds(type, args);
+		new = create_cmds(args);
 		add_cmds_back(&minishell->cmds, new);
 		if (current != NULL)
 			current = current->next;
@@ -102,7 +85,8 @@ int	setup_redirections(t_cmds *cmds, t_minishell *minishell)
 			}
 			else if (current->type[i] == T_REDIR_IN)
 			{
-				minishell->fd = open(current->args[i + 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+				minishell->fd = open(current->args[i + 1],
+						O_CREAT | O_WRONLY | O_TRUNC, 0644);
 				if (minishell->fd < 0)
 					return (perror(current->args[i]), -1);
 				if (dup2(minishell->fd, STDOUT_FILENO) < 0)
@@ -128,10 +112,8 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	pid = fork();
 	if (pid == 0)
 	{
-		// if (setup_redirections(cmds, minishell) < 0)
-		// 	printf("coucou");
-		minishell->fd = open("stdout.txt", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		dup2(minishell->fd, STDOUT_FILENO);
+		if (setup_redirections(cmds, minishell) < 0)
+			printf("coucou");
 		if (is_a_builtins(cmds->args[0]))
 			exec_builtins(minishell);
 		// changer exec-builtins par minishell->cmd->args,
@@ -156,15 +138,15 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 void	exec_tokens(t_minishell *minishell)
 {
 	t_cmds	*current;
-
 	split_tokens(minishell->tokens, minishell);
+	print_cmds(minishell->cmds);
 	current = minishell->cmds;
-	while (current)
-	{
-		// if (minishell->cmds->next != NULL)
-		// 	// execute_piped_command();
-		// else
-		execute_single_command(minishell, current);
-		current = current->next;
-	}
+		while (current)
+		{
+			// if (minishell->cmds->next != NULL)
+			// 	// execute_piped_command();
+			// else
+			execute_single_command(minishell, current);
+			current = current->next;
+		}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 12:36:28 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/13 16:38:38 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,23 +62,26 @@ char	*find_path(char *arg, char **envp, int i)
 void	exec_builtins(t_minishell *minishell)
 {
 	int		len;
-	t_token	*tokens;
+	t_cmds	*cmds;
 
-	tokens = minishell->tokens;
-	len = ft_strlen(tokens->value);
-	if (ft_strncmp(tokens->value, "cd", len) == 0 && len == 2)
-		ft_cd(minishell, &tokens);
-	else if (ft_strncmp(tokens->value, "echo", len) == 0 && len == 4)
-		ft_echo(&tokens);
-	else if (ft_strncmp(tokens->value, "env", len) == 0 && len == 3)
-		ft_env(minishell);
-	else if (ft_strncmp(tokens->value, "exit", len) == 0 && len == 4)
+	cmds = minishell->cmds;
+	len = ft_strlen(cmds->args[0]);
+	if (ft_strncmp(cmds->args[0], "cd", len) == 0 && len == 2)
+		// ft_cd(minishell, &cmds);
 		return ;
-	else if (ft_strncmp(tokens->value, "export", len) == 0 && len == 6)
+	else if (ft_strncmp(cmds->args[0], "echo", len) == 0 && len == 4)
+		// ft_echo(&cmds);
 		return ;
-	else if (ft_strncmp(tokens->value, "pwd", len) == 0 && len == 3)
+	else if (ft_strncmp(cmds->args[0], "env", len) == 0 && len == 3)
+		// ft_env(minishell);
+		return ;
+	else if (ft_strncmp(cmds->args[0], "exit", len) == 0 && len == 4)
+		return ;
+	else if (ft_strncmp(cmds->args[0], "export", len) == 0 && len == 6)
+		return ;
+	else if (ft_strncmp(cmds->args[0], "pwd", len) == 0 && len == 3)
 		ft_pwd();
-	else if (ft_strncmp(tokens->value, "unset", len) == 0 && len == 5)
+	else if (ft_strncmp(cmds->args[0], "unset", len) == 0 && len == 5)
 		return ;
 	return ;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/12 15:23:42 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 15:35:18 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	minishell->envp = envp_copy;
 	minishell->is_running = true;
 	minishell->error_code = 0;
+	minishell->fd = 0;
 	minishell->input_fd = STDIN_FILENO;
 	minishell->launch_mode = 0;
 	copy_envp(envp, minishell);

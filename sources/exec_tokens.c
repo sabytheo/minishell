@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 15:02:37 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/13 16:24:38 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,49 @@ void	split_tokens(t_token *tokens, t_minishell *minishell)
 	}
 	return ;
 }
+int	setup_redirections(t_cmds *cmds, t_minishell *minishell)
+{
+	int		i;
+	t_cmds	*current;
+
+	i = 0;
+	current = cmds;
+	while (current)
+	{
+		while (current->args[i])
+		{
+			if (current->type[i] == T_REDIR_OUT)
+			{
+				minishell->fd = open(current->args[i + 1], O_RDONLY);
+				if (minishell->fd < 0)
+					return (perror(current->args[i]), -1);
+				if (dup2(minishell->fd, STDIN_FILENO) < 0)
+				{
+					perror("dup2");
+					close(minishell->fd);
+					return (-1);
+				}
+				close(minishell->fd);
+			}
+			else if (current->type[i] == T_REDIR_IN)
+			{
+				minishell->fd = open(current->args[i + 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+				if (minishell->fd < 0)
+					return (perror(current->args[i]), -1);
+				if (dup2(minishell->fd, STDOUT_FILENO) < 0)
+				{
+					perror("dup2");
+					close(minishell->fd);
+					return (-1);
+				}
+				close(minishell->fd);
+			}
+			i++;
+		}
+		current = current->next;
+	}
+	return (0);
+}
 
 void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 {
@@ -85,10 +128,13 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	pid = fork();
 	if (pid == 0)
 	{
-		// if (setup_redirection(cmds->args) < 0)
-		// 	clean_error(NULL, minishell);
+		// if (setup_redirections(cmds, minishell) < 0)
+		// 	printf("coucou");
+		minishell->fd = open("stdout.txt", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		dup2(minishell->fd, STDOUT_FILENO);
 		if (is_a_builtins(cmds->args[0]))
-			exec_builtins(minishell); // changer exec-builtins par minishell->cmd->args,
+			exec_builtins(minishell);
+		// changer exec-builtins par minishell->cmd->args,
 		else
 		{
 			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
@@ -109,7 +155,7 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 
 void	exec_tokens(t_minishell *minishell)
 {
-	t_cmds *current;
+	t_cmds	*current;
 
 	split_tokens(minishell->tokens, minishell);
 	current = minishell->cmds;

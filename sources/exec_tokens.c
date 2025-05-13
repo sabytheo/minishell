@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 13:45:21 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 15:02:37 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,14 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 		// if (setup_redirection(cmds->args) < 0)
 		// 	clean_error(NULL, minishell);
 		if (is_a_builtins(cmds->args[0]))
-			exec_builtins(minishell);
-		// changer exec-builtins par minishell->cmd->args,
+			exec_builtins(minishell); // changer exec-builtins par minishell->cmd->args,
 		else
+		{
 			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
 				minishell->envp_tab);
-		perror("execve");
-		clean_error(NULL, minishell);
+			perror("execve");
+			clean_error(NULL, minishell);
+		}
 	}
 	else
 	{
@@ -108,14 +109,16 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 
 void	exec_tokens(t_minishell *minishell)
 {
+	t_cmds *current;
+
 	split_tokens(minishell->tokens, minishell);
-	// print_cmds(minishell->cmds);
-	while (minishell->cmds)
+	current = minishell->cmds;
+	while (current)
 	{
 		// if (minishell->cmds->next != NULL)
 		// 	// execute_piped_command();
 		// else
-		execute_single_command(minishell, minishell->cmds);
-		minishell->cmds = minishell->cmds->next;
+		execute_single_command(minishell, current);
+		current = current->next;
 	}
 }

@@ -3,31 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/12 19:57:48 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 12:46:21 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// void	exec_tokens(t_minishell *minishell, t_token *tokens)
-// {
-// }
-
-static int	get_cmds_size(t_token *tokens)
-{
-	int	size;
-
-	size = 0;
-	while (tokens && tokens->type != T_PIPE)
-	{
-		tokens = tokens->next;
-		size++;
-	}
-	return (size);
-}
 
 static char	**fill_args(t_token **current)
 {
@@ -72,29 +55,45 @@ void	split_tokens(t_token *tokens, t_minishell *minishell)
 	return ;
 }
 
-t_cmds	*create_cmds(char **val)
+void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 {
-	t_cmds	*new;
+	pid_t	pid;
+	int		status;
 
-	new = malloc(sizeof(t_cmds));
-	if (new == NULL)
-		return (NULL);
-	new->args = val;
-	new->next = NULL;
-	return (new);
+	pid = fork();
+	if (pid == 0)
+	{
+		// if (setup_redirection(cmds->args) < 0)
+		// 	clean_error(NULL, minishell);
+		if (is_a_builtins(cmds->args[0]))
+			exec_builtins(minishell);
+		// changer exec-builtins par minishell->cmd->args,
+		else
+			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
+				minishell->envp_tab);
+		perror("execve");
+		clean_error(NULL, minishell);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			minishell->error_code = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			minishell->error_code = 128 + WTERMSIG(status);
+	}
 }
 
-void	add_cmds_back(t_cmds **list_cmds, t_cmds *new)
+void	exec_tokens(t_minishell *minishell)
 {
-	t_cmds	*current;
-
-	if (*list_cmds == NULL)
+	split_tokens(minishell->tokens, minishell);
+	// print_cmds(minishell->cmds);
+	while (minishell->cmds)
 	{
-		*list_cmds = new;
-		return ;
+		// if (minishell->cmds->next != NULL)
+		// 	// execute_piped_command();
+		// else
+		execute_single_command(minishell, minishell->cmds);
+		minishell->cmds = minishell->cmds->next;
 	}
-	current = *list_cmds;
-	while (current->next)
-		current = current->next;
-	current->next = new;
 }

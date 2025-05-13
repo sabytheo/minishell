@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/12 15:58:59 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 09:45:39 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,5 +85,6 @@ void tokens(t_minishell *minishell, char *entry)
 	minishell->tokens = define_tokens(entry);
 	format_tokens(minishell->tokens, minishell);
 	check_tokens(minishell);
+	exec_tokens(minishell);
 	//print_tokens(minishell->tokens);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/12 19:34:17 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 11:31:23 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		add_history(entry);
 		tokens(&minishell, entry);
-		split_tokens(minishell.tokens, &minishell);
-		print_cmds(minishell.cmds);
-		exec_builtins(&minishell);
+		// exec_builtins(&minishell);
 		free_cmds(&minishell.cmds);
 		free_tokens(&minishell.tokens);
 		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL

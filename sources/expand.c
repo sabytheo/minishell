@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/04/30 12:39:00 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/13 11:57:14 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ static char	*extract_var_name(char *str, int *i)
 	return (ft_substr(str, start, len));
 }
 
-static char	*get_values(char *name, t_envp *envp)
+static char	*get_values(char *name, t_envp *envp, t_minishell *minishell)
 {
 	size_t	len;
 
 	if (!name)
 		return (ft_strdup(""));
 	if (ft_strncmp(name, "?", 1) == 0)
-		return (ft_strdup("errorcode"));
+		return (ft_strdup(ft_itoa(minishell->error_code)));
 	len = ft_strlen(name);
 	while (envp)
 	{
@@ -61,7 +61,8 @@ static char	*get_values(char *name, t_envp *envp)
 	return (ft_strdup(""));
 }
 
-static char	*handle_expand(char *str, int *i, t_envp *envp, t_expand *expand)
+static char	*handle_expand(char *str, int *i, t_minishell *minishell,
+		t_expand *expand)
 {
 	char	*name;
 	char	*value;
@@ -71,7 +72,7 @@ static char	*handle_expand(char *str, int *i, t_envp *envp, t_expand *expand)
 	{
 		(*i)++;
 		name = extract_var_name(str, i);
-		value = get_values(name, envp);
+		value = get_values(name, minishell->envp, minishell);
 		expand->expanded = append_and_free(expand->expanded, value);
 		free(name);
 		free(value);
@@ -101,7 +102,7 @@ char	*expand_variable(char *str, t_minishell *minishell)
 			expand.in_squote = !expand.in_squote;
 		else if (str[i] == '"' && expand.in_squote == false)
 			expand.in_dquote = !expand.in_dquote;
-		expand.expanded = handle_expand(str, &i, minishell->envp, &expand);
+		expand.expanded = handle_expand(str, &i, minishell, &expand);
 	}
 	return (expand.expanded);
 }

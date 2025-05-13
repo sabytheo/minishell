@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 16:37:49 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 19:00:50 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ void							signal_initialisation(void);
 void							signal_handler(int signum);
 
 // builtins.c --->
-// void							ft_echo(t_cmds **cmds);
+void							ft_echo(t_cmds **cmds);
 // void							ft_cd(t_minishell *minishell, t_cmds **cmds);
 void							ft_pwd(void);
 void							ft_env(t_minishell *minishell);

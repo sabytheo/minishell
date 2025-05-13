@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 16:38:38 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 19:02:59 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,7 @@ void	exec_builtins(t_minishell *minishell)
 		// ft_cd(minishell, &cmds);
 		return ;
 	else if (ft_strncmp(cmds->args[0], "echo", len) == 0 && len == 4)
-		// ft_echo(&cmds);
-		return ;
+		ft_echo(&cmds); 
 	else if (ft_strncmp(cmds->args[0], "env", len) == 0 && len == 3)
 		// ft_env(minishell);
 		return ;

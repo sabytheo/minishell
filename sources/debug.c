@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:42:30 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/12 16:41:51 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 13:44:45 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	print_cmds(t_cmds *cmds)
 		while (cmds->args[i] != NULL)
 		{
 			printf("\nargs[%d] : (%s)\n", i, cmds->args[i]);
+			printf("\ntype[%d] : (%d)\n", i, cmds->type[i]);
 			i++;
 		}
 		cmds = cmds->next;

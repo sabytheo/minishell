@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:29:35 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/12 15:45:00 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 13:25:42 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_token
 typedef struct s_cmds
 {
 	char			**args;
+	int				*type;
 	struct s_cmds	*next;
 }					t_cmds;
 

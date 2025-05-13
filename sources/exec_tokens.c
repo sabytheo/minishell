@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 12:46:21 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/13 13:45:21 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,39 @@ static char	**fill_args(t_token **current)
 	return (args);
 }
 
+static int	*fill_type(t_token *current)
+{
+	int	*type;
+	int	i;
+	int	size;
+
+	i = 0;
+	size = get_cmds_size(current);
+	type = malloc(sizeof(int) * (size + 1));
+	if (type == NULL)
+		return (NULL); // NEED FREE ?
+	while (current != NULL && current->type != T_PIPE)
+	{
+		type[i] = current->type;
+		current = current->next;
+		i++;
+	}
+	return (type);
+}
+
 void	split_tokens(t_token *tokens, t_minishell *minishell)
 {
 	t_token	*current;
 	t_cmds	*new;
 	char	**args;
+	int		*type;
 
 	current = tokens;
 	while (current != NULL)
 	{
+		type = fill_type(current);
 		args = fill_args(&current);
-		new = create_cmds(args);
+		new = create_cmds(type, args);
 		add_cmds_back(&minishell->cmds, new);
 		if (current != NULL)
 			current = current->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 17:15:51 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/13 19:04:50 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,22 +59,20 @@ void	split_tokens(t_token *tokens, t_minishell *minishell)
 	}
 	return ;
 }
-int	setup_redirections(t_cmds *cmds, t_minishell *minishell)
+int	setup_redirections(t_token *tokens, t_minishell *minishell)
 {
 	int		i;
-	t_cmds	*current;
+	t_token	*current;
 
 	i = 0;
-	current = cmds;
+	current = tokens;
 	while (current)
 	{
-		while (current->args[i])
-		{
-			if (current->type[i] == T_REDIR_OUT)
+			if (current->type == T_REDIR_OUT)
 			{
-				minishell->fd = open(current->args[i + 1], O_RDONLY);
+				minishell->fd = open(current->next->value, O_RDONLY);
 				if (minishell->fd < 0)
-					return (perror(current->args[i]), -1);
+					return (perror(current->next->value), -1);
 				if (dup2(minishell->fd, STDIN_FILENO) < 0)
 				{
 					perror("dup2");
@@ -83,12 +81,11 @@ int	setup_redirections(t_cmds *cmds, t_minishell *minishell)
 				}
 				close(minishell->fd);
 			}
-			else if (current->type[i] == T_REDIR_IN)
+			else if (current->type == T_REDIR_IN)
 			{
-				minishell->fd = open(current->args[i + 1],
-						O_CREAT | O_WRONLY | O_TRUNC, 0644);
+				minishell->fd = open(current->next->value, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 				if (minishell->fd < 0)
-					return (perror(current->args[i]), -1);
+					return (perror(current->next->value), -1);
 				if (dup2(minishell->fd, STDOUT_FILENO) < 0)
 				{
 					perror("dup2");
@@ -97,8 +94,20 @@ int	setup_redirections(t_cmds *cmds, t_minishell *minishell)
 				}
 				close(minishell->fd);
 			}
-			i++;
-		}
+			else if (current->type == T_APPEND)
+			{
+				minishell->fd = open(current->next->value, O_CREAT | O_WRONLY | O_APPEND, 0644);
+				if (minishell->fd < 0)
+					return (perror(current->next->value), -1);
+				if (dup2(minishell->fd, STDOUT_FILENO) < 0)
+				{
+					perror("dup2");
+					close(minishell->fd);
+					return (-1);
+				}
+				close(minishell->fd);
+			}
+
 		current = current->next;
 	}
 	return (0);
@@ -112,7 +121,7 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (setup_redirections(cmds, minishell) < 0)
+		if (setup_redirections(minishell->tokens, minishell) < 0)
 			printf("coucou");
 		if (is_a_builtins(cmds->args[0]))
 			exec_builtins(minishell);
@@ -139,7 +148,7 @@ void	exec_tokens(t_minishell *minishell)
 {
 	t_cmds	*current;
 	split_tokens(minishell->tokens, minishell);
-	print_cmds(minishell->cmds);
+	// print_cmds(minishell->cmds);
 	current = minishell->cmds;
 		while (current)
 		{

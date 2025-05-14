@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 19:05:42 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/14 16:48:00 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,10 @@ void	free_tokens(t_token **tokens)
 void	free_cmds(t_cmds **cmds)
 {
 	t_cmds	*current;
-
 	t_cmds	*next;
+
 	if (!cmds || !*cmds)
-	return ;
+		return ;
 	current = *cmds;
 	while (current)
 	{
@@ -64,7 +64,7 @@ void	free_cmds(t_cmds **cmds)
 	*cmds = NULL;
 }
 
-static void	free_envp(t_envp **envp)
+void	free_envp(t_envp **envp)
 {
 	t_envp	*current;
 	t_envp	*next;

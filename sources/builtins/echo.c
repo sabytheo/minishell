@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 19:39:21 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:56:29 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static bool	find_newline(char *str)
 	return (false);
 }
 
-void	ft_echo(t_cmds **cmds)
+void	ft_echo(int fd, t_cmds **cmds)
 {
 	bool	newline;
 	int		i;
@@ -36,20 +36,16 @@ void	ft_echo(t_cmds **cmds)
 		i++;
 	while ((*cmds)->args[i] != NULL)
 	{
-		// printf("bite");
-		ft_putstr_fd((*cmds)->args[i], STDOUT_FILENO);
+		ft_putstr_fd((*cmds)->args[i], fd);
 		if ((*cmds)->args[i + 1] != NULL)
 		{
-			ft_putstr_fd(" ", STDOUT_FILENO);
+			ft_putstr_fd(" ", fd);
 			i++;
 		}
 		else
-		{
-			if (newline == false)
-				ft_putstr_fd("\n", STDOUT_FILENO);
 			i++;
-			exit(EXIT_SUCCESS);
-		}
 	}
-	exit(EXIT_SUCCESS);
+	if (newline == false)
+		ft_putstr_fd("\n", fd);
+	return ;
 }

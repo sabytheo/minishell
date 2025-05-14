@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 19:00:50 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/14 18:05:21 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void							free_minishell(t_minishell *minishell);
 void							free_tokens(t_token **tokens);
 void							free_tab(char **tab);
 void							free_cmds(t_cmds **cmds);
+void							free_envp(t_envp **envp);
 
 // main.c --->
 void							clean_error(char *error_message,
@@ -93,6 +94,8 @@ char							*get_entry(t_minishell *minishell);
 void							init_minishell(t_minishell *minishell,
 									char **envp);
 void							copy_envp(char **envp, t_minishell *minishell);
+t_envp							*create_node(char *val);
+void							add_node_back(t_envp **list_envp, t_envp *new);
 void							copy_envp_bis(char **envp,
 									t_minishell *minishell);
 
@@ -114,12 +117,6 @@ char							*check_syntax(t_minishell *minishell);
 // check_tokens_utils.c
 bool							is_a_builtins(char *cmd);
 bool							is_valid_cmd(char *cmd, t_minishell *minishell);
-// NOT USED --- bool check_first_token(t_minishell *minishell,
-// 						t_token **current);
-// NOT USED --- bool operator_error(t_minishell *minishell,
-// 					t_token *current, bool errfound);
-// NOT USED --- bool pipe_error(t_minishell *minishell,
-// 				t_token *current, bool errfound);
 
 // define_tokens_utils.c
 char							*extract_token(char *entry, int *i);
@@ -149,10 +146,11 @@ void							signal_initialisation(void);
 void							signal_handler(int signum);
 
 // builtins.c --->
-void							ft_echo(t_cmds **cmds);
-// void							ft_cd(t_minishell *minishell, t_cmds **cmds);
+void							ft_echo(int fd, t_cmds **cmds);
+void							ft_cd(t_cmds **cmds);
 void							ft_pwd(void);
-void							ft_env(t_minishell *minishell);
+void							ft_env(int fd, t_minishell *minishell);
+void							ft_export(t_minishell *minishell);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);

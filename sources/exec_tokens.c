@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/13 19:38:41 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/14 19:23:38 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,24 +69,28 @@ int	setup_redirections(t_token *tokens, t_minishell *minishell)
 	current = tokens;
 	while (current)
 	{
-			if (current->type == T_REDIR_OUT)
+		if (current->type == T_REDIR_OUT)
+		{
+			minishell->fd = open(current->next->value, O_RDONLY);
+			if (minishell->fd < 0)
+				return (perror(current->next->value), -1);
+			if (dup2(minishell->fd, STDIN_FILENO) < 0)
 			{
-				minishell->fd = open(current->next->value, O_RDONLY);
-				if (minishell->fd < 0)
-					return (perror(current->next->value), -1);
-				if (dup2(minishell->fd, STDIN_FILENO) < 0)
-				{
-					perror("dup2");
-					close(minishell->fd);
-					return (-1);
-				}
+				perror("dup2");
 				close(minishell->fd);
+				return (-1);
 			}
-			else if (current->type == T_REDIR_IN)
+			close(minishell->fd);
+		}
+		else if (current->type == T_REDIR_IN)
+		{
+			minishell->fd = open(current->next->value,
+					O_CREAT | O_WRONLY | O_TRUNC, 0644);
+			if (minishell->fd < 0)
+				return (perror(current->next->value), -1);
+			if (!is_a_builtins(minishell->cmds->args[0]))
+			// Check si y'a un pipe aussi
 			{
-				minishell->fd = open(current->next->value, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-				if (minishell->fd < 0)
-					return (perror(current->next->value), -1);
 				if (dup2(minishell->fd, STDOUT_FILENO) < 0)
 				{
 					perror("dup2");
@@ -95,20 +99,21 @@ int	setup_redirections(t_token *tokens, t_minishell *minishell)
 				}
 				close(minishell->fd);
 			}
-			else if (current->type == T_APPEND)
+		}
+		else if (current->type == T_APPEND)
+		{
+			minishell->fd = open(current->next->value,
+					O_CREAT | O_WRONLY | O_APPEND, 0644);
+			if (minishell->fd < 0)
+				return (perror(current->next->value), -1);
+			if (dup2(minishell->fd, STDOUT_FILENO) < 0)
 			{
-				minishell->fd = open(current->next->value, O_CREAT | O_WRONLY | O_APPEND, 0644);
-				if (minishell->fd < 0)
-					return (perror(current->next->value), -1);
-				if (dup2(minishell->fd, STDOUT_FILENO) < 0)
-				{
-					perror("dup2");
-					close(minishell->fd);
-					return (-1);
-				}
+				perror("dup2");
 				close(minishell->fd);
+				return (-1);
 			}
-
+			close(minishell->fd);
+		}
 		current = current->next;
 	}
 	return (0);
@@ -119,44 +124,51 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	pid_t	pid;
 	int		status;
 
-	pid = fork();
-	if (pid == 0)
+	if (is_a_builtins(cmds->args[0]))
 	{
 		if (setup_redirections(minishell->tokens, minishell) < 0)
 			printf("coucou");
-		if (is_a_builtins(cmds->args[0]))
-			exec_builtins(minishell);
-		// changer exec-builtins par minishell->cmd->args,
-		else
+		exec_builtins(minishell);
+	}
+	else
+	{
+		pid = fork();
+		// printf("pid : %d\n", pid);
+		if (pid == 0)
 		{
+			if (setup_redirections(minishell->tokens, minishell) < 0)
+				printf("coucou");
+			// changer exec-builtins par minishell->cmd->args,
 			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
 				minishell->envp_tab);
 			perror("execve");
 			clean_error(NULL, minishell);
 		}
+		else
+		{
+			waitpid(pid, &status, 0);
+			if (WIFEXITED(status))
+				minishell->error_code = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				minishell->error_code = 128 + WTERMSIG(status);
+		}
 	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			minishell->error_code = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			minishell->error_code = 128 + WTERMSIG(status);
-	}
+	return ;
 }
 
 void	exec_tokens(t_minishell *minishell)
 {
 	t_cmds	*current;
+
 	split_tokens(minishell->tokens, minishell);
 	// print_cmds(minishell->cmds);
 	current = minishell->cmds;
-		while (current)
-		{
-			// if (minishell->cmds->next != NULL)
-			// 	// execute_piped_command();
-			// else
-			execute_single_command(minishell, current);
-			current = current->next;
-		}
+	while (current)
+	{
+		// if (minishell->cmds->next != NULL)
+		// 	// execute_piped_command();
+		// else
+		execute_single_command(minishell, current);
+		current = current->next;
+	}
 }

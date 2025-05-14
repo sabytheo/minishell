@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 14:41:35 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/14 18:56:07 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	main(int argc, char **argv, char **envp)
 	init_minishell(&minishell, envp);
 	check_args_count(argc, argv, &minishell);
 	signal_initialisation();
+	chainedlst_to_tab(&minishell, minishell.envp);
 	while (minishell.is_running == true)
 	{
 		entry = get_entry(&minishell);

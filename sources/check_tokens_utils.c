@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:27:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 12:51:15 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/14 16:52:46 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 		return (true);
 	chainedlst_to_tab(minishell, minishell->envp);
 	path = find_path(cmd, minishell->envp_tab, 0);
-	//printf("path : %s\n", path);
+	// printf("path : %s\n", path);
 	if (path != NULL)
 	{
 		free(path);
@@ -51,8 +51,6 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 	free(path);
 	return (false);
 }
-
-
 
 //--------------------------------------------------------------------------------
 

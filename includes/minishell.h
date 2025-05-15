@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/14 18:05:21 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/15 19:24:34 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,17 @@ typedef struct s_minishell
 {
 	int							launch_mode;
 	int							input_fd;
+	int							output_fd;
+	int							heredoc_fd;
 	int							error_code;
 	char						*error_item;
 	char						**envp_tab;
 	int							envp_countline;
-	int							fd;
 	bool						is_running;
 	t_token						*tokens;
 	t_expand					*expand;
 	t_envp						*envp;
+	t_envp						*export_envp;
 	t_cmds						*cmds;
 
 }								t_minishell;
@@ -146,7 +148,7 @@ void							signal_initialisation(void);
 void							signal_handler(int signum);
 
 // builtins.c --->
-void							ft_echo(int fd, t_cmds **cmds);
+int								ft_echo(t_cmds **cmds);
 void							ft_cd(t_cmds **cmds);
 void							ft_pwd(void);
 void							ft_env(int fd, t_minishell *minishell);
@@ -154,7 +156,7 @@ void							ft_export(t_minishell *minishell);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);
-void							exec_builtins(t_minishell *minishell);
+int								exec_builtins(t_minishell *minishell);
 void							exec_tokens(t_minishell *minishell);
 
 // exec_tokens.c --->
@@ -166,5 +168,7 @@ void							split_tokens(t_token *tokens,
 t_cmds							*create_cmds(char **val);
 void							add_cmds_back(t_cmds **list_cmds, t_cmds *new);
 int								get_cmds_size(t_token *tokens);
+
+int	create_heredoc(char *eof, t_minishell *minishell);
 
 #endif

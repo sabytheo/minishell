@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/14 16:48:00 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/15 16:50:46 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,7 @@ void	free_minishell(t_minishell *minishell)
 		free_cmds(&minishell->cmds);
 	rl_clear_history();
 	if (minishell->input_fd > 2)
+	close(minishell->input_fd);
+	if (minishell->output_fd > 2)
 		close(minishell->input_fd);
 }

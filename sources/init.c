@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 15:35:18 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/15 19:24:57 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,11 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	minishell->envp = envp_copy;
 	minishell->is_running = true;
 	minishell->error_code = 0;
-	minishell->fd = 0;
-	minishell->input_fd = STDIN_FILENO;
+	minishell->output_fd = STDOUT_FILENO; // 1
+	minishell->input_fd = STDIN_FILENO; // 0
+	minishell->heredoc_fd = 0; // 0
 	minishell->launch_mode = 0;
+
 	copy_envp(envp, minishell);
 	minishell->envp_tab = NULL;
 	// print_envp(minishell->envp);

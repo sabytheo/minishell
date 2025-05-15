@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/14 19:23:38 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/15 19:52:26 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,57 +62,64 @@ void	split_tokens(t_token *tokens, t_minishell *minishell)
 
 int	setup_redirections(t_token *tokens, t_minishell *minishell)
 {
-	int		i;
 	t_token	*current;
 
-	i = 0;
 	current = tokens;
 	while (current)
 	{
-		if (current->type == T_REDIR_OUT)
+		if (current->type == T_REDIR_IN)
 		{
-			minishell->fd = open(current->next->value, O_RDONLY);
-			if (minishell->fd < 0)
+			minishell->input_fd = open(current->next->value, O_RDONLY);
+			if (minishell->input_fd < 0)
 				return (perror(current->next->value), -1);
-			if (dup2(minishell->fd, STDIN_FILENO) < 0)
+			if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
 			{
 				perror("dup2");
-				close(minishell->fd);
+				close(minishell->input_fd);
 				return (-1);
 			}
-			close(minishell->fd);
+			close(minishell->input_fd);
 		}
-		else if (current->type == T_REDIR_IN)
+		else if (current->type == T_REDIR_OUT)
 		{
-			minishell->fd = open(current->next->value,
+			minishell->output_fd = open(current->next->value,
 					O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (minishell->fd < 0)
+			if (minishell->output_fd < 0)
 				return (perror(current->next->value), -1);
-			if (!is_a_builtins(minishell->cmds->args[0]))
-			// Check si y'a un pipe aussi
+			if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
 			{
-				if (dup2(minishell->fd, STDOUT_FILENO) < 0)
-				{
-					perror("dup2");
-					close(minishell->fd);
-					return (-1);
-				}
-				close(minishell->fd);
+				perror("dup2");
+				close(minishell->output_fd);
+				return (-1);
 			}
+			close(minishell->output_fd);
 		}
 		else if (current->type == T_APPEND)
 		{
-			minishell->fd = open(current->next->value,
+			minishell->output_fd = open(current->next->value,
 					O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (minishell->fd < 0)
+			if (minishell->output_fd < 0)
 				return (perror(current->next->value), -1);
-			if (dup2(minishell->fd, STDOUT_FILENO) < 0)
+			if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
 			{
 				perror("dup2");
-				close(minishell->fd);
+				close(minishell->output_fd);
 				return (-1);
 			}
-			close(minishell->fd);
+			close(minishell->output_fd);
+		}
+		else if (current->type == T_HEREDOC)
+		{
+			create_heredoc(current->next->value, minishell);
+			if (minishell->input_fd < 0)
+				return (-1);
+			if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
+			{
+				perror("dup2");
+				close(minishell->input_fd);
+				return (-1);
+			}
+			close(minishell->input_fd);
 		}
 		current = current->next;
 	}
@@ -124,34 +131,27 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	pid_t	pid;
 	int		status;
 
-	if (is_a_builtins(cmds->args[0]))
+	status = 0;
+	pid = fork();
+	if (pid == 0)
 	{
 		if (setup_redirections(minishell->tokens, minishell) < 0)
-			printf("coucou");
-		exec_builtins(minishell);
+			exit(1);
+		if (is_a_builtins(cmds->args[0]))
+			exit(exec_builtins(minishell));
+		else
+			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
+				minishell->envp_tab);
+		perror("execve");
+		clean_error(NULL, minishell);
 	}
 	else
 	{
-		pid = fork();
-		// printf("pid : %d\n", pid);
-		if (pid == 0)
-		{
-			if (setup_redirections(minishell->tokens, minishell) < 0)
-				printf("coucou");
-			// changer exec-builtins par minishell->cmd->args,
-			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
-				minishell->envp_tab);
-			perror("execve");
-			clean_error(NULL, minishell);
-		}
-		else
-		{
-			waitpid(pid, &status, 0);
-			if (WIFEXITED(status))
-				minishell->error_code = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				minishell->error_code = 128 + WTERMSIG(status);
-		}
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			minishell->error_code = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			minishell->error_code = 128 + WTERMSIG(status);
 	}
 	return ;
 }

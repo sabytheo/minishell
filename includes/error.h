@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:33:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/06 18:44:38 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/15 19:04:41 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,6 @@
 # define E_PARS_OPE_D "minishell: syntax error near unexpected token '%s'\n"
 # define E_PARS_OPE_E "minishell: syntax error near unexpected token '\\n'\n"
 # define E_PARS_CMD_NF "minishell: %s: command not found\n"
+# define E_EXPORT_ARG "bash: export '%s': is not a valid identifier\n"
 
 #endif

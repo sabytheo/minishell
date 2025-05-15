@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/14 18:05:21 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/15 19:42:34 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_minishell
 	bool						is_running;
 	t_token						*tokens;
 	t_expand					*expand;
+	t_envp						*export;
 	t_envp						*envp;
 	t_cmds						*cmds;
 
@@ -151,6 +152,7 @@ void							ft_cd(t_cmds **cmds);
 void							ft_pwd(void);
 void							ft_env(int fd, t_minishell *minishell);
 void							ft_export(t_minishell *minishell);
+void							ft_unset(t_minishell *minishell);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);

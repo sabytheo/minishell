@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 15:35:18 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/15 19:46:57 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,23 @@ void	copy_envp(char **envp, t_minishell *minishell)
 
 void	init_minishell(t_minishell *minishell, char **envp)
 {
-	t_token		*token;
+	t_token		*tokens;
 	t_cmds		*cmds;
 	t_expand	*expand;
 	t_envp		*envp_copy;
+	t_envp		*export;
 
-	token = NULL;
+	tokens = NULL;
 	cmds = NULL;
 	expand = NULL;
 	envp_copy = NULL;
+	export = NULL;
 	ft_bzero(minishell, sizeof(t_minishell));
-	minishell->tokens = token;
+	minishell->tokens = tokens;
 	minishell->cmds = cmds;
 	minishell->expand = expand;
 	minishell->envp = envp_copy;
+	minishell->export = export;
 	minishell->is_running = true;
 	minishell->error_code = 0;
 	minishell->fd = 0;

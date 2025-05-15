@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:07:22 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/14 16:47:56 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/15 19:33:48 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,7 @@ void	chainedlst_to_tab(t_minishell *minishell, t_envp *envp)
 		current = current->next;
 	}
 	envp_tab_copy[i] = NULL;
+	if (minishell->envp_tab)
+		free(minishell->envp_tab);
 	minishell->envp_tab = envp_tab_copy;
 }

@@ -6,7 +6,7 @@
 #    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/14 18:08:06 by egache           ###   ########.fr        #
+#    Updated: 2025/05/15 16:30:26 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ SRCS_BUILTINS  :=	builtins/echo.c \
 					builtins/cd.c \
 					builtins/pwd.c \
 					builtins/env.c \
-					builtins/export.c
+					builtins/export.c \
+					builtins/unset.c
 
 SRCS		:=		main.c \
 					init.c \

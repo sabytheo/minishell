@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/14 18:19:21 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/15 16:25:44 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,6 @@ void	exec_builtins(t_minishell *minishell)
 	else if (ft_strncmp(cmds->args[0], "pwd", len) == 0 && len == 3)
 		ft_pwd();
 	else if (ft_strncmp(cmds->args[0], "unset", len) == 0 && len == 5)
-		return ;
+		ft_unset(minishell);
 	return ;
 }

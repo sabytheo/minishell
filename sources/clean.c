@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/14 16:48:00 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/15 14:32:33 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ void	free_minishell(t_minishell *minishell)
 	// line = 0;
 	if (!minishell)
 		return ;
+	// if (minishell->envp_tab)
+	// 	free_tab(minishell->envp_tab);
 	if (minishell->envp)
 		free_envp(&minishell->envp);
 	if (minishell->tokens)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 10:37:49 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 12:33:17 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,10 +154,10 @@ void							signal_initialisation(void);
 void							signal_handler(int signum);
 
 // builtins.c --->
-int								ft_echo(int fd, t_cmds **cmds);
-void							ft_cd(t_cmds **cmds);
+void							ft_echo(t_minishell *minishell, t_cmds **cmds);
+void							ft_cd(t_minishell *minishell, t_cmds **cmds);
 void							ft_pwd(void);
-void							ft_env(int fd, t_minishell *minishell);
+void							ft_env(t_minishell *minishell);
 void							ft_export(t_minishell *minishell);
 void							ft_unset(t_minishell *minishell);
 

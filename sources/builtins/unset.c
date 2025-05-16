@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 14:41:43 by egache            #+#    #+#             */
-/*   Updated: 2025/05/15 19:33:55 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/16 12:31:53 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void	ft_unset(t_minishell *minishell)
 				to_delete = current->next;
 				current->next = current->next->next;
 				ft_delnode(to_delete, del_str);
-				// free(minishell->envp_tab);
 				chainedlst_to_tab(minishell, envp);
 			}
 			else

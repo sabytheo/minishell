@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 15:53:03 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 16:54:21 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,30 +22,31 @@ static bool	find_newline(char *str)
 	return (false);
 }
 
-int	ft_echo(int fd, t_cmds **cmds)
+void	ft_echo(t_minishell *minishell, t_cmds **cmds)
 {
 	bool	newline;
 	int		i;
 
+	(void)minishell;
 	newline = false;
 	i = 1;
 	if ((*cmds) == NULL)
-		return (1);
+		return ;
 	newline = find_newline((*cmds)->args[i]);
 	if (newline == true)
 		i++;
 	while ((*cmds)->args[i] != NULL)
 	{
-		ft_putstr_fd((*cmds)->args[i], fd);
+		ft_putstr_fd((*cmds)->args[i], STDOUT_FILENO);
 		if ((*cmds)->args[i + 1] != NULL)
 		{
-			ft_putstr_fd(" ", fd);
+			ft_putstr_fd(" ", STDOUT_FILENO);
 			i++;
 		}
 		else
 			i++;
 	}
 	if (newline == false)
-		ft_putstr_fd("\n", fd);
-	return (0);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	return ;
 }

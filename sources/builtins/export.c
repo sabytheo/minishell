@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 15:44:22 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 16:55:02 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,17 @@ void	add_to_list(t_minishell *minishell, t_envp *list)
 	char	*str;
 
 	current = list;
+	printf("list : %p\n", list);
 	while (current != NULL && current->next != NULL)
+	{
 		current = current->next;
+	}
 	str = ft_strdup(minishell->cmds->args[1]);
+	printf("str : %s\n", str);
 	new = create_node(str);
 	add_node_back(&current, new);
+	current = list;
 }
-
 /* qques leak mais normal -- la liste export ne fonctionne pas atm. */
 
 void	ft_export(t_minishell *minishell)
@@ -86,27 +90,37 @@ void	ft_export(t_minishell *minishell)
 	t_envp	*current;
 
 	minishell->export = ft_calloc(1, sizeof(t_envp));
+	printf("address export : %p\n", minishell->export);
+	printf("address envp   : %p\n", minishell->envp);
 	if (minishell->cmds->args[1] == NULL)
 	{
 		current = minishell->export;
 		printf("caca\n");
-		printf("export -- %s", current->value);
-		while (current && current->next)
+		printf("export -- %s\n", current->value);
+		while (current)
 		{
-			printf("export -- %s", current->value);
+			printf("export %s\n", current->value);
 			current = current->next;
 		}
 		return ;
 	}
 	if (export_parsing(minishell->cmds->args[1]) == 1)
 	{
+		printf("pipi\n");
+		// add_to_list(minishell, minishell->export);
 		add_to_list(minishell, minishell->envp);
-		add_to_list(minishell, minishell->export);
+		print_envp(minishell->envp);
 		chainedlst_to_tab(minishell, minishell->envp);
 	}
 	else if (export_parsing(minishell->cmds->args[1]) == 2)
+	{
+		printf("caca\n");
 		add_to_list(minishell, minishell->export);
+	}
 	else
+	{
+		minishell->error_code = 1;
 		ft_printf_fd(2, E_EXPORT_ARG, minishell->cmds->args[1]);
+	}
 	return ;
 }

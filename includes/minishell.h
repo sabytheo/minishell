@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 09:25:37 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 10:37:49 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ typedef struct s_minishell
 	int							envp_countline;
 	int							fd;
 	bool						is_running;
+	bool						errfound;
+	bool						cmdfound;
 	char						*entry;
 	t_token						*tokens;
 	t_expand					*expand;

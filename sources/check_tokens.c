@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/05/09 15:57:31 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/16 10:40:01 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,29 +70,26 @@ char	*check_syntax(t_minishell *minishell)
 int	check_cmd(t_minishell *minishell)
 {
 	t_token	*current;
-	bool	errfound;
-	bool	cmdfound;
 
 	current = minishell->tokens;
-	errfound = false;
-	cmdfound = false;
 	while (current != NULL)
 	{
-		if (current->type == T_WORD && cmdfound == false && errfound == false)
+		if (current->type == T_WORD && minishell->cmdfound == false
+			&& minishell->errfound == false)
 		{
 			if (is_valid_cmd(current->value, minishell) == true)
-				cmdfound = true;
+				minishell->cmdfound = true;
 			else
 			{
 				minishell->error_code = 127;
-				errfound = true;
+				minishell->errfound = true;
 				ft_printf_fd(2, E_PARS_CMD_NF, current->value);
 			}
 		}
 		if (current->type == T_PIPE)
 		{
-			cmdfound = false;
-			errfound = false;
+			minishell->cmdfound = false;
+			minishell->errfound = false;
 		}
 		current = current->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 09:20:06 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 10:43:30 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,14 +136,16 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	if (pid == 0)
 	{
 		if (setup_redirections(minishell->tokens, minishell) < 0)
-			exit(1);
+			exit_and_clear_child(minishell->error_code, minishell);
 		if (is_a_builtins(cmds->args[0]))
 			exit_and_clear_child(exec_builtins(minishell), minishell);
-		else
+		else if (minishell->cmdfound == true)
+		{
 			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
 				minishell->envp_tab);
-		perror("execve");
-		clean_error(NULL, minishell);
+			perror("execve");
+			exit_and_clear_child(status, minishell);
+		}
 	}
 	else
 	{

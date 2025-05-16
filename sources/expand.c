@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 11:57:14 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 10:46:28 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static char	*get_values(char *name, t_envp *envp, t_minishell *minishell)
 	if (!name)
 		return (ft_strdup(""));
 	if (ft_strncmp(name, "?", 1) == 0)
-		return (ft_strdup(ft_itoa(minishell->error_code)));
+		return (ft_itoa(minishell->error_code));
 	len = ft_strlen(name);
 	while (envp)
 	{

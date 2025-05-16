@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/14 19:23:38 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/16 08:46:09 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,57 +62,64 @@ void	split_tokens(t_token *tokens, t_minishell *minishell)
 
 int	setup_redirections(t_token *tokens, t_minishell *minishell)
 {
-	int		i;
 	t_token	*current;
 
-	i = 0;
 	current = tokens;
 	while (current)
 	{
-		if (current->type == T_REDIR_OUT)
+		if (current->type == T_REDIR_IN)
 		{
-			minishell->fd = open(current->next->value, O_RDONLY);
-			if (minishell->fd < 0)
+			minishell->input_fd = open(current->next->value, O_RDONLY);
+			if (minishell->input_fd < 0)
 				return (perror(current->next->value), -1);
-			if (dup2(minishell->fd, STDIN_FILENO) < 0)
+			if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
 			{
 				perror("dup2");
-				close(minishell->fd);
+				close(minishell->input_fd);
 				return (-1);
 			}
-			close(minishell->fd);
+			close(minishell->input_fd);
 		}
-		else if (current->type == T_REDIR_IN)
+		else if (current->type == T_REDIR_OUT)
 		{
-			minishell->fd = open(current->next->value,
+			minishell->output_fd = open(current->next->value,
 					O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (minishell->fd < 0)
+			if (minishell->output_fd < 0)
 				return (perror(current->next->value), -1);
-			if (!is_a_builtins(minishell->cmds->args[0]))
-			// Check si y'a un pipe aussi
+			if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
 			{
-				if (dup2(minishell->fd, STDOUT_FILENO) < 0)
-				{
-					perror("dup2");
-					close(minishell->fd);
-					return (-1);
-				}
-				close(minishell->fd);
+				perror("dup2");
+				close(minishell->output_fd);
+				return (-1);
 			}
+			close(minishell->output_fd);
 		}
 		else if (current->type == T_APPEND)
 		{
-			minishell->fd = open(current->next->value,
+			minishell->output_fd = open(current->next->value,
 					O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (minishell->fd < 0)
+			if (minishell->output_fd < 0)
 				return (perror(current->next->value), -1);
-			if (dup2(minishell->fd, STDOUT_FILENO) < 0)
+			if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
 			{
 				perror("dup2");
-				close(minishell->fd);
+				close(minishell->output_fd);
 				return (-1);
 			}
-			close(minishell->fd);
+			close(minishell->output_fd);
+		}
+		else if (current->type == T_HEREDOC)
+		{
+			create_heredoc(current->next->value, minishell);
+			if (minishell->input_fd < 0)
+				return (-1);
+			if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
+			{
+				perror("dup2");
+				close(minishell->input_fd);
+				return (-1);
+			}
+			close(minishell->input_fd);
 		}
 		current = current->next;
 	}

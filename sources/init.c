@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/15 19:46:57 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/16 08:47:21 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	minishell->error_code = 0;
 	minishell->fd = 0;
 	minishell->input_fd = STDIN_FILENO;
+	minishell->output_fd = STDOUT_FILENO;
+	minishell->heredoc_fd = STDOUT_FILENO;
 	minishell->launch_mode = 0;
 	copy_envp(envp, minishell);
 	minishell->envp_tab = NULL;

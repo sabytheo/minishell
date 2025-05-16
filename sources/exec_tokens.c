@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 15:36:35 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 21:46:33 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	split_tokens(t_token *tokens, t_minishell *minishell)
 	return ;
 }
 
-int	setup_redirections(t_token *tokens, t_minishell *minishell)
+void	setup_redirections(t_token *tokens, t_minishell *minishell)
 {
 	t_token	*current;
 
@@ -68,45 +68,15 @@ int	setup_redirections(t_token *tokens, t_minishell *minishell)
 	while (current)
 	{
 		if (current->type == T_REDIR_IN)
-		{
-			if (redir_in(minishell, current) < 0)
-				return (-1);
-		}
+			redir_in(minishell, current);
 		else if (current->type == T_REDIR_OUT)
-		{
-			if (redir_out(minishell, current) < 0)
-				return (-1);
-		}
+			redir_out(minishell, current);
 		else if (current->type == T_APPEND)
-		{
-			minishell->output_fd = open(current->next->value,
-					O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (minishell->output_fd < 0)
-				return (perror(current->next->value), -1);
-			if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
-			{
-				perror("dup2");
-				close(minishell->output_fd);
-				return (-1);
-			}
-			close(minishell->output_fd);
-		}
+			redir_append(minishell, current);
 		else if (current->type == T_HEREDOC)
-		{
-			create_heredoc(current->next->value, minishell);
-			if (minishell->input_fd < 0)
-				return (-1);
-			if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
-			{
-				perror("dup2");
-				close(minishell->input_fd);
-				return (-1);
-			}
-			close(minishell->input_fd);
-		}
+			redir_heredoc(minishell, current);
 		current = current->next;
 	}
-	return (0);
 }
 
 void	reset_redir(t_minishell *minishell)
@@ -141,16 +111,17 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	if (is_a_builtins(cmds->args[0]))
 	{
 		setup_redirections(minishell->tokens, minishell);
-		exec_builtins(minishell);
+		if (minishell->input_fd >= 0 && minishell->output_fd >= 0)
+			exec_builtins(minishell);
 		reset_redir(minishell);
 		return ;
 	}
 	pid = fork();
 	if (pid == 0)
 	{
-		if (setup_redirections(minishell->tokens, minishell) < 0)
-			exit_and_clear_child(minishell->error_code, minishell);
-		if (minishell->cmdfound == true)
+		setup_redirections(minishell->tokens, minishell);
+		if (minishell->cmdfound == true && minishell->input_fd >= 0
+			&& minishell->output_fd >= 0)
 		{
 			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
 				minishell->envp_tab);

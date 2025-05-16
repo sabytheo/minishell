@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 18:04:58 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/16 21:24:26 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef struct s_minishell
 	char						*error_item;
 	char						**envp_tab;
 	int							envp_countline;
-	int 						fd;
+	int							fd;
 	bool						is_running;
 	bool						errfound;
 	bool						cmdfound;
@@ -187,6 +187,10 @@ int								get_cmds_size(t_token *tokens);
 int								redir_in(t_minishell *minishell,
 									t_token *current);
 int								redir_out(t_minishell *minishell,
+									t_token *current);
+int								redir_append(t_minishell *minishell,
+									t_token *current);
+int								redir_heredoc(t_minishell *minishell,
 									t_token *current);
 
 #endif

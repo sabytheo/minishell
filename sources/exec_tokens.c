@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 10:43:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 15:09:01 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,30 +69,13 @@ int	setup_redirections(t_token *tokens, t_minishell *minishell)
 	{
 		if (current->type == T_REDIR_IN)
 		{
-			minishell->input_fd = open(current->next->value, O_RDONLY);
-			if (minishell->input_fd < 0)
-				return (perror(current->next->value), -1);
-			if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
-			{
-				perror("dup2");
-				close(minishell->input_fd);
+			if (redir_in(minishell, current) < 0)
 				return (-1);
-			}
-			close(minishell->input_fd);
 		}
 		else if (current->type == T_REDIR_OUT)
 		{
-			minishell->output_fd = open(current->next->value,
-					O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (minishell->output_fd < 0)
-				return (perror(current->next->value), -1);
-			if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
-			{
-				perror("dup2");
-				close(minishell->output_fd);
+			if (redir_out(minishell, current) < 0)
 				return (-1);
-			}
-			close(minishell->output_fd);
 		}
 		else if (current->type == T_APPEND)
 		{
@@ -126,20 +109,48 @@ int	setup_redirections(t_token *tokens, t_minishell *minishell)
 	return (0);
 }
 
+void	reset_redir(t_minishell *minishell)
+{
+	if (minishell->input_fd > 2 && minishell->saved_inputfd > 2)
+	{
+		if (dup2(minishell->saved_inputfd, STDIN_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->saved_inputfd);
+		}
+		close(minishell->saved_inputfd);
+		minishell->saved_inputfd = STDIN_FILENO;
+	}
+	if (minishell->output_fd > 2 && minishell->saved_outputfd > 2)
+	{
+		if (dup2(minishell->saved_outputfd, STDOUT_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->saved_outputfd);
+		}
+		close(minishell->saved_outputfd);
+		minishell->saved_outputfd = STDOUT_FILENO;
+	}
+}
 void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 {
 	pid_t	pid;
 	int		status;
 
 	status = 0;
+	if (is_a_builtins(cmds->args[0]))
+	{
+		setup_redirections(minishell->tokens, minishell);
+		exec_builtins(minishell);
+		reset_redir(minishell);
+		return ;
+	}
 	pid = fork();
 	if (pid == 0)
 	{
 		if (setup_redirections(minishell->tokens, minishell) < 0)
 			exit_and_clear_child(minishell->error_code, minishell);
-		if (is_a_builtins(cmds->args[0]))
-			exit_and_clear_child(exec_builtins(minishell), minishell);
-		else if (minishell->cmdfound == true)
+		if (minishell->cmdfound == true)
 		{
 			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
 				minishell->envp_tab);

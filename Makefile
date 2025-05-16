@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/16 09:26:33 by tsaby            ###   ########.fr        #
+#    Updated: 2025/05/16 13:06:06 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ SRCS		:=		main.c \
 					exec_tokens.c \
 					exec_tokens_utils.c \
 					heredoc.c \
+					redirection.c \
 					$(SRCS_BUILTINS)
 
 #SRCS_BONUS	:=

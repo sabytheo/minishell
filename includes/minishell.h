@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 10:37:49 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 14:35:07 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ typedef struct s_minishell
 	int							launch_mode;
 	int							input_fd;
 	int							output_fd;
+	int							saved_inputfd;
+	int							saved_outputfd;
 	int							heredoc_fd;
 	int							error_code;
 	char						*error_item;
@@ -179,5 +181,11 @@ int								create_heredoc(char *eof,
 t_cmds							*create_cmds(char **val);
 void							add_cmds_back(t_cmds **list_cmds, t_cmds *new);
 int								get_cmds_size(t_token *tokens);
+
+// redirection.c --->
+int								redir_in(t_minishell *minishell,
+									t_token *current);
+int								redir_out(t_minishell *minishell,
+									t_token *current);
 
 #endif

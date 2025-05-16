@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 09:21:39 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 15:44:13 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static bool	find_newline(char *str)
 
 int	ft_echo(int fd, t_cmds **cmds)
 {
-	bool	newline;
-	int		i;
+	bool newline;
+	int i;
 
 	newline = false;
 	i = 1;
@@ -36,14 +36,19 @@ int	ft_echo(int fd, t_cmds **cmds)
 		i++;
 	while ((*cmds)->args[i] != NULL)
 	{
-		ft_putstr_fd((*cmds)->args[i], fd);
+		ft_putstr_fd((*cmds)->args[i], STDOUT_FILENO);
 		if ((*cmds)->args[i + 1] != NULL)
 		{
-			ft_putstr_fd(" ", fd);
+			ft_putstr_fd(" ", STDOUT_FILENO);
 			i++;
 		}
 		else
+		{
+			if (newline == false)
+				ft_putstr_fd("\n", STDOUT_FILENO);
 			i++;
+			return (0);
+		}
 	}
 	if (newline == false)
 		ft_putstr_fd("\n", fd);

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 10:31:08 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 15:39:20 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,5 +126,7 @@ void	free_minishell(t_minishell *minishell)
 		free_cmds(&minishell->cmds);
 	rl_clear_history();
 	if (minishell->input_fd > 2)
+	close(minishell->input_fd);
+	if (minishell->output_fd > 2)
 		close(minishell->input_fd);
 }

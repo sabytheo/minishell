@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:04:02 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 09:28:32 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 15:39:39 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ t_token_type	get_type(char *str)
 		return (T_REDIR_IN);
 	if (ft_strncmp(str, ">", 2) == 0)
 		return (T_REDIR_OUT);
+	if (ft_strncmp(str, "<", 2) == 0)
+		return (T_REDIR_IN);
 	return (T_WORD);
 }
 

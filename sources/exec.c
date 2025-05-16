@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 14:54:06 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 15:38:35 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,10 @@ int	exec_builtins(t_minishell *minishell)
 	int		fd;
 	t_cmds	*cmds;
 
-	if (minishell->fd != 0)
-		fd = minishell->fd;
-	else
-		fd = STDOUT_FILENO;
+	// if (minishell->fd != 0)
+	// 	fd = minishell->fd;
+	// else
+	// 	fd = STDOUT_FILENO;
 	cmds = minishell->cmds;
 	len = ft_strlen(cmds->args[0]);
 	if (ft_strncmp(cmds->args[0], "cd", len) == 0 && len == 2)

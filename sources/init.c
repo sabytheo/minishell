@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 14:51:08 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 15:41:46 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	minishell->export = export;
 	minishell->is_running = true;
 	minishell->error_code = 0;
-	minishell->fd = 0;
 	minishell->input_fd = STDIN_FILENO;
 	minishell->output_fd = STDOUT_FILENO;
 	minishell->heredoc_fd = STDOUT_FILENO;

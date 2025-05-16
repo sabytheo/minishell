@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 15:41:46 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 18:12:56 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,38 +42,25 @@ void	add_node_back(t_envp **list_envp, t_envp *new)
 void	copy_envp(char **envp, t_minishell *minishell)
 {
 	int		i;
-	t_envp	*new;
+	t_envp	*new_envp;
+	t_envp	*new_export;
 
 	if (!envp)
 		return ;
 	i = 0;
 	while (envp[i])
 	{
-		new = create_node(ft_strdup(envp[i]));
-		add_node_back(&minishell->envp, new);
+		new_envp = create_node(ft_strdup(envp[i]));
+		new_export = create_node(ft_strdup(envp[i]));
+		add_node_back(&minishell->envp, new_envp);
+		add_node_back(&minishell->export, new_export);
 		i++;
 	}
 }
 
 void	init_minishell(t_minishell *minishell, char **envp)
 {
-	t_token		*tokens;
-	t_cmds		*cmds;
-	t_expand	*expand;
-	t_envp		*envp_copy;
-	t_envp		*export;
-
-	tokens = NULL;
-	cmds = NULL;
-	expand = NULL;
-	envp_copy = NULL;
-	export = NULL;
 	ft_bzero(minishell, sizeof(t_minishell));
-	minishell->tokens = tokens;
-	minishell->cmds = cmds;
-	minishell->expand = expand;
-	minishell->envp = envp_copy;
-	minishell->export = export;
 	minishell->is_running = true;
 	minishell->error_code = 0;
 	minishell->input_fd = STDIN_FILENO;
@@ -85,6 +72,4 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	minishell->saved_inputfd = 0;
 	minishell->saved_outputfd = 1;
 	copy_envp(envp, minishell);
-	minishell->envp_tab = NULL;
-	// print_envp(minishell->envp);
 }

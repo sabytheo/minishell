@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 15:39:20 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 18:17:00 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	exit_and_clear_child(int error_code,t_minishell *minishell)
 		free(minishell->entry);
 	if (minishell->envp)
 		free_envp(&minishell->envp);
+	if (minishell->export)
+		free_envp(&minishell->export);
 	if (minishell->envp_tab)
 		free(minishell->envp_tab);
 	exit(error_code);
@@ -120,6 +122,8 @@ void	free_minishell(t_minishell *minishell)
 	// 	free_tab(minishell->envp_tab);
 	if (minishell->envp)
 		free_envp(&minishell->envp);
+	if (minishell->export)
+		free_envp(&minishell->export);
 	if (minishell->tokens)
 		free_tokens(&minishell->tokens);
 	if (minishell->cmds)

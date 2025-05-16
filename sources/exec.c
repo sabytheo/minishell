@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 15:55:35 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 17:31:06 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,14 @@ int	exec_builtins(t_minishell *minishell)
 	else
 		fd = STDOUT_FILENO;
 	cmds = minishell->cmds;
+	minishell->error_code = 0;
 	len = ft_strlen(cmds->args[0]);
 	if (ft_strncmp(cmds->args[0], "cd", len) == 0 && len == 2)
-		ft_cd(&cmds);
+		ft_cd(minishell, &cmds);
 	if (ft_strncmp(cmds->args[0], "echo", len) == 0 && len == 4)
-		ft_echo(fd, &cmds);
+		ft_echo(minishell, &cmds);
 	else if (ft_strncmp(cmds->args[0], "env", len) == 0 && len == 3)
-		ft_env(fd, minishell);
+		ft_env(minishell);
 	else if (ft_strncmp(cmds->args[0], "exit", len) == 0 && len == 4)
 		return (0);
 	else if (ft_strncmp(cmds->args[0], "export", len) == 0 && len == 6)

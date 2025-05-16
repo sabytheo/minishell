@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 08:46:09 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 08:51:59 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,34 +131,27 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	pid_t	pid;
 	int		status;
 
-	if (is_a_builtins(cmds->args[0]))
+	status = 0;
+	pid = fork();
+	if (pid == 0)
 	{
 		if (setup_redirections(minishell->tokens, minishell) < 0)
-			printf("coucou");
-		exec_builtins(minishell);
+			exit(1);
+		if (is_a_builtins(cmds->args[0]))
+			exit(exec_builtins(minishell));
+		else
+			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
+				minishell->envp_tab);
+		perror("execve");
+		clean_error(NULL, minishell);
 	}
 	else
 	{
-		pid = fork();
-		// printf("pid : %d\n", pid);
-		if (pid == 0)
-		{
-			if (setup_redirections(minishell->tokens, minishell) < 0)
-				printf("coucou");
-			// changer exec-builtins par minishell->cmd->args,
-			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
-				minishell->envp_tab);
-			perror("execve");
-			clean_error(NULL, minishell);
-		}
-		else
-		{
-			waitpid(pid, &status, 0);
-			if (WIFEXITED(status))
-				minishell->error_code = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				minishell->error_code = 128 + WTERMSIG(status);
-		}
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			minishell->error_code = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			minishell->error_code = 128 + WTERMSIG(status);
 	}
 	return ;
 }

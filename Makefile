@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
+#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/15 16:30:26 by egache           ###   ########.fr        #
+#    Updated: 2025/05/16 09:26:33 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRCS		:=		main.c \
 					exec.c \
 					exec_tokens.c \
 					exec_tokens_utils.c \
+					heredoc.c \
 					$(SRCS_BUILTINS)
 
 #SRCS_BONUS	:=

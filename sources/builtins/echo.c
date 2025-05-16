@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/05/14 15:56:29 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/16 09:21:39 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static bool	find_newline(char *str)
 	return (false);
 }
 
-void	ft_echo(int fd, t_cmds **cmds)
+int	ft_echo(int fd, t_cmds **cmds)
 {
 	bool	newline;
 	int		i;
@@ -30,7 +30,7 @@ void	ft_echo(int fd, t_cmds **cmds)
 	newline = false;
 	i = 1;
 	if ((*cmds) == NULL)
-		return ;
+		return (1);
 	newline = find_newline((*cmds)->args[i]);
 	if (newline == true)
 		i++;
@@ -47,5 +47,5 @@ void	ft_echo(int fd, t_cmds **cmds)
 	}
 	if (newline == false)
 		ft_putstr_fd("\n", fd);
-	return ;
+	return (0);
 }

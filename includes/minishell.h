@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 08:46:29 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/16 09:25:37 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_minishell
 	int							envp_countline;
 	int							fd;
 	bool						is_running;
+	char						*entry;
 	t_token						*tokens;
 	t_expand					*expand;
 	t_envp						*export;
@@ -85,6 +86,8 @@ void							free_tokens(t_token **tokens);
 void							free_tab(char **tab);
 void							free_cmds(t_cmds **cmds);
 void							free_envp(t_envp **envp);
+int								exit_and_clear_child(int error_code,
+									t_minishell *minishell);
 
 // main.c --->
 void							clean_error(char *error_message,
@@ -149,7 +152,7 @@ void							signal_initialisation(void);
 void							signal_handler(int signum);
 
 // builtins.c --->
-void							ft_echo(int fd, t_cmds **cmds);
+int								ft_echo(int fd, t_cmds **cmds);
 void							ft_cd(t_cmds **cmds);
 void							ft_pwd(void);
 void							ft_env(int fd, t_minishell *minishell);
@@ -158,12 +161,16 @@ void							ft_unset(t_minishell *minishell);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);
-void							exec_builtins(t_minishell *minishell);
+int								exec_builtins(t_minishell *minishell);
 void							exec_tokens(t_minishell *minishell);
 
 // exec_tokens.c --->
 
 void							split_tokens(t_token *tokens,
+									t_minishell *minishell);
+
+// exec_tokens.c --->
+int								create_heredoc(char *eof,
 									t_minishell *minishell);
 
 // exec_tokens_utils.c --->

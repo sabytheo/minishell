@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/15 14:32:33 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/16 09:35:30 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	exit_and_clear_child(int error_code,t_minishell *minishell)
+{
+	if (minishell->cmds)
+		free_cmds(&minishell->cmds);
+	if (minishell->tokens)
+		free_tokens(&minishell->tokens);
+	if (minishell->entry)
+		free(minishell->entry);
+	if (minishell->envp)
+		free_envp(&minishell->envp);
+	if (minishell->envp_tab)
+		free(minishell->envp_tab);
+	exit(error_code);
+}
 
 void	free_tab(char **tab)
 {

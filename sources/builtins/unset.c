@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 14:41:43 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 12:31:53 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/20 19:13:50 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,3 +82,32 @@ void	ft_unset(t_minishell *minishell)
 // 	printf("----- %s\n", current->value);
 // 	current = current->next;
 // }
+
+
+/*
+ft_export :
+- Check si arg
+	- Si non juste display export; (voir photo yves)
+
+- Check si '=' (export parsing) (SEPARER EN 2 : 1 partie ONLY export 1 partie env & export)
+	- Si oui -> export ET env
+		- Check si export existe deja
+			-strncmp len de l'argument
+		- Check si env existe deja
+			- strcmp
+	- Si non -> export ONLY
+		- Check si export existe deja
+			-strncmp len de l'argument
+	Si toute la string existe deja.
+		- Ne rien faire
+	Sinon check si la variable existe deja (check jusqu'au egal)
+		- Si existe deja : remplacer la string dans le noeud actuel
+		- Sinon : rajouter un noeud
+
+
+SALUT=caca
+
+SALUT=cac
+
+
+*/

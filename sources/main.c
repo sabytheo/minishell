@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 15:41:59 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/21 18:53:32 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,9 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		add_history(minishell.entry);
 		tokens(&minishell, minishell.entry);
-		// exec_builtins(&minishell);
 		free_cmds(&minishell.cmds);
 		free_tokens(&minishell.tokens);
-		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
-		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
 		free(minishell.entry);
-		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
 	}
 	free(minishell.envp_tab);
 	free_minishell(&minishell);

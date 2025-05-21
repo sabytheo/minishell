@@ -13,6 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include "error.h"
 # include "expand.h"
 # include "ft_printf.h"
@@ -24,7 +25,6 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdbool.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/time.h>
 # include <sys/wait.h>

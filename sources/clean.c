@@ -3,16 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 18:17:00 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/21 18:43:49 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	exit_and_clear_child(int error_code,t_minishell *minishell)
+void	close_fds(t_minishell *minishell)
+{
+	if (minishell->saved_inputfd >= 0)
+	{
+		close(minishell->saved_inputfd);
+		minishell->saved_inputfd = -1;
+	}
+	if (minishell->saved_outputfd >= 0)
+	{
+		close(minishell->saved_outputfd);
+		minishell->saved_outputfd = -1;
+	}
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
+}
+
+int	exit_and_clear_child(int error_code, t_minishell *minishell)
 {
 	if (minishell->cmds)
 		free_cmds(&minishell->cmds);
@@ -26,8 +43,10 @@ int	exit_and_clear_child(int error_code,t_minishell *minishell)
 		free_envp(&minishell->export);
 	if (minishell->envp_tab)
 		free(minishell->envp_tab);
+	close_fds(minishell);
 	exit(error_code);
 }
+
 
 void	free_tab(char **tab)
 {
@@ -130,7 +149,7 @@ void	free_minishell(t_minishell *minishell)
 		free_cmds(&minishell->cmds);
 	rl_clear_history();
 	if (minishell->input_fd > 2)
-	close(minishell->input_fd);
+		close(minishell->input_fd);
 	if (minishell->output_fd > 2)
 		close(minishell->input_fd);
 }

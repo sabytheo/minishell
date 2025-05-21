@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/05/20 20:25:49 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/21 16:50:17 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,11 @@ static int	export_parsing(char *str)
 {
 	int	i;
 
-	if (ft_isalpha(str[0] == 0))
+	if (str[0] != '_' && ft_isalpha(str[0]) == 0)
+	{
+		printf("caca");
 		return (1);
+	}
 	i = 1;
 	while (str[i])
 	{
@@ -52,20 +55,16 @@ static int	export_parsing(char *str)
 		}
 		else
 		{
-			if (valid_id(str[i]) == false || ft_isalpha(str[0] == 0))
+			if (valid_id(str[i]) == false || ft_isalpha(str[0]) == 0)
+			{
+				printf("pipi");
 				return (1);
+			}
 			i++;
 		}
 	}
 	return (2);
 }
-/*
-	Si SALUT 		-> puis SALUT=coucou 	-> SALUT=coucou remplace SALUT (dans env et export)
-	Si SALUT=coucou
-						-> puis SALUT 				-> SALUT ne remplace pas SALUT=coucou (dans env et export)
-	Si SALUT=coucou -> puis SALUT=pascoucou
-		-> SALUT=pascoucou remplace SALUT=coucou (dans env et export)
-*/
 
 void	add_to_list(t_minishell *minishell, t_envp *list)
 {
@@ -111,37 +110,6 @@ int	ft_strlen_equal(char *str)
 	return (i);
 }
 
-bool	replace_export(t_minishell *minishell)
-{
-	t_envp	*current;
-
-	current = minishell->envp;
-	while (current != NULL)
-	{
-		if (ft_strncmp(minishell->cmds->args[1], current->value,
-				(ft_strlen_equal(current->value) + 1)) == 0)
-		{
-			free(current->value);
-			current->value = ft_strdup(minishell->cmds->args[1]);
-			chainedlst_to_tab(minishell, minishell->envp);
-		}
-		current = current->next;
-	}
-	current = minishell->export;
-	while (current != NULL)
-	{
-		if (ft_strncmp(minishell->cmds->args[1], current->value,
-				ft_strlen_equal(current->value)) == 0)
-		{
-			free(current->value);
-			current->value = ft_strdup(minishell->cmds->args[1]);
-			return (true);
-		}
-		current = current->next;
-	}
-	return (false);
-}
-
 bool	already_exist(t_minishell *minishell)
 {
 	t_envp	*current;
@@ -166,38 +134,64 @@ bool	already_exist(t_minishell *minishell)
 		while (current)
 		{
 			if (ft_strncmp(minishell->cmds->args[1], current->value,
-					ft_strlen_equal(minishell->cmds->args[1]) == 0))
-				return (true);
+					ft_strlen_equal(current->value)) == 0)
+			{
+				if (ft_strncmp(minishell->cmds->args[1], current->value,
+						ft_strlen_equal(minishell->cmds->args[1])) == 0)
+					return (true);
+			}
+			current = current->next;
 		}
 	}
 	return (false);
 }
 
-// void	ft_export(t_minishell *minishell)
-// {
-// 	if (display_export(minishell) == true)
-// 		return ;
-// 	if (export_parsing(minishell->cmds->args[1]) == 0)
-// 	{
-// 		if (replace_export(minishell) == true)
-// 			return ;
-// 		add_to_list(minishell, minishell->envp);
-// 		add_to_list(minishell, minishell->export);
-// 		chainedlst_to_tab(minishell, minishell->envp);
-// 	}
-// 	else if (export_parsing(minishell->cmds->args[1]) == 2)
-// 	{
-// 		if (replace_export(minishell) == true)
-// 			return ;
-// 		add_to_list(minishell, minishell->export);
-// 	}
-// 	else
-// 	{
-// 		minishell->error_code = 1;
-// 		ft_printf_fd(2, E_EXPORT_ARG, minishell->cmds->args[1]);
-// 	}
-// 	return ;
-// }
+bool	replace_export(t_minishell *minishell)
+{
+	t_envp	*current;
+	int		len;
+
+	current = minishell->export;
+	while (current)
+	{
+		if (ft_strlen_equal(current->value) > ft_strlen_equal(minishell->cmds->args[1]))
+			len = ft_strlen_equal(current->value);
+		else
+			len = ft_strlen_equal(minishell->cmds->args[1]);
+		if (ft_strncmp(current->value, minishell->cmds->args[1], len) == 0)
+		{
+			free(current->value);
+			current->value = ft_strdup(minishell->cmds->args[1]);
+			return (true);
+		}
+		current = current->next;
+	}
+	return (false);
+}
+
+bool	replace_envp(t_minishell *minishell)
+{
+	t_envp	*current;
+	int		len;
+
+	current = minishell->envp;
+	while (current)
+	{
+		if (ft_strlen_equal(current->value) > ft_strlen_equal(minishell->cmds->args[1]))
+			len = ft_strlen_equal(current->value);
+		else
+			len = ft_strlen_equal(minishell->cmds->args[1]);
+		if (ft_strncmp(current->value, minishell->cmds->args[1],
+				ft_strlen_equal(minishell->cmds->args[1])) == 0)
+		{
+			free(current->value);
+			current->value = ft_strdup(minishell->cmds->args[1]);
+			return (true);
+		}
+		current = current->next;
+	}
+	return (false);
+}
 
 void	ft_export(t_minishell *minishell)
 {
@@ -205,16 +199,20 @@ void	ft_export(t_minishell *minishell)
 		return ;
 	if (already_exist(minishell) == true)
 		return ;
+	printf("export parsing : %d\n", export_parsing(minishell->cmds->args[1]));
 	if (export_parsing(minishell->cmds->args[1]) == 0)
 	{
-		if (replace_export(minishell) == true)
-			return ;
-		add_to_list(minishell, minishell->envp);
-		add_to_list(minishell, minishell->export);
+		if (replace_export(minishell) == false)
+			add_to_list(minishell, minishell->export);
+		if (replace_envp(minishell) == false)
+			add_to_list(minishell, minishell->envp);
 		chainedlst_to_tab(minishell, minishell->envp);
 	}
 	else if (export_parsing(minishell->cmds->args[1]) == 2)
-		add_to_list(minishell, minishell->export);
+	{
+		if (replace_export(minishell) == false)
+			add_to_list(minishell, minishell->export);
+	}
 	else
 	{
 		minishell->error_code = 1;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/21 18:53:32 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/22 14:49:59 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ int	main(int argc, char **argv, char **envp)
 		free_cmds(&minishell.cmds);
 		free_tokens(&minishell.tokens);
 		free(minishell.entry);
+		minishell.cmdfound = false ;
+		minishell.errfound = false ;
 	}
 	free(minishell.envp_tab);
 	free_minishell(&minishell);

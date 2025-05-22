@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 10:40:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/22 16:21:35 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,12 @@ int	check_cmd(t_minishell *minishell)
 	current = minishell->tokens;
 	while (current != NULL)
 	{
+		// while (current && ((current->type >= T_REDIR_IN && current->type <= T_HEREDOC) || is_valid_cmd(current->value, minishell) == false))
+		// {
+		// 		current = current->next;
+		// }
+		while (current->type >= T_REDIR_IN && current->type <= T_HEREDOC && current->next->next)
+			current= current->next->next;
 		if (current->type == T_WORD && minishell->cmdfound == false
 			&& minishell->errfound == false)
 		{

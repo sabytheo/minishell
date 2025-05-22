@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 13:04:59 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/21 18:50:53 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/22 16:28:14 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,17 @@ int	redir_in(t_minishell *minishell, t_token *current)
 		minishell->error_code = -1;
 		return (-1);
 	}
-		if (minishell->saved_inputfd == -1)
-	minishell->saved_inputfd = dup(STDIN_FILENO);
-	if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
+	if (minishell->cmdfound == true)
 	{
-		perror("dup2");
-		close(minishell->input_fd);
-		minishell->error_code = -1;
-		return (-1);
+		if (minishell->saved_inputfd == -1)
+		minishell->saved_inputfd = dup(STDIN_FILENO);
+		if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->input_fd);
+			minishell->error_code = -1;
+			return (-1);
+		}
 	}
 	close(minishell->input_fd);
 	return (0);
@@ -44,14 +47,17 @@ int	redir_out(t_minishell *minishell, t_token *current)
 		minishell->error_code = -1;
 		return (-1);
 	}
-	if (minishell->saved_outputfd == -1)
-		minishell->saved_outputfd = dup(STDOUT_FILENO);
-	if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
+	if (minishell->cmdfound == true)
 	{
-		perror("dup2");
-		close(minishell->output_fd);
-		minishell->error_code = -1;
-		return (-1);
+		if (minishell->saved_outputfd == -1)
+		minishell->saved_outputfd = dup(STDOUT_FILENO);
+		if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->output_fd);
+			minishell->error_code = -1;
+			return (-1);
+		}
 	}
 	close(minishell->output_fd);
 	return (0);
@@ -66,13 +72,16 @@ int	redir_append(t_minishell *minishell, t_token *current)
 		minishell->error_code = -1;
 		return (-1);
 	}
-	if (minishell->saved_outputfd == -1)
-		minishell->saved_outputfd = dup(STDOUT_FILENO);
-	if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
+	if (minishell->cmdfound == true)
 	{
-		perror("dup2");
-		close(minishell->output_fd);
-		return (-1);
+		if (minishell->saved_outputfd == -1)
+		minishell->saved_outputfd = dup(STDOUT_FILENO);
+		if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->output_fd);
+			return (-1);
+		}
 	}
 	close(minishell->output_fd);
 	return (0);

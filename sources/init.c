@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/21 18:29:54 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/22 11:43:03 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,13 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	ft_bzero(minishell, sizeof(t_minishell));
 	minishell->is_running = true;
 	minishell->error_code = 0;
-	minishell->input_fd = STDIN_FILENO;
-	minishell->output_fd = STDOUT_FILENO;
-	minishell->heredoc_fd = STDOUT_FILENO;
+	minishell->input_fd = -1;
+	minishell->output_fd = -1;
+	minishell->heredoc_fd = -1;
+	minishell->saved_inputfd = -1;
+	minishell->saved_outputfd = -1;
 	minishell->launch_mode = 0;
 	minishell->errfound = false;
 	minishell->cmdfound = false;
-	minishell->saved_inputfd = -1;
-	minishell->saved_outputfd = -1;
 	copy_envp(envp, minishell);
 }

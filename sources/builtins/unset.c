@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 14:41:43 by egache            #+#    #+#             */
-/*   Updated: 2025/05/21 16:12:43 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/23 18:27:56 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,49 @@ ft_export :
 		- Sinon : rajouter un noeud
 
 
-SALUT=caca
+void	ft_export(t_minishell *minishell)
+{
+	if (display_export(minishell) == true)
+		return ;
+	if (already_exist(minishell) == true)
+		return ;
+	printf("export parsing : %d\n", export_parsing(minishell->cmds->args[1]));
+	if (export_parsing(minishell->cmds->args[1]) == 0)
+	{
+		if (replace_export(minishell) == false)
+			add_to_list(minishell, minishell->export);
+		if (replace_envp(minishell) == false)
+			add_to_list(minishell, minishell->envp);
+		chainedlst_to_tab(minishell, minishell->envp);
+	}
+	else if (export_parsing(minishell->cmds->args[1]) == 2)
+	{
+		if (replace_export(minishell) == false)
+			add_to_list(minishell, minishell->export);
+	}
+	else
+	{
+		minishell->error_code = 1;
+		ft_printf_fd(2, E_EXPORT_ARG, minishell->cmds->args[1]);
+	}
+	return ;
+}
+bool	replace_export(t_minishell *minishell)
+{
+	t_envp	*current;
+	int		len;
 
-SALUT=cac
-
+	current = minishell->export;
+	while (current)
+	{
+		if (ft_strlen_equal(current->value) > ft_strlen_equal(minishell->cmds->args[1]))
+			len = ft_strlen_equal(current->value);
+		else
+			len = ft_strlen_equal(minishell->cmds->args[1]);
+		if (ft_strncmp(current->value, minishell->cmds->args[1], len) == 0)
+		{//
+	return (false);
+}
 
 */
 

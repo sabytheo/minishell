@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 18:12:56 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/23 19:07:47 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	copy_envp(char **envp, t_minishell *minishell)
 {
 	int		i;
 	t_envp	*new_envp;
-	t_envp	*new_export;
 
 	if (!envp)
 		return ;
@@ -51,9 +50,7 @@ void	copy_envp(char **envp, t_minishell *minishell)
 	while (envp[i])
 	{
 		new_envp = create_node(ft_strdup(envp[i]));
-		new_export = create_node(ft_strdup(envp[i]));
 		add_node_back(&minishell->envp, new_envp);
-		add_node_back(&minishell->export, new_export);
 		i++;
 	}
 }
@@ -72,4 +69,5 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	minishell->saved_inputfd = 0;
 	minishell->saved_outputfd = 1;
 	copy_envp(envp, minishell);
+	split_envp(minishell->envp, minishell->denvp, minishell->export);
 }

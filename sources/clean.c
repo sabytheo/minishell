@@ -6,13 +6,13 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 18:17:00 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/23 19:05:12 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	exit_and_clear_child(int error_code,t_minishell *minishell)
+int	exit_and_clear_child(int error_code, t_minishell *minishell)
 {
 	if (minishell->cmds)
 		free_cmds(&minishell->cmds);
@@ -23,7 +23,9 @@ int	exit_and_clear_child(int error_code,t_minishell *minishell)
 	if (minishell->envp)
 		free_envp(&minishell->envp);
 	if (minishell->export)
-		free_envp(&minishell->export);
+		free_denvp(&minishell->export);
+	if (minishell->denvp)
+		free_denvp(&minishell->denvp);
 	if (minishell->envp_tab)
 		free(minishell->envp_tab);
 	exit(error_code);
@@ -81,6 +83,24 @@ void	free_cmds(t_cmds **cmds)
 	*cmds = NULL;
 }
 
+void	free_denvp(t_denvp **denvp)
+{
+	t_denvp	*current;
+	t_denvp	*next;
+
+	if (!denvp || !*denvp)
+		return ;
+	current = *denvp;
+	while (current)
+	{
+		next = current->next;
+		free_tab(current->var);
+		free(current);
+		current = next;
+	}
+	*denvp = NULL;
+}
+
 void	free_envp(t_envp **envp)
 {
 	t_envp	*current;
@@ -122,15 +142,17 @@ void	free_minishell(t_minishell *minishell)
 	// 	free_tab(minishell->envp_tab);
 	if (minishell->envp)
 		free_envp(&minishell->envp);
+	if (minishell->denvp)
+		free_denvp(&minishell->denvp);
 	if (minishell->export)
-		free_envp(&minishell->export);
+		free_denvp(&minishell->export);
 	if (minishell->tokens)
 		free_tokens(&minishell->tokens);
 	if (minishell->cmds)
 		free_cmds(&minishell->cmds);
 	rl_clear_history();
 	if (minishell->input_fd > 2)
-	close(minishell->input_fd);
+		close(minishell->input_fd);
 	if (minishell->output_fd > 2)
 		close(minishell->input_fd);
 }

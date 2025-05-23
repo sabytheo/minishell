@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 18:04:58 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/23 19:08:14 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,12 @@ typedef struct s_envp
 	struct s_envp				*next;
 }								t_envp;
 
+typedef struct s_denvp
+{
+	char						**var;
+	struct s_denvp				*next;
+}								t_denvp;
+
 typedef struct s_minishell
 {
 	int							launch_mode;
@@ -61,16 +67,16 @@ typedef struct s_minishell
 	char						*error_item;
 	char						**envp_tab;
 	int							envp_countline;
-	int 						fd;
+	int							fd;
 	bool						is_running;
 	bool						errfound;
 	bool						cmdfound;
 	char						*entry;
 	t_token						*tokens;
 	t_expand					*expand;
-	t_envp						*export;
 	t_envp						*envp;
-	t_envp						*export_envp;
+	t_denvp						*denvp;
+	t_denvp						*export;
 	t_cmds						*cmds;
 
 }								t_minishell;
@@ -91,6 +97,7 @@ void							free_tokens(t_token **tokens);
 void							free_tab(char **tab);
 void							free_cmds(t_cmds **cmds);
 void							free_envp(t_envp **envp);
+void							free_denvp(t_denvp **denvp);
 int								exit_and_clear_child(int error_code,
 									t_minishell *minishell);
 
@@ -163,6 +170,10 @@ void							ft_pwd(void);
 void							ft_env(t_minishell *minishell);
 void							ft_export(t_minishell *minishell);
 void							ft_unset(t_minishell *minishell);
+
+// ft_export.c --->
+void							split_envp(t_envp *envp, t_denvp *denvp,
+									t_denvp *export);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);

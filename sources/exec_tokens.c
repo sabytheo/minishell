@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/22 17:45:08 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/23 12:11:41 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int	setup_redirections(t_token *tokens, t_minishell *minishell)
 	current = tokens;
 	while (current)
 	{
-		// printf(" 2 fd output :%d\n", minishell->output_fd);
 		if (current->type == T_REDIR_IN)
 			errfound = redir_in(minishell, current);
 		else if (current->type == T_REDIR_OUT)

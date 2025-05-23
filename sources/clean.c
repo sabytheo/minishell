@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/22 14:18:22 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/23 12:10:32 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,5 +151,5 @@ void	free_minishell(t_minishell *minishell)
 	if (minishell->input_fd > 2)
 		close(minishell->input_fd);
 	if (minishell->output_fd > 2)
-		close(minishell->input_fd);
+		close(minishell->output_fd);
 }

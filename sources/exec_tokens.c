@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/23 12:11:41 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/23 14:48:51 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,26 +60,31 @@ void	split_tokens(t_token *tokens, t_minishell *minishell)
 	return ;
 }
 
-int	setup_redirections(t_token *tokens, t_minishell *minishell)
+int	setup_redirections(t_token **current, t_minishell *minishell)
 {
-	t_token	*current;
-	int errfound;
+	int	errfound;
 
 	errfound = 0;
-	current = tokens;
-	while (current)
+	while (*current)
 	{
-		if (current->type == T_REDIR_IN)
-			errfound = redir_in(minishell, current);
-		else if (current->type == T_REDIR_OUT)
-			errfound = redir_out(minishell, current);
-		else if (current->type == T_APPEND)
-			errfound = redir_append(minishell, current);
-		else if (current->type == T_HEREDOC)
-			errfound = redir_heredoc(minishell, current);
+		if ((*current)->type == T_REDIR_IN)
+			errfound = redir_in(minishell, *current);
+		else if ((*current)->type == T_REDIR_OUT)
+			errfound = redir_out(minishell, *current);
+		else if ((*current)->type == T_APPEND)
+			errfound = redir_append(minishell, *current);
+		else if ((*current)->type == T_HEREDOC)
+			errfound = redir_heredoc(minishell, *current);
+		else if ((*current)->type == T_PIPE)
+			break ;
 		if (errfound < 0)
 			return (-1);
-		current = current->next;
+		(*current) = (*current)->next;
+	}
+	if (*current)
+	{
+		if ((*current)->next && (*current)->type == T_PIPE)
+			(*current) = (*current)->next;
 	}
 	return (0);
 }
@@ -111,18 +116,18 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 {
 	pid_t	pid;
 	int		status;
+	t_token	*current;
 
+	current = minishell->tokens;
 	status = 0;
-	// printf(" minishell->cmdfound %d\n", minishell->cmdfound);
 	if (minishell->cmdfound == false)
 	{
-		setup_redirections(minishell->tokens, minishell);
-		//reset_redir(minishell);
-		return;
+		setup_redirections(&current, minishell);
+		return ;
 	}
 	if (is_a_builtins(cmds->args[0]))
 	{
-		if (setup_redirections(minishell->tokens, minishell) < 0)
+		if (setup_redirections(&current, minishell) < 0)
 		{
 			reset_redir(minishell);
 			return ;
@@ -134,8 +139,8 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (setup_redirections(minishell->tokens, minishell) < 0)
-			exit_and_clear_child(status,minishell);
+		if (setup_redirections(&current, minishell) < 0)
+			exit_and_clear_child(status, minishell);
 		if (minishell->cmdfound == true)
 		{
 			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
@@ -155,6 +160,10 @@ void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
 	return ;
 }
 
+void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
+{
+
+}
 void	exec_tokens(t_minishell *minishell)
 {
 	t_cmds	*current;
@@ -162,13 +171,15 @@ void	exec_tokens(t_minishell *minishell)
 	split_tokens(minishell->tokens, minishell);
 	current = minishell->cmds;
 	// print_cmds(current);
-	while (current)
-	{
-		// if (minishell->cmds->next != NULL)
-		// 	// execute_piped_command();
-		// else
+	if (current->next == NULL)
 		execute_single_command(minishell, current);
-		current = current->next;
+	else
+	{
+		while (current)
+		{
+			execute_piped_command(minishell, current);
+			current = current->next;
+		}
 	}
 	if (minishell->saved_inputfd != -1)
 	{

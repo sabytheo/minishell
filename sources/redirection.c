@@ -3,19 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 13:04:59 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/23 14:58:39 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/24 19:03:29 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-//  < Makefile < asjdnvejrg > LL cat
-// cat adsfvwthwrh > LL
-
 
 int	redir_in(t_minishell *minishell, t_token *current)
 {

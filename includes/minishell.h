@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 21:24:26 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/25 10:16:09 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,8 +171,7 @@ void							exec_tokens(t_minishell *minishell);
 
 // exec_tokens.c --->
 
-void							split_tokens(t_token *tokens,
-									t_minishell *minishell);
+void							split_tokens(t_minishell *minishell);
 
 // exec_tokens.c --->
 int								create_heredoc(char *eof,
@@ -192,5 +191,10 @@ int								redir_append(t_minishell *minishell,
 									t_token *current);
 int								redir_heredoc(t_minishell *minishell,
 									t_token *current);
+
+
+// exec_multiple_pipe.c --->
+void execute_piped_command(t_minishell *minishell, t_cmds *cmds);
+int	setup_redirections(t_token *current, t_minishell *minishell);
 
 #endif

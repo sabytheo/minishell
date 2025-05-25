@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 09:37:33 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 17:13:43 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/24 14:08:57 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ t_cmds	*create_cmds(char **val)
 	if (new == NULL)
 		return (NULL);
 	new->args = val;
+	new->redirs = NULL ;
 	new->next = NULL;
 	return (new);
 }

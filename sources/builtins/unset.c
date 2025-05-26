@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 14:41:43 by egache            #+#    #+#             */
-/*   Updated: 2025/05/23 18:27:56 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/26 19:39:45 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_unset(t_minishell *minishell)
 		envp = envp->next;
 		ft_delnode(to_delete, del_str);
 		free(minishell->envp_tab);
-		chainedlst_to_tab(minishell, envp);
+		chainedlst_to_tab(minishell);
 	}
 	else
 	{
@@ -68,7 +68,7 @@ void	ft_unset(t_minishell *minishell)
 				to_delete = current->next;
 				current->next = current->next->next;
 				ft_delnode(to_delete, del_str);
-				chainedlst_to_tab(minishell, envp);
+				chainedlst_to_tab(minishell);
 			}
 			else
 				current = current->next;
@@ -76,78 +76,5 @@ void	ft_unset(t_minishell *minishell)
 	}
 	return ;
 }
-// current = minishell->envp;
-// while (current)
-// {
-// 	printf("----- %s\n", current->value);
-// 	current = current->next;
-// }
 
-
-/*
-ft_export :
-- Check si arg
-	- Si non juste display export; (voir photo yves)
-
-- Check si '=' (export parsing) (SEPARER EN 2 : 1 partie ONLY export 1 partie env & export)
-	- Si oui -> export ET env
-		- Check si export existe deja
-			-strncmp len de l'argument
-		- Check si env existe deja
-			- strcmp
-	- Si non -> export ONLY
-		- Check si export existe deja
-			-strncmp len de l'argument
-	Si toute la string existe deja.
-		- Ne rien faire
-	Sinon check si la variable existe deja (check jusqu'au egal)
-		- Si existe deja : remplacer la string dans le noeud actuel
-		- Sinon : rajouter un noeud
-
-
-void	ft_export(t_minishell *minishell)
-{
-	if (display_export(minishell) == true)
-		return ;
-	if (already_exist(minishell) == true)
-		return ;
-	printf("export parsing : %d\n", export_parsing(minishell->cmds->args[1]));
-	if (export_parsing(minishell->cmds->args[1]) == 0)
-	{
-		if (replace_export(minishell) == false)
-			add_to_list(minishell, minishell->export);
-		if (replace_envp(minishell) == false)
-			add_to_list(minishell, minishell->envp);
-		chainedlst_to_tab(minishell, minishell->envp);
-	}
-	else if (export_parsing(minishell->cmds->args[1]) == 2)
-	{
-		if (replace_export(minishell) == false)
-			add_to_list(minishell, minishell->export);
-	}
-	else
-	{
-		minishell->error_code = 1;
-		ft_printf_fd(2, E_EXPORT_ARG, minishell->cmds->args[1]);
-	}
-	return ;
-}
-bool	replace_export(t_minishell *minishell)
-{
-	t_envp	*current;
-	int		len;
-
-	current = minishell->export;
-	while (current)
-	{
-		if (ft_strlen_equal(current->value) > ft_strlen_equal(minishell->cmds->args[1]))
-			len = ft_strlen_equal(current->value);
-		else
-			len = ft_strlen_equal(minishell->cmds->args[1]);
-		if (ft_strncmp(current->value, minishell->cmds->args[1], len) == 0)
-		{//
-	return (false);
-}
-
-*/
-
+// A REFAIRE 

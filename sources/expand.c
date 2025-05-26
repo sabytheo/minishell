@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 10:46:28 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 18:55:47 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static char	*extract_var_name(char *str, int *i)
 	return (ft_substr(str, start, len));
 }
 
-static char	*get_values(char *name, t_envp *envp, t_minishell *minishell)
+static char	*get_values(char *name, t_denvp *denvp, t_minishell *minishell)
 {
 	size_t	len;
 
@@ -52,11 +52,11 @@ static char	*get_values(char *name, t_envp *envp, t_minishell *minishell)
 	if (ft_strncmp(name, "?", 1) == 0)
 		return (ft_itoa(minishell->error_code));
 	len = ft_strlen(name);
-	while (envp)
+	while (denvp != NULL)
 	{
-		if (ft_strncmp(envp->value, name, len) == 0 && envp->value[len] == '=')
-			return (ft_strdup(envp->value + len + 1));
-		envp = envp->next;
+		if (ft_strcmp(denvp->var[0], name) == 0)
+			return (ft_strdup(denvp->var[1] + 1));
+		denvp = denvp->next;
 	}
 	return (ft_strdup(""));
 }
@@ -72,7 +72,7 @@ static char	*handle_expand(char *str, int *i, t_minishell *minishell,
 	{
 		(*i)++;
 		name = extract_var_name(str, i);
-		value = get_values(name, minishell->envp, minishell);
+		value = get_values(name, minishell->denvp, minishell);
 		expand->expanded = append_and_free(expand->expanded, value);
 		free(name);
 		free(value);

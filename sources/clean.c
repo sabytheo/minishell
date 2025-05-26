@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/23 19:05:12 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/26 17:36:51 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void	free_denvp(t_denvp **denvp)
 	}
 	*denvp = NULL;
 }
+
 
 void	free_envp(t_envp **envp)
 {

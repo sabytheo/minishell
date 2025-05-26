@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 15:41:59 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 19:14:50 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	main(int argc, char **argv, char **envp)
 	init_minishell(&minishell, envp);
 	check_args_count(argc, argv, &minishell);
 	signal_initialisation();
-	chainedlst_to_tab(&minishell, minishell.envp);
+	chainedlst_to_tab(&minishell);
 	while (minishell.is_running == true)
 	{
 		minishell.entry = get_entry(&minishell);
@@ -86,12 +86,13 @@ int	main(int argc, char **argv, char **envp)
 		// exec_builtins(&minishell);
 		free_cmds(&minishell.cmds);
 		free_tokens(&minishell.tokens);
+		//free_denvp(&minishell.denvp);
 		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
 		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
 		free(minishell.entry);
 		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
 	}
-	free(minishell.envp_tab);
+	free_tab(minishell.envp_tab);
 	free_minishell(&minishell);
 	return (0);
 }

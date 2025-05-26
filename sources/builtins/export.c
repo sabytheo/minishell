@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/05/23 19:09:45 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/26 19:34:31 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ static char	**fill_variables(char *value)
 	var[0] = ft_strldup(value, size1);
 	if (value[size1] != '\0')
 		var[1] = ft_strldup(&value[size1], size2);
+	else
+		var[1] = NULL;
 	return (var);
 }
 
@@ -100,31 +102,6 @@ void	add_denvp_back(t_denvp **list_denvp, t_denvp *new)
 	tmp->next = new;
 }
 
-void	split_envp(t_envp *envp, t_denvp *denvp, t_denvp *export)
-{
-	t_envp	*current;
-	t_denvp	*new_denvp;
-	t_denvp	*new_export;
-	char	**var;
-
-	current = envp;
-	while (current != NULL)
-	{
-		var = fill_variables(current->value);
-		printf("var[0] = %s\n", var[0]);
-		printf("var[1] = %s\n", var[1]);
-		printf("-----------------------\n");
-		new_export = create_denvp(var);
-		new_denvp = create_denvp(var);
-		add_denvp_back(&export, new_export);
-		add_denvp_back(&denvp, new_denvp);
-		if (current != NULL)
-			current = current->next;
-		else
-			return ;
-	}
-}
-
 bool	display_export(t_minishell *minishell)
 {
 	t_denvp	*current;
@@ -132,9 +109,12 @@ bool	display_export(t_minishell *minishell)
 	if (minishell->cmds->args[1] == NULL)
 	{
 		current = minishell->export;
-		while (current)
+		while (current != NULL)
 		{
-			printf("export %s%s\n", current->var[0], current->var[1]);
+			printf("export %s", current->var[0]);
+			if (current->var[1] != NULL)
+				printf("%s", current->var[1]);
+			printf("\n");
 			current = current->next;
 		}
 		return (true);
@@ -142,26 +122,26 @@ bool	display_export(t_minishell *minishell)
 	return (false);
 }
 
-bool	already_exist(t_minishell *minishell)
+bool	already_exist(t_minishell *minishell, t_denvp *list)
 {
 	t_denvp	*current;
+	char	**args;
 
-	current = minishell->denvp;
-	while (current)
+	args = fill_variables(minishell->cmds->args[1]);
+	current = list;
+	while (current != NULL)
 	{
-		if (ft_strcmp(minishell->cmds->args[1], ft_strjoin(current->var[0],
-					current->var[1])) == 0)
-			return (true);
+		if (ft_strcmp(args[0], list->var[0]) == 0)
+		{
+			if (ft_strcmp(args[1], list->var[1]) == 0)
+			{
+				free_tab(args);
+				return (true);
+			}
+		}
 		current = current->next;
 	}
-	current = minishell->export;
-	while (current)
-	{
-		if (ft_strcmp(minishell->cmds->args[1], ft_strjoin(current->var[0],
-					current->var[1])) == 0)
-			return (true);
-		current = current->next;
-	}
+	free_tab(args);
 	return (false);
 }
 
@@ -178,16 +158,13 @@ static int	export_parsing(char *str)
 	int	i;
 
 	if (str[0] != '_' && ft_isalpha(str[0]) == 0)
-	{
-		printf("caca");
 		return (1);
-	}
 	i = 1;
 	while (str[i])
 	{
 		if (str[i] == '=')
 		{
-			i = 0;
+			i = 1;
 			while (str[i] != '=')
 			{
 				if (valid_id(str[i]) == false || ft_isalpha(str[0] == 0))
@@ -199,10 +176,7 @@ static int	export_parsing(char *str)
 		else
 		{
 			if (valid_id(str[i]) == false || ft_isalpha(str[0]) == 0)
-			{
-				printf("pipi");
 				return (1);
-			}
 			i++;
 		}
 	}
@@ -210,12 +184,20 @@ static int	export_parsing(char *str)
 }
 bool	replace_node(t_denvp *current, char *arg)
 {
+	int	size1;
+	int	size2;
+
+	size1 = ft_strlen_equal(arg);
+	size2 = ft_strlen(arg) - size1;
 	while (current)
 	{
 		if (ft_strncmp(arg, current->var[0], ft_strlen(current->var[0])) == 0)
 		{
-			free(current->var);
-			current->var = fill_variables(arg);
+			if (arg[size1] != '\0')
+			{
+				free(current->var[1]);
+				current->var[1] = ft_strldup(&arg[size1], size2);
+			}
 			return (true);
 		}
 		current = current->next;
@@ -223,10 +205,6 @@ bool	replace_node(t_denvp *current, char *arg)
 	return (false);
 }
 
-// bool	check_variables(t_minishell *minishell)
-// {
-// 	replace_node(minishell->export, minishell->cmds->args[1]);
-// }
 void	add_to_list(t_minishell *minishell, t_denvp *list)
 {
 	t_denvp	*current;
@@ -234,7 +212,6 @@ void	add_to_list(t_minishell *minishell, t_denvp *list)
 	char	**var;
 
 	current = list;
-	printf("list : %p\n", list);
 	while (current != NULL && current->next != NULL)
 		current = current->next;
 	var = fill_variables(minishell->cmds->args[1]);
@@ -247,17 +224,14 @@ void	ft_export(t_minishell *minishell)
 {
 	if (display_export(minishell) == true)
 		return ;
-	if (already_exist(minishell) == true)
+	if (already_exist(minishell, minishell->export) == true)
 		return ;
 	if (export_parsing(minishell->cmds->args[1]) == 0)
 	{
-		if (replace_node(minishell->export, minishell->cmds->args[1]) == true)
-			replace_node(minishell->denvp, minishell->cmds->args[1]);
-		else
-		{
-			add_to_list(minishell, minishell->denvp);
+		if (replace_node(minishell->export, minishell->cmds->args[1]) == false)
 			add_to_list(minishell, minishell->export);
-		}
+		if (replace_node(minishell->denvp, minishell->cmds->args[1]) == false)
+			add_to_list(minishell, minishell->denvp);
 	}
 	else if (export_parsing(minishell->cmds->args[1]) == 2)
 	{
@@ -271,169 +245,3 @@ void	ft_export(t_minishell *minishell)
 	}
 	return ;
 }
-
-// static bool	valid_id(char c)
-// {
-// 	if (ft_isalnum(c) == 1 || c == '_')
-// 		return (true);
-// 	else
-// 		return (false);
-// }
-
-// static int	export_parsing(char *str)
-// {
-// 	int	i;
-
-// 	if (str[0] != '_' && ft_isalpha(str[0]) == 0)
-// 	{
-// 		printf("caca");
-// 		return (1);
-// 	}
-// 	i = 1;
-// 	while (str[i])
-// 	{
-// 		if (str[i] == '=')
-// 		{
-// 			i = 0;
-// 			while (str[i] != '=')
-// 			{
-// 				if (valid_id(str[i]) == false || ft_isalpha(str[0] == 0))
-// 					return (1);
-// 				i++;
-// 			}
-// 			return (0);
-// 		}
-// 		else
-// 		{
-// 			if (valid_id(str[i]) == false || ft_isalpha(str[0]) == 0)
-// 			{
-// 				printf("pipi");
-// 				return (1);
-// 			}
-// 			i++;
-// 		}
-// 	}
-// 	return (2);
-// }
-
-// void	add_to_list(t_minishell *minishell, t_envp *list)
-// {
-// 	t_envp	*current;
-// 	t_envp	*new;
-// 	char	*str;
-
-// 	current = list;
-// 	printf("list : %p\n", list);
-// 	while (current != NULL && current->next != NULL)
-// 		current = current->next;
-// 	str = ft_strdup(minishell->cmds->args[1]);
-// 	printf("str : %s\n", str);
-// 	new = create_node(str);
-// 	current = list;
-// 	add_node_back(&current, new);
-// }
-
-// bool	already_exist(t_minishell *minishell)
-// {
-// 	t_envp	*current;
-
-// 	current = minishell->envp;
-// 	while (current)
-// 	{
-// 		if (ft_strcmp(minishell->cmds->args[1], current->value) == 0)
-// 			return (true);
-// 		current = current->next;
-// 	}
-// 	current = minishell->export;
-// 	while (current)
-// 	{
-// 		if (ft_strcmp(minishell->cmds->args[1], current->value) == 0)
-// 			return (true);
-// 		current = current->next;
-// 	}
-// 	if (export_parsing(minishell->cmds->args[1]) == 2)
-// 	{
-// 		current = minishell->export;
-// 		while (current)
-// 		{
-// 			if (ft_strncmp(minishell->cmds->args[1], current->value,
-// 					ft_strlen_equal(current->value)) == 0)
-// 			{
-// 				if (ft_strncmp(minishell->cmds->args[1], current->value,
-// 						ft_strlen_equal(minishell->cmds->args[1])) == 0)
-// 					return (true);
-// 			}
-// 			current = current->next;
-// 		}
-// 	}
-// 	return (false);
-// }
-
-// bool	replace_export(t_minishell *minishell)
-// {
-// 	t_envp	*current;
-// 	int		len;
-
-// 	current = minishell->export;
-// 	while (current)
-// 	{
-// 		if (ft_strlen_equal(current->value) > ft_strlen_equal(minishell->cmds->args[1]))
-// 			len = ft_strlen_equal(current->value);
-// 		else
-// 			len = ft_strlen_equal(minishell->cmds->args[1]);
-// 		if (ft_strncmp(current->value, minishell->cmds->args[1], len) == 0)
-// 		{//
-// 	return (false);
-// }
-
-// bool	replace_envp(t_minishell *minishell)
-// {
-// 	t_envp	*current;
-// 	int		len;
-
-// 	current = minishell->envp;
-// 	while (current)
-// 	{
-// 		if (ft_strlen_equal(current->value) > ft_strlen_equal(minishell->cmds->args[1]))
-// 			len = ft_strlen_equal(current->value);
-// 		else
-// 			len = ft_strlen_equal(minishell->cmds->args[1]);
-// 		if (ft_strncmp(current->value, minishell->cmds->args[1],
-// 				ft_strlen_equal(minishell->cmds->args[1])) == 0)
-// 		{
-// 			free(current->value);
-// 			current->value = ft_strdup(minishell->cmds->args[1]);
-// 			return (true);
-// 		}
-// 		current = current->next;
-// 	}
-// 	return (false);
-// }
-
-// void	ft_export(t_minishell *minishell)
-// {
-// 	if (display_export(minishell) == true)
-// 		return ;
-// 	if (already_exist(minishell) == true)
-// 		return ;
-// 	printf("export parsing : %d\n", export_parsing(minishell->cmds->args[1]));
-// 	if (export_parsing(minishell->cmds->args[1]) == 0)
-// 	{
-// 		if (replace_export(minishell) == false)
-// 			add_to_list(minishell, minishell->export);
-// 		if (replace_envp(minishell) == false)
-// 			add_to_list(minishell, minishell->envp);
-// 		chainedlst_to_tab(minishell, minishell->envp);
-// 	}
-// 	else if (export_parsing(minishell->cmds->args[1]) == 2)
-// 	{
-// 		if (replace_export(minishell) == false)
-// 			add_to_list(minishell, minishell->export);
-// 	}
-// 	else
-// 	{
-// 		minishell->error_code = 1;
-// 		ft_printf_fd(2, E_EXPORT_ARG, minishell->cmds->args[1]);
-// 	}
-// 	return ;
-// }

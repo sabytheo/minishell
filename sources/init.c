@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/23 19:07:47 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/26 19:32:39 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,28 @@ void	add_node_back(t_envp **list_envp, t_envp *new)
 	tmp->next = new;
 }
 
-void	copy_envp(char **envp, t_minishell *minishell)
+void	split_envp(t_minishell *minishell, char **envp)
 {
+	t_denvp	*new_denvp;
+	t_denvp	*new_export;
 	int		i;
-	t_envp	*new_envp;
+	char	**var1;
+	char	**var2;
 
-	if (!envp)
+	if (envp == NULL)
 		return ;
 	i = 0;
-	while (envp[i])
+	while (envp[i] != NULL)
 	{
-		new_envp = create_node(ft_strdup(envp[i]));
-		add_node_back(&minishell->envp, new_envp);
+		var1 = fill_variables(envp[i]);
+		var2 = fill_variables(envp[i]);
+		new_export = create_denvp(var1);
+		new_denvp = create_denvp(var2);
+		add_denvp_back(&minishell->export, new_export);
+		add_denvp_back(&minishell->denvp, new_denvp);
 		i++;
 	}
+	return ;
 }
 
 void	init_minishell(t_minishell *minishell, char **envp)
@@ -68,6 +76,5 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	minishell->cmdfound = false;
 	minishell->saved_inputfd = 0;
 	minishell->saved_outputfd = 1;
-	copy_envp(envp, minishell);
-	split_envp(minishell->envp, minishell->denvp, minishell->export);
+	split_envp(minishell, envp);
 }

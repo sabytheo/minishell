@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/24 18:42:34 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 09:12:05 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,6 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	minishell->launch_mode = 0;
 	minishell->errfound = false;
 	minishell->cmdfound = false;
+	minishell->cmds_count = 0;
 	copy_envp(envp, minishell);
 }

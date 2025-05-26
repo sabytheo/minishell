@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/25 10:16:09 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 15:57:12 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdio.h>
 # include "error.h"
 # include "expand.h"
 # include "ft_printf.h"
@@ -25,6 +24,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdbool.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <sys/time.h>
 # include <sys/wait.h>
@@ -62,6 +62,9 @@ typedef struct s_minishell
 	char						**envp_tab;
 	int							envp_countline;
 	int							fd;
+	int							cmds_count;
+	int							**pipes;
+	pid_t						*pids;
 	bool						is_running;
 	bool						errfound;
 	bool						cmdfound;
@@ -122,7 +125,7 @@ char							*remove_quotes(const char *str);
 
 // check_tokens.c --->
 void							check_tokens(t_minishell *minishell);
-int								check_cmd(t_minishell *minishell);
+bool							check_cmd(t_minishell *minishell, char *arg);
 char							*check_syntax(t_minishell *minishell);
 
 // check_tokens_utils.c
@@ -166,16 +169,17 @@ void							ft_unset(t_minishell *minishell);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);
-int								exec_builtins(t_minishell *minishell);
+int								exec_builtins(t_minishell *minishell,
+									t_cmds *cmds);
 void							exec_tokens(t_minishell *minishell);
 
 // exec_tokens.c --->
 
 void							split_tokens(t_minishell *minishell);
-
-// exec_tokens.c --->
 int								create_heredoc(char *eof,
 									t_minishell *minishell);
+int								setup_redirections(t_token *current,
+									t_minishell *minishell, bool cmdfound);
 
 // exec_tokens_utils.c --->
 t_cmds							*create_cmds(char **val);
@@ -184,17 +188,22 @@ int								get_cmds_size(t_token *tokens);
 
 // redirection.c --->
 int								redir_in(t_minishell *minishell,
-									t_token *current);
+									t_token *current, bool cmdfound);
 int								redir_out(t_minishell *minishell,
-									t_token *current);
+									t_token *current, bool cmdfound);
 int								redir_append(t_minishell *minishell,
-									t_token *current);
+									t_token *current, bool cmdfound);
 int								redir_heredoc(t_minishell *minishell,
-									t_token *current);
+									t_token *current, bool cmdfound);
 
+// exec_pipe.c --->
+void							execute_piped_command(t_minishell *minishell,
+									t_cmds *cmds);
+void							wait_allchild(t_minishell *minishell);
 
-// exec_multiple_pipe.c --->
-void execute_piped_command(t_minishell *minishell, t_cmds *cmds);
-int	setup_redirections(t_token *current, t_minishell *minishell);
+// exec_pipe_utils.c --->
 
+void							close_pipes_inchild(t_minishell *minishell);
+void							cleanup_pipes(int **pipes, int pipe_count);
+void							getcmd_count(t_minishell *minishell);
 #endif

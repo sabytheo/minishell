@@ -6,10 +6,9 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/16 15:40:18 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 19:02:30 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -17,36 +16,36 @@
 
 int	create_heredoc(char *eof, t_minishell *minishell)
 {
-	char * line;
-	size_t len;
+	char	*line;
+	size_t	len;
 
 	len = ft_strlen(eof);
-
-	minishell->heredoc_fd = open (HEREDOC_TMP, O_CREAT | O_WRONLY | O_TRUNC, 0600 );
+	minishell->heredoc_fd = open(HEREDOC_TMP, O_CREAT | O_WRONLY | O_TRUNC,
+			0600);
 	if (minishell->heredoc_fd < 0)
-		return( perror ("open heredoc"), -1);
+		return (perror("open heredoc"), -1);
 	while (1)
 	{
 		ft_printf("minishell_heredoc>");
 		line = get_next_line(STDIN_FILENO);
 		if (line == NULL)
-			break;
-		if (strncmp(line,eof,len) == 0 && line[len] == '\n')
+			break ;
+		if (strncmp(line, eof, len) == 0 && line[len] == '\n')
 		{
 			free(line);
-			break;
+			break ;
 		}
-		//ft_printf_fd(minishell->heredoc_fd,"%s",line);
-		write(minishell->heredoc_fd,line, ft_strlen(line));
+		// ft_printf_fd(minishell->heredoc_fd,"%s",line);
+		write(minishell->heredoc_fd, line, ft_strlen(line));
 		free(line);
 	}
 	close(minishell->heredoc_fd);
 	minishell->input_fd = open(HEREDOC_TMP, O_RDONLY);
 	if (minishell->input_fd < 0)
 	{
-		perror ("open heredoc");
+		perror("open heredoc");
 		unlink(HEREDOC_TMP);
-		return(-1);
+		return (-1);
 	}
 	unlink(HEREDOC_TMP);
 	return (0);

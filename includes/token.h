@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:29:35 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/24 14:08:37 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 13:21:10 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_cmds
 {
 	char			**args;
 	t_token			*redirs;
+	bool			cmdfound;
 	struct s_cmds	*next;
 }					t_cmds;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/24 13:19:39 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 18:54:46 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,10 @@ char	*find_path(char *arg, char **envp, int i)
 	return (NULL);
 }
 
-int	exec_builtins(t_minishell *minishell)
+int	exec_builtins(t_minishell *minishell, t_cmds *cmds)
 {
-	int		len;
-	t_cmds	*cmds;
+	int	len;
 
-	cmds = minishell->cmds;
 	minishell->error_code = 0;
 	len = ft_strlen(cmds->args[0]);
 	if (ft_strncmp(cmds->args[0], "cd", len) == 0 && len == 2)

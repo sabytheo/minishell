@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 13:04:59 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/24 19:03:29 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 19:02:44 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	redir_in(t_minishell *minishell, t_token *current)
+int	redir_in(t_minishell *minishell, t_token *current, bool cmdfound)
 {
 	minishell->input_fd = open(current->next->value, O_RDONLY);
 	if (minishell->input_fd < 0)
@@ -21,10 +21,10 @@ int	redir_in(t_minishell *minishell, t_token *current)
 		minishell->error_code = -1;
 		return (-1);
 	}
-	if (minishell->cmdfound == true)
+	if (cmdfound == true)
 	{
 		if (minishell->saved_inputfd == -1)
-		minishell->saved_inputfd = dup(STDIN_FILENO);
+			minishell->saved_inputfd = dup(STDIN_FILENO);
 		if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
 		{
 			perror("dup2");
@@ -37,7 +37,7 @@ int	redir_in(t_minishell *minishell, t_token *current)
 	return (0);
 }
 
-int	redir_out(t_minishell *minishell, t_token *current)
+int	redir_out(t_minishell *minishell, t_token *current, bool cmdfound)
 {
 	minishell->output_fd = open(current->next->value,
 			O_CREAT | O_WRONLY | O_TRUNC, 0644);
@@ -47,10 +47,10 @@ int	redir_out(t_minishell *minishell, t_token *current)
 		minishell->error_code = -1;
 		return (-1);
 	}
-	if (minishell->cmdfound == true)
+	if (cmdfound == true)
 	{
 		if (minishell->saved_outputfd == -1)
-		minishell->saved_outputfd = dup(STDOUT_FILENO);
+			minishell->saved_outputfd = dup(STDOUT_FILENO);
 		if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
 		{
 			perror("dup2");
@@ -62,7 +62,7 @@ int	redir_out(t_minishell *minishell, t_token *current)
 	close(minishell->output_fd);
 	return (0);
 }
-int	redir_append(t_minishell *minishell, t_token *current)
+int	redir_append(t_minishell *minishell, t_token *current, bool cmdfound)
 {
 	minishell->output_fd = open(current->next->value,
 			O_CREAT | O_WRONLY | O_APPEND, 0644);
@@ -72,10 +72,10 @@ int	redir_append(t_minishell *minishell, t_token *current)
 		minishell->error_code = -1;
 		return (-1);
 	}
-	if (minishell->cmdfound == true)
+	if (cmdfound == true)
 	{
 		if (minishell->saved_outputfd == -1)
-		minishell->saved_outputfd = dup(STDOUT_FILENO);
+			minishell->saved_outputfd = dup(STDOUT_FILENO);
 		if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
 		{
 			perror("dup2");
@@ -86,19 +86,22 @@ int	redir_append(t_minishell *minishell, t_token *current)
 	close(minishell->output_fd);
 	return (0);
 }
- int redir_heredoc(t_minishell *minishell, t_token *current)
- {
+int	redir_heredoc(t_minishell *minishell, t_token *current, bool cmdfound)
+{
 	create_heredoc(current->next->value, minishell);
 	if (minishell->input_fd < 0)
 		return (-1);
 	if (minishell->saved_inputfd == -1)
 		minishell->saved_inputfd = dup(STDIN_FILENO);
-	if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
+	if (cmdfound == true)
 	{
-		perror("dup2");
-		close(minishell->input_fd);
-		return (-1);
+		if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->input_fd);
+			return (-1);
+		}
 	}
 	close(minishell->input_fd);
-	return(0);
- }
+	return (0);
+}

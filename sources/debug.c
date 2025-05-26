@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:42:30 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/24 14:24:16 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 15:00:30 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,9 @@ void	print_cmds(t_cmds *cmds)
 		}
 		printf("Redirections:\n");
 		print_redirs(cmds->redirs);
+		printf("Cmdfound:\n 0 pour false\n 1 pour true\n");
+		printf("cmdfound: (%d)\n", cmds->cmdfound);
+		printf("------------------\n");
 		cmds = cmds->next;
 	}
 }

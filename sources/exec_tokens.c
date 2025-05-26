@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/25 10:50:59 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 16:22:06 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_token	*extract_redirections(t_token **current)
 void	split_tokens(t_minishell *minishell)
 {
 	t_token	*current_args;
-	t_token *current_redir;
+	t_token	*current_redir;
 	t_cmds	*new;
 	char	**args;
 
@@ -84,6 +84,7 @@ void	split_tokens(t_minishell *minishell)
 		args = fill_args(&current_args);
 		new = create_cmds(args);
 		new->redirs = extract_redirections(&current_redir);
+		new->cmdfound = check_cmd(minishell, args[0]);
 		add_cmds_back(&minishell->cmds, new);
 		if (current_args != NULL)
 			current_args = current_args->next;
@@ -95,7 +96,7 @@ void	split_tokens(t_minishell *minishell)
 	return ;
 }
 
-int	setup_redirections(t_token *current, t_minishell *minishell)
+int	setup_redirections(t_token *current, t_minishell *minishell, bool cmdfound)
 {
 	int	errfound;
 
@@ -103,13 +104,13 @@ int	setup_redirections(t_token *current, t_minishell *minishell)
 	while (current)
 	{
 		if (current->type == T_REDIR_IN)
-			errfound = redir_in(minishell, current);
+			errfound = redir_in(minishell, current, cmdfound);
 		else if (current->type == T_REDIR_OUT)
-			errfound = redir_out(minishell, current);
+			errfound = redir_out(minishell, current, cmdfound);
 		else if (current->type == T_APPEND)
-			errfound = redir_append(minishell, current);
+			errfound = redir_append(minishell, current, cmdfound);
 		else if (current->type == T_HEREDOC)
-			errfound = redir_heredoc(minishell, current);
+			errfound = redir_heredoc(minishell, current, cmdfound);
 		if (errfound < 0)
 			return (-1);
 		current = current->next;
@@ -140,76 +141,82 @@ void	reset_redir(t_minishell *minishell)
 		minishell->saved_outputfd = -1;
 	}
 }
-void	execute_single_command(t_minishell *minishell)
-{
-	pid_t	pid;
-	int		status;
-	t_cmds	*cmds;
 
-	cmds = minishell->cmds;
+void	wait_thechild(pid_t pid, t_minishell *minishell)
+{
+	int	status;
+
 	status = 0;
-	if (minishell->cmdfound == false)
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		minishell->error_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		minishell->error_code = 128 + WTERMSIG(status);
+}
+int	before_builtins(t_cmds *cmds, t_minishell *minishell)
+{
+	if (cmds->cmdfound == false)
 	{
-		setup_redirections(cmds->redirs, minishell);
-		return ;
+		setup_redirections(cmds->redirs, minishell, cmds->cmdfound);
+		return (-1);
 	}
 	if (is_a_builtins(cmds->args[0]))
 	{
-		if (setup_redirections(cmds->redirs, minishell) < 0)
+		if (setup_redirections(cmds->redirs, minishell, cmds->cmdfound) < 0)
 		{
 			reset_redir(minishell);
-			return ;
+			return (-1);
 		}
-		exec_builtins(minishell);
+		exec_builtins(minishell, cmds);
 		reset_redir(minishell);
-		return ;
+		return (-1);
 	}
+	return (0);
+}
+void	execute_single_command(t_minishell *minishell)
+{
+	pid_t	pid;
+	t_cmds	*cmds;
+
+	cmds = minishell->cmds;
+	if (before_builtins(cmds, minishell) < 0)
+		return ;
 	pid = fork();
 	if (pid == 0)
 	{
-		if (setup_redirections(cmds->redirs, minishell) < 0)
-			exit_and_clear_child(status, minishell);
-		if (minishell->cmdfound == true)
+		if (setup_redirections(cmds->redirs, minishell, cmds->cmdfound) < 0)
+			exit_and_clear_child(minishell->error_code, minishell);
+		if (cmds->cmdfound == true)
 		{
 			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
 				minishell->envp_tab);
 			perror("execve");
-			exit_and_clear_child(status, minishell);
+			exit_and_clear_child(minishell->error_code, minishell);
 		}
 	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			minishell->error_code = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			minishell->error_code = 128 + WTERMSIG(status);
-	}
+	wait_thechild(pid, minishell);
 	return ;
 }
 
-
-void exec_tokens(t_minishell *minishell)
+void	exec_tokens(t_minishell *minishell)
 {
-    t_cmds *current;
+	t_cmds	*current;
 
-    split_tokens(minishell);
-	print_cmds(minishell->cmds);
-    current = minishell->cmds;
-
-    if (current->next == NULL)
-        execute_single_command(minishell);
-    else
-        execute_piped_command(minishell, current);
-
-    if (minishell->saved_inputfd != -1)
-    {
-        close(minishell->saved_inputfd);
-        minishell->saved_inputfd = -1;
-    }
-    if (minishell->saved_outputfd != -1)
-    {
-        close(minishell->saved_outputfd);
-        minishell->saved_outputfd = -1;
-    }
+	split_tokens(minishell);
+	// print_cmds(minishell->cmds);
+	current = minishell->cmds;
+	if (current->next == NULL)
+		execute_single_command(minishell);
+	else
+		execute_piped_command(minishell, current);
+	if (minishell->saved_inputfd != -1)
+	{
+		close(minishell->saved_inputfd);
+		minishell->saved_inputfd = -1;
+	}
+	if (minishell->saved_outputfd != -1)
+	{
+		close(minishell->saved_outputfd);
+		minishell->saved_outputfd = -1;
+	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/05/25 11:04:56 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/26 16:08:44 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,35 +67,13 @@ char	*check_syntax(t_minishell *minishell)
 	return (NULL);
 }
 
-int	check_cmd(t_minishell *minishell)
+bool	check_cmd(t_minishell *minishell, char *arg)
 {
-	t_token	*current;
-
-	current = minishell->tokens;
-	while (current != NULL)
-	{
-		while (current->type >= T_REDIR_IN && current->type <= T_HEREDOC && current->next->next)
-			current= current->next->next;
-		if (current->type == T_WORD && minishell->cmdfound == false
-			&& minishell->errfound == false)
-		{
-			if (is_valid_cmd(current->value, minishell) == true)
-				minishell->cmdfound = true;
-			else
-			{
-				minishell->error_code = 127;
-				minishell->errfound = true;
-				ft_printf_fd(2, E_PARS_CMD_NF, current->value);
-			}
-		}
-		if (current->type == T_PIPE)
-		{
-			minishell->cmdfound = false;
-			minishell->errfound = false;
-		}
-		current = current->next;
-	}
-	return (0);
+	if (is_valid_cmd(arg, minishell) == true)
+		return (true);
+	minishell->error_code = 127;
+	ft_printf_fd(2, E_PARS_CMD_NF, arg);
+	return(false);
 }
 
 void	check_tokens(t_minishell *minishell)
@@ -108,6 +86,5 @@ void	check_tokens(t_minishell *minishell)
 		minishell->error_code = 2;
 		clean_error(syntax_error, minishell);
 	}
-	check_cmd(minishell);
 	return ;
 }

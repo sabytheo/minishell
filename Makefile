@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
+#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/25 10:14:10 by tsaby            ###   ########.fr        #
+#    Updated: 2025/05/26 11:15:55 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ SRCS		:=		main.c \
 					heredoc.c \
 					redirection.c \
 					exec_pipes.c \
+					exec_pipes_utils.c \
 					$(SRCS_BUILTINS)
 
 #SRCS_BONUS	:=

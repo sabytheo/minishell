@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 14:41:43 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 16:32:20 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 17:22:44 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,15 @@ static int	unset_list(t_cmds *cmds, t_denvp **current)
 	}
 }
 
-int 	ft_unset(t_minishell *minishell)
+int	ft_unset(t_minishell *minishell)
 {
-	int ret;
+	int	ret;
+
 	if (minishell->cmds->args[1] == NULL)
-		return (1);
+		return (0);
 	ret = unset_list(minishell->cmds, &minishell->envp);
 	if (ret == 0)
 		chainedlst_to_tab(minishell);
-	ret = unset_list(minishell->cmds, &minishell->export);
-	return (ret);
+	unset_list(minishell->cmds, &minishell->export);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 12:43:26 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 16:50:50 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 17:20:58 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ ABSOLUTE PATH
 
 path depuis le root root
 	- /home/egache...
+
+// Verifier nombre arg / INterdit > 2
+
+
 
 */
 #include "minishell.h"

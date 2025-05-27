@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/26 16:22:06 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/27 12:33:28 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,12 @@ static char	**fill_args(t_token **current)
 	}
 	return (args);
 }
-t_token	*extract_redirections(t_token **current)
+t_token	*extract_redirections(t_token **current, t_token *redir_head)
 {
-	t_token	*redir_head;
 	t_token	*redir_tail;
 	t_token	*redir_token;
 	t_token	*file_token;
 
-	redir_head = NULL;
 	redir_tail = NULL;
 	while (*current && (*current)->type != T_PIPE)
 	{
@@ -73,17 +71,19 @@ t_token	*extract_redirections(t_token **current)
 void	split_tokens(t_minishell *minishell)
 {
 	t_token	*current_args;
+	t_token *redir_head;
 	t_token	*current_redir;
 	t_cmds	*new;
 	char	**args;
 
+	redir_head = NULL;
 	current_args = minishell->tokens;
 	current_redir = minishell->tokens;
 	while (current_args && current_redir)
 	{
 		args = fill_args(&current_args);
 		new = create_cmds(args);
-		new->redirs = extract_redirections(&current_redir);
+		new->redirs = extract_redirections(&current_redir,redir_head);
 		new->cmdfound = check_cmd(minishell, args[0]);
 		add_cmds_back(&minishell->cmds, new);
 		if (current_args != NULL)

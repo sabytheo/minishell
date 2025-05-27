@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 13:04:59 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/26 19:02:44 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/27 12:09:12 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	redir_in(t_minishell *minishell, t_token *current, bool cmdfound)
 	if (minishell->input_fd < 0)
 	{
 		perror(current->next->value);
-		minishell->error_code = -1;
+		minishell->error_code = 1;
 		return (-1);
 	}
 	if (cmdfound == true)
@@ -29,7 +29,7 @@ int	redir_in(t_minishell *minishell, t_token *current, bool cmdfound)
 		{
 			perror("dup2");
 			close(minishell->input_fd);
-			minishell->error_code = -1;
+			minishell->error_code = 1;
 			return (-1);
 		}
 	}
@@ -44,7 +44,7 @@ int	redir_out(t_minishell *minishell, t_token *current, bool cmdfound)
 	if (minishell->output_fd < 0)
 	{
 		perror(current->next->value);
-		minishell->error_code = -1;
+		minishell->error_code = 1;
 		return (-1);
 	}
 	if (cmdfound == true)
@@ -55,7 +55,7 @@ int	redir_out(t_minishell *minishell, t_token *current, bool cmdfound)
 		{
 			perror("dup2");
 			close(minishell->output_fd);
-			minishell->error_code = -1;
+			minishell->error_code = 1;
 			return (-1);
 		}
 	}
@@ -69,7 +69,7 @@ int	redir_append(t_minishell *minishell, t_token *current, bool cmdfound)
 	if (minishell->output_fd < 0)
 	{
 		perror(current->next->value);
-		minishell->error_code = -1;
+		minishell->error_code = 1;
 		return (-1);
 	}
 	if (cmdfound == true)

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 14:47:33 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:41:42 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,12 +246,12 @@ void	split_envp(t_minishell *minishell, char **envp)
 	return ;
 }
 
-void	ft_export(t_minishell *minishell)
+int	ft_export(t_minishell *minishell)
 {
 	if (display_export(minishell) == true)
-		return ;
+		return (0);
 	if (already_exist(minishell, minishell->export) == true)
-		return ;
+		return (0);
 	if (export_parsing(minishell->cmds->args[1]) == 0)
 	{
 		if (replace_node(minishell->export, minishell->cmds->args[1]) == false)
@@ -266,8 +266,8 @@ void	ft_export(t_minishell *minishell)
 	}
 	else
 	{
-		minishell->error_code = 1;
 		ft_printf_fd(2, E_EXPORT_ARG, minishell->cmds->args[1]);
+		return (1);
 	}
-	return ;
+	return (0);
 }

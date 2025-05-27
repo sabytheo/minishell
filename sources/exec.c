@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/26 18:54:46 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/27 16:55:42 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,18 @@ int	exec_builtins(t_minishell *minishell, t_cmds *cmds)
 	minishell->error_code = 0;
 	len = ft_strlen(cmds->args[0]);
 	if (ft_strncmp(cmds->args[0], "cd", len) == 0 && len == 2)
-		ft_cd(minishell, &cmds);
-	if (ft_strncmp(cmds->args[0], "echo", len) == 0 && len == 4)
-		ft_echo(minishell, &cmds);
+		minishell->error_code = ft_cd(&cmds);
+	else if (ft_strncmp(cmds->args[0], "echo", len) == 0 && len == 4)
+		minishell->error_code = ft_echo(&cmds);
 	else if (ft_strncmp(cmds->args[0], "env", len) == 0 && len == 3)
-		ft_env(minishell);
+		minishell->error_code = ft_env(minishell);
 	else if (ft_strncmp(cmds->args[0], "exit", len) == 0 && len == 4)
-		return (0);
+		ft_exit(minishell, minishell->error_code);
 	else if (ft_strncmp(cmds->args[0], "export", len) == 0 && len == 6)
-		ft_export(minishell);
+		minishell->error_code = ft_export(minishell);
 	else if (ft_strncmp(cmds->args[0], "pwd", len) == 0 && len == 3)
-		ft_pwd();
+		minishell->error_code = ft_pwd();
 	else if (ft_strncmp(cmds->args[0], "unset", len) == 0 && len == 5)
-		ft_unset(minishell);
-	return (0);
+		minishell->error_code = ft_unset(minishell);
+	return (minishell->error_code);
 }

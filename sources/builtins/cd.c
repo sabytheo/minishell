@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 12:43:26 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 12:29:55 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:50:50 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,24 @@ path depuis le root root
 */
 #include "minishell.h"
 
-void	ft_cd(t_minishell *minishell, t_cmds **cmds)
+int	ft_cd(t_cmds **cmds)
 {
 	char	*pwd;
 	int		cd;
 
 	pwd = getcwd(NULL, 0);
-	//printf("pwd before chdir: %s\n", pwd);
 	free(pwd);
 	if ((*cmds)->args[1] == NULL)
 		cd = chdir("/home");
 	else
 		cd = chdir((*cmds)->args[1]);
 	pwd = getcwd(NULL, 0);
-	//printf("pwd after chdir: %s\n", pwd);
 	free(pwd);
 	if (cd != 0)
 	{
-		minishell->error_code = 1;
 		ft_printf_fd(2, "minishell: cd: %s: No such file or directory\n",
 			(*cmds)->args[1]);
+		return (1);
 	}
-	return ;
+	return (0);
 }

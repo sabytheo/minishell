@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/05/16 17:30:13 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:49:47 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,15 @@ static bool	find_newline(char *str)
 	return (false);
 }
 
-void	ft_echo(t_minishell *minishell, t_cmds **cmds)
+int	ft_echo(t_cmds **cmds)
 {
 	bool	newline;
 	int		i;
 
-	(void)minishell;
 	newline = false;
 	i = 1;
 	if ((*cmds) == NULL)
-		return ;
+		return (1);
 	newline = find_newline((*cmds)->args[i]);
 	if (newline == true)
 		i++;
@@ -48,5 +47,5 @@ void	ft_echo(t_minishell *minishell, t_cmds **cmds)
 	}
 	if (newline == false)
 		ft_putstr_fd("\n", STDOUT_FILENO);
-	return ;
+	return (0);
 }

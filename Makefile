@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
+#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/26 11:15:55 by tsaby            ###   ########.fr        #
+#    Updated: 2025/05/27 16:45:31 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,8 @@ SRCS_BUILTINS  :=	builtins/echo.c \
 					builtins/pwd.c \
 					builtins/env.c \
 					builtins/export.c \
-					builtins/unset.c
+					builtins/unset.c \
+					builtins/exit.c
 
 SRCS		:=		main.c \
 					init.c \

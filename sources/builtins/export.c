@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/05/26 19:34:31 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 11:43:08 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	ft_strlen_equal(char *str)
 		i++;
 	return (i);
 }
+
+
 
 static char	**fill_variables(char *value)
 {
@@ -218,6 +220,30 @@ void	add_to_list(t_minishell *minishell, t_denvp *list)
 	new = create_denvp(var);
 	current = list;
 	add_denvp_back(&current, new);
+}
+
+void	split_envp(t_minishell *minishell, char **envp)
+{
+	t_denvp	*new_denvp;
+	t_denvp	*new_export;
+	int		i;
+	char	**var1;
+	char	**var2;
+
+	if (envp == NULL)
+		return ;
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		var1 = fill_variables(envp[i]);
+		var2 = fill_variables(envp[i]);
+		new_export = create_denvp(var1);
+		new_denvp = create_denvp(var2);
+		add_denvp_back(&minishell->export, new_export);
+		add_denvp_back(&minishell->denvp, new_denvp);
+		i++;
+	}
+	return ;
 }
 
 void	ft_export(t_minishell *minishell)

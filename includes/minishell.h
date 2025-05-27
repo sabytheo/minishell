@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/26 15:57:12 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/27 12:50:57 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,12 @@ typedef struct s_envp
 	struct s_envp				*next;
 }								t_envp;
 
+typedef struct s_denvp
+{
+	char						**var;
+	struct s_denvp				*next;
+}								t_denvp;
+
 typedef struct s_minishell
 {
 	int							launch_mode;
@@ -71,9 +77,9 @@ typedef struct s_minishell
 	char						*entry;
 	t_token						*tokens;
 	t_expand					*expand;
-	t_envp						*export;
 	t_envp						*envp;
-	t_envp						*export_envp;
+	t_denvp						*denvp;
+	t_denvp						*export;
 	t_cmds						*cmds;
 
 }								t_minishell;
@@ -94,6 +100,7 @@ void							free_tokens(t_token **tokens);
 void							free_tab(char **tab);
 void							free_cmds(t_cmds **cmds);
 void							free_envp(t_envp **envp);
+void							free_denvp(t_denvp **denvp);
 int								exit_and_clear_child(int error_code,
 									t_minishell *minishell);
 
@@ -107,11 +114,9 @@ char							*get_entry(t_minishell *minishell);
 // init.c --->
 void							init_minishell(t_minishell *minishell,
 									char **envp);
-void							copy_envp(char **envp, t_minishell *minishell);
+void							split_envp(t_minishell *minishell, char **envp);
 t_envp							*create_node(char *val);
 void							add_node_back(t_envp **list_envp, t_envp *new);
-void							copy_envp_bis(char **envp,
-									t_minishell *minishell);
 
 // tokens.c --->
 bool							has_closed_quotes(char *str);
@@ -145,9 +150,8 @@ char							*expand_variable(char *str,
 
 // utils_expand.c --->
 int								is_valid_var_char(char c, int len);
-void							chainedlst_to_tab(t_minishell *minishell,
-									t_envp *envp);
-int								envp_size(t_envp *envp);
+void							chainedlst_to_tab(t_minishell *minishell);
+int								envp_size(t_denvp *denvp);
 
 // debug.c --->
 void							print_tokens(t_token *tokens);
@@ -166,6 +170,9 @@ void							ft_pwd(void);
 void							ft_env(t_minishell *minishell);
 void							ft_export(t_minishell *minishell);
 void							ft_unset(t_minishell *minishell);
+
+// ft_export.c --->
+int								ft_strcmp(const char *s1, const char *s2);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);

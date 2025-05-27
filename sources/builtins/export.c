@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 11:43:08 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 14:47:33 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,7 @@ void	split_envp(t_minishell *minishell, char **envp)
 		new_export = create_denvp(var1);
 		new_denvp = create_denvp(var2);
 		add_denvp_back(&minishell->export, new_export);
-		add_denvp_back(&minishell->denvp, new_denvp);
+		add_denvp_back(&minishell->envp, new_denvp);
 		i++;
 	}
 	return ;
@@ -256,8 +256,8 @@ void	ft_export(t_minishell *minishell)
 	{
 		if (replace_node(minishell->export, minishell->cmds->args[1]) == false)
 			add_to_list(minishell, minishell->export);
-		if (replace_node(minishell->denvp, minishell->cmds->args[1]) == false)
-			add_to_list(minishell, minishell->denvp);
+		if (replace_node(minishell->envp, minishell->cmds->args[1]) == false)
+			add_to_list(minishell, minishell->envp);
 	}
 	else if (export_parsing(minishell->cmds->args[1]) == 2)
 	{

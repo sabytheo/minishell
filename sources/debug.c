@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:42:30 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/26 15:00:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/27 14:46:07 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,5 @@ void	print_cmds(t_cmds *cmds)
 		printf("cmdfound: (%d)\n", cmds->cmdfound);
 		printf("------------------\n");
 		cmds = cmds->next;
-	}
-}
-
-void	print_envp(t_envp *envp)
-{
-	while (envp)
-	{
-		printf("envp: %s\n", envp->value);
-		envp = envp->next;
 	}
 }

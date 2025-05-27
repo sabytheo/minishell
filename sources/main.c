@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/27 12:52:22 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 14:30:43 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,7 @@ int	main(int argc, char **argv, char **envp)
 		free_cmds(&minishell.cmds);
 		free_tokens(&minishell.tokens);
 		free(minishell.entry);
-		minishell.cmdfound = false ;
-		minishell.errfound = false ;
+		minishell.errfound = false;
 	}
 	free_tab(minishell.envp_tab);
 	free_minishell(&minishell);

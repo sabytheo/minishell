@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 12:50:57 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 14:47:33 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,6 @@
 
 extern volatile sig_atomic_t	g_signal_value;
 
-typedef struct s_envp
-{
-	char						*value;
-	struct s_envp				*next;
-}								t_envp;
-
 typedef struct s_denvp
 {
 	char						**var;
@@ -77,8 +71,7 @@ typedef struct s_minishell
 	char						*entry;
 	t_token						*tokens;
 	t_expand					*expand;
-	t_envp						*envp;
-	t_denvp						*denvp;
+	t_denvp						*envp;
 	t_denvp						*export;
 	t_cmds						*cmds;
 
@@ -99,8 +92,7 @@ void							free_minishell(t_minishell *minishell);
 void							free_tokens(t_token **tokens);
 void							free_tab(char **tab);
 void							free_cmds(t_cmds **cmds);
-void							free_envp(t_envp **envp);
-void							free_denvp(t_denvp **denvp);
+void							free_denvp(t_denvp **envp);
 int								exit_and_clear_child(int error_code,
 									t_minishell *minishell);
 
@@ -115,8 +107,6 @@ char							*get_entry(t_minishell *minishell);
 void							init_minishell(t_minishell *minishell,
 									char **envp);
 void							split_envp(t_minishell *minishell, char **envp);
-t_envp							*create_node(char *val);
-void							add_node_back(t_envp **list_envp, t_envp *new);
 
 // tokens.c --->
 bool							has_closed_quotes(char *str);
@@ -151,11 +141,10 @@ char							*expand_variable(char *str,
 // utils_expand.c --->
 int								is_valid_var_char(char c, int len);
 void							chainedlst_to_tab(t_minishell *minishell);
-int								envp_size(t_denvp *denvp);
+int								envp_size(t_denvp *envp);
 
 // debug.c --->
 void							print_tokens(t_token *tokens);
-void							print_envp(t_envp *envp);
 void							print_cmds(t_cmds *cmds);
 
 // signals.c --->

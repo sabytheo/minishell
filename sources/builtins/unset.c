@@ -6,68 +6,57 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 14:41:43 by egache            #+#    #+#             */
-/*   Updated: 2025/05/26 19:39:45 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 14:47:33 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	del_str(void *value)
+void	del_tab(void *var)
 {
-	free((char *)value);
+	free_tab((char **)var);
+	// free(var);
+	var = NULL;
 }
 
-void	ft_delnode(t_envp *envp, void (*del)(void *))
+void	ft_delnode(t_denvp *envp, void (*del)(void *))
 {
-	(*del)(envp->value);
+	(*del)(envp->var);
 	free(envp);
 }
 
-static bool	check_arg(char *arg, char *envp_value)
+static bool	check_arg(char *arg, char *denvp_var)
 {
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		if (arg[i] == '=')
-			return (false);
-		i++;
-	}
-	if (ft_strncmp(arg, envp_value, ft_strlen(arg)) != 0)
-		return (false);
-	return (true);
+	if (ft_strncmp(arg, denvp_var, ft_strlen(denvp_var)) == 0)
+		return (true);
+	return (false);
 }
 
 void	ft_unset(t_minishell *minishell)
 {
-	t_cmds	*cmds;
-	t_envp	*envp;
-	t_envp	*current;
-	t_envp	*to_delete;
+	t_denvp	*current;
+	t_denvp	*to_delete;
 
-	envp = minishell->envp;
-	cmds = minishell->cmds;
-	if (cmds->args[1] == NULL)
+	if (minishell->cmds->args[1])
 		return ;
-	if (check_arg(cmds->args[1], envp->value) == true)
+	if (check_arg(minishell->cmds->args[1], minishell->envp->var[0]) == true)
 	{
-		to_delete = envp;
-		envp = envp->next;
-		ft_delnode(to_delete, del_str);
-		free(minishell->envp_tab);
+		to_delete = minishell->envp;
+		minishell->envp = minishell->envp->next;
+		ft_delnode(to_delete, del_tab);
 		chainedlst_to_tab(minishell);
 	}
 	else
 	{
-		current = envp;
+		current = minishell->envp;
 		while (current && current->next != NULL)
 		{
-			if (check_arg(cmds->args[1], current->next->value) == true)
+			if (check_arg(minishell->cmds->args[1],
+					current->next->var[0]) == true)
 			{
 				to_delete = current->next;
 				current->next = current->next->next;
-				ft_delnode(to_delete, del_str);
+				ft_delnode(to_delete, del_tab);
 				chainedlst_to_tab(minishell);
 			}
 			else
@@ -77,4 +66,4 @@ void	ft_unset(t_minishell *minishell)
 	return ;
 }
 
-// A REFAIRE 
+// A REFAIRE

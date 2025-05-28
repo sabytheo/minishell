@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 16:58:02 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/28 14:46:49 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include "get_next_line.h"
 # include "libft.h"
 # include "token.h"
+# include <errno.h>
+# include <dirent.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -119,7 +121,7 @@ void							tokens(t_minishell *minishell, char *entry);
 char							*remove_quotes(const char *str);
 
 // check_tokens.c --->
-void							check_tokens(t_minishell *minishell);
+bool							check_tokens(t_minishell *minishell);
 bool							check_cmd(t_minishell *minishell, char *arg);
 char							*check_syntax(t_minishell *minishell);
 

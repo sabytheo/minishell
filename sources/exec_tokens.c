@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 12:33:28 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/28 15:18:02 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ t_token	*extract_redirections(t_token **current, t_token *redir_head)
 void	split_tokens(t_minishell *minishell)
 {
 	t_token	*current_args;
-	t_token *redir_head;
+	t_token	*redir_head;
 	t_token	*current_redir;
 	t_cmds	*new;
 	char	**args;
@@ -83,7 +83,7 @@ void	split_tokens(t_minishell *minishell)
 	{
 		args = fill_args(&current_args);
 		new = create_cmds(args);
-		new->redirs = extract_redirections(&current_redir,redir_head);
+		new->redirs = extract_redirections(&current_redir, redir_head);
 		new->cmdfound = check_cmd(minishell, args[0]);
 		add_cmds_back(&minishell->cmds, new);
 		if (current_args != NULL)
@@ -177,6 +177,7 @@ void	execute_single_command(t_minishell *minishell)
 {
 	pid_t	pid;
 	t_cmds	*cmds;
+	char	*path;
 
 	cmds = minishell->cmds;
 	if (before_builtins(cmds, minishell) < 0)
@@ -188,8 +189,15 @@ void	execute_single_command(t_minishell *minishell)
 			exit_and_clear_child(minishell->error_code, minishell);
 		if (cmds->cmdfound == true)
 		{
-			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
-				minishell->envp_tab);
+			path = find_path(cmds->args[0], minishell->envp_tab, 0);
+			printf("path : %s\n", path);
+			if (ft_strnstr("/home/egache/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/egache/.dotnet/tools",
+					path, ft_strlen(path)) == NULL)
+			{
+				printf("pas bon\n");
+				exit_and_clear_child(minishell->error_code, minishell);
+			}
+			execve(path, cmds->args, minishell->envp_tab);
 			perror("execve");
 			exit_and_clear_child(minishell->error_code, minishell);
 		}

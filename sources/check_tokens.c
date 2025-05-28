@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/05/26 16:08:44 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/28 15:20:13 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,19 @@ char	*check_syntax(t_minishell *minishell)
 bool	check_cmd(t_minishell *minishell, char *arg)
 {
 	if (is_valid_cmd(arg, minishell) == true)
+	{
+		printf("errno if true : %d\n", errno);
 		return (true);
+	}
 	minishell->error_code = 127;
-	ft_printf_fd(2, E_PARS_CMD_NF, arg);
-	return(false);
+	ft_printf_fd(2, "errno : %d\n", errno);
+	ft_printf_fd(2, "bash: %s: ", arg);
+	perror(NULL);
+	// ft_printf_fd(2, E_PARS_CMD_NF, arg);
+	return (false);
 }
 
-void	check_tokens(t_minishell *minishell)
+bool	check_tokens(t_minishell *minishell)
 {
 	char	*syntax_error;
 
@@ -85,6 +91,7 @@ void	check_tokens(t_minishell *minishell)
 	{
 		minishell->error_code = 2;
 		clean_error(syntax_error, minishell);
+		return (false);
 	}
-	return ;
+	return (true);
 }

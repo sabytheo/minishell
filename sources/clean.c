@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/27 17:04:19 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/28 12:06:01 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,8 @@ void	clean_error(char *error_message, t_minishell *minishell)
 	// besoin de completer cette fonction pour tout bien clean,free.
 	if (error_message)
 		ft_printf_fd(2, error_message, minishell->error_item);
-	free_minishell(minishell);
-	exit(minishell->error_code);
+	// free_minishell(minishell);
+	// exit(minishell->error_code);
 }
 
 void	free_minishell(t_minishell *minishell)

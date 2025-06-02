@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/28 15:18:02 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/02 16:43:42 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ void	split_tokens(t_minishell *minishell)
 		args = fill_args(&current_args);
 		new = create_cmds(args);
 		new->redirs = extract_redirections(&current_redir, redir_head);
-		new->cmdfound = check_cmd(minishell, args[0]);
+		if (args[0] != NULL)
+			new->cmdfound = check_cmd(minishell, args[0]);
 		add_cmds_back(&minishell->cmds, new);
 		if (current_args != NULL)
 			current_args = current_args->next;
@@ -191,12 +192,7 @@ void	execute_single_command(t_minishell *minishell)
 		{
 			path = find_path(cmds->args[0], minishell->envp_tab, 0);
 			printf("path : %s\n", path);
-			if (ft_strnstr("/home/egache/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/egache/.dotnet/tools",
-					path, ft_strlen(path)) == NULL)
-			{
-				printf("pas bon\n");
-				exit_and_clear_child(minishell->error_code, minishell);
-			}
+			printf("cmds->args[0] : %s\n", cmds->args[0]);
 			execve(path, cmds->args, minishell->envp_tab);
 			perror("execve");
 			exit_and_clear_child(minishell->error_code, minishell);
@@ -211,7 +207,7 @@ void	exec_tokens(t_minishell *minishell)
 	t_cmds	*current;
 
 	split_tokens(minishell);
-	// print_cmds(minishell->cmds);
+	//print_cmds(minishell->cmds);
 	current = minishell->cmds;
 	if (current->next == NULL)
 		execute_single_command(minishell);

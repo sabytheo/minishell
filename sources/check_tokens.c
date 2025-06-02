@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/05/28 15:20:13 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/02 16:17:58 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,12 @@ bool	check_cmd(t_minishell *minishell, char *arg)
 {
 	if (is_valid_cmd(arg, minishell) == true)
 	{
-		printf("errno if true : %d\n", errno);
+		printf("errno if valid_cmd : %d\n", errno);
 		return (true);
 	}
 	minishell->error_code = 127;
-	ft_printf_fd(2, "errno : %d\n", errno);
-	ft_printf_fd(2, "bash: %s: ", arg);
+	//ft_printf_fd(2, "errno : %d\n", errno);
+	ft_printf_fd(2,  	"minishell: %s: ", arg);
 	perror(NULL);
 	// ft_printf_fd(2, E_PARS_CMD_NF, arg);
 	return (false);

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/27 17:18:34 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/02 16:30:41 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ char	*find_path(char *arg, char **envp, int i)
 	if (!envp[i])
 		return (NULL);
 	if (access(arg, X_OK) == 0)
+	{
+		printf("arg :::: %s\n", arg);
 		return (arg);
+	}
 	path_arg = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (path_arg != NULL && path_arg[i] && arg)
@@ -62,7 +65,7 @@ char	*find_path(char *arg, char **envp, int i)
 int	exec_builtins(t_minishell *minishell, t_cmds *cmds)
 {
 	int	len;
-	
+
 	len = ft_strlen(cmds->args[0]);
 	if (ft_strncmp(cmds->args[0], "cd", len) == 0 && len == 2)
 		minishell->error_code = ft_cd(&cmds);

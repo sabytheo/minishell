@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/28 14:46:49 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/03 18:17:51 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,4 +205,6 @@ void							wait_allchild(t_minishell *minishell);
 void							close_pipes_inchild(t_minishell *minishell);
 void							cleanup_pipes(int **pipes, int pipe_count);
 void							getcmd_count(t_minishell *minishell);
+
+void	reset_redir(t_minishell *minishell);
 #endif

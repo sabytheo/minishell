@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/02 16:43:42 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/03 18:57:44 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,8 +191,8 @@ void	execute_single_command(t_minishell *minishell)
 		if (cmds->cmdfound == true)
 		{
 			path = find_path(cmds->args[0], minishell->envp_tab, 0);
-			printf("path : %s\n", path);
-			printf("cmds->args[0] : %s\n", cmds->args[0]);
+			// printf("path : %s\n", path);
+			// printf("cmds->args[0] : %s\n", cmds->args[0]);
 			execve(path, cmds->args, minishell->envp_tab);
 			perror("execve");
 			exit_and_clear_child(minishell->error_code, minishell);

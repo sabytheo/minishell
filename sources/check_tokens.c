@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/06/02 16:17:58 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/03 18:59:48 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,7 @@ bool	check_cmd(t_minishell *minishell, char *arg)
 		return (true);
 	}
 	minishell->error_code = 127;
-	//ft_printf_fd(2, "errno : %d\n", errno);
-	ft_printf_fd(2,  	"minishell: %s: ", arg);
+	ft_printf_fd(2, "minishell: %s: ", arg);
 	perror(NULL);
 	// ft_printf_fd(2, E_PARS_CMD_NF, arg);
 	return (false);

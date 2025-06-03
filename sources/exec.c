@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/02 16:30:41 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/03 20:03:36 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,7 @@ char	*find_path(char *arg, char **envp, int i)
 	if (!envp[i])
 		return (NULL);
 	if (access(arg, X_OK) == 0)
-	{
-		printf("arg :::: %s\n", arg);
 		return (arg);
-	}
 	path_arg = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (path_arg != NULL && path_arg[i] && arg)

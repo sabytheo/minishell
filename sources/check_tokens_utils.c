@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:27:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/02 16:42:25 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/03 20:09:03 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,64 +46,3 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 	free(path);
 	return (false);
 }
-
-//--------------------------------------------------------------------------------
-
-// bool	check_first_token(t_minishell *minishell, t_token **current)
-// {
-// 	bool	ret;
-
-// 	ret = false;
-// 	if (is_valid_cmd((*current)->value, minishell) == false
-// 		&& (*current)->type == T_WORD)
-// 	{
-// 		ft_printf_fd(2, E_PARS_CMD_NF, (*current)->value);
-// 		minishell->error_code = 127;
-// 		ret = true;
-// 	}
-// 	else if ((*current)->type == T_PIPE)
-// 	{
-// 		ft_printf_fd(2, E_PARS_PIPE);
-// 		minishell->error_code = 2;
-// 		ret = true;
-// 		if ((*current)->next != NULL)
-// 			(*current) = (*current)->next;
-// 	}
-// 	return (ret);
-// }
-
-// bool operator_error(t_minishell *minishell, t_token *current, bool errfound)
-// {
-// 	if (current->next == NULL && errfound == false)
-// 	{
-// 		ft_printf_fd(2, E_PARS_OPE_E);
-// 		minishell->error_code = 2;
-// 		errfound = true;
-// 	}
-// 	else if (current->next != NULL && current->next->type != T_WORD
-//		&& errfound == false)
-// 	{
-// 		ft_printf_fd(2, E_PARS_OPE_D, current->next->value);
-// 		// printf("current->next->value in operator error : %s\n",
-//			current->next->value);
-// 		minishell->error_code = 2;
-// 		errfound = true;
-// 	}
-// 	return (errfound);
-// }
-
-// bool pipe_error(t_minishell *minishell, t_token *current, bool errfound)
-// {
-// 	if (current->next == NULL && errfound == false)
-// 	{
-// 		ft_printf_fd(2, E_PARS_PIPE);
-// 		minishell->error_code = 2;
-// 	}
-// 	else if (current->next != NULL)
-// 	{
-// 		// errfound = false;
-// 		// printf("current->next in pipe_error : %s\n", current->next->value);
-// 		check_tokens(minishell, current->next);
-// 	}
-// 	return (errfound);
-// }

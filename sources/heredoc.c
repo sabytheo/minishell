@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/26 19:02:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/03 18:18:04 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,14 @@ int	create_heredoc(char *eof, t_minishell *minishell)
 	while (1)
 	{
 		ft_printf("minishell_heredoc>");
+		if( minishell->saved_inputfd > 2)
+			reset_redir(minishell);
 		line = get_next_line(STDIN_FILENO);
 		if (line == NULL)
+		{
+			printf("test\n");
 			break ;
+		}
 		if (strncmp(line, eof, len) == 0 && line[len] == '\n')
 		{
 			free(line);

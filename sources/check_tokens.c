@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/05/09 15:57:31 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/28 15:20:13 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,39 +67,22 @@ char	*check_syntax(t_minishell *minishell)
 	return (NULL);
 }
 
-int	check_cmd(t_minishell *minishell)
+bool	check_cmd(t_minishell *minishell, char *arg)
 {
-	t_token	*current;
-	bool	errfound;
-	bool	cmdfound;
-
-	current = minishell->tokens;
-	errfound = false;
-	cmdfound = false;
-	while (current != NULL)
+	if (is_valid_cmd(arg, minishell) == true)
 	{
-		if (current->type == T_WORD && cmdfound == false && errfound == false)
-		{
-			if (is_valid_cmd(current->value, minishell) == true)
-				cmdfound = true;
-			else
-			{
-				minishell->error_code = 127;
-				errfound = true;
-				ft_printf_fd(2, E_PARS_CMD_NF, current->value);
-			}
-		}
-		if (current->type == T_PIPE)
-		{
-			cmdfound = false;
-			errfound = false;
-		}
-		current = current->next;
+		printf("errno if true : %d\n", errno);
+		return (true);
 	}
-	return (0);
+	minishell->error_code = 127;
+	ft_printf_fd(2, "errno : %d\n", errno);
+	ft_printf_fd(2, "bash: %s: ", arg);
+	perror(NULL);
+	// ft_printf_fd(2, E_PARS_CMD_NF, arg);
+	return (false);
 }
 
-void	check_tokens(t_minishell *minishell)
+bool	check_tokens(t_minishell *minishell)
 {
 	char	*syntax_error;
 
@@ -108,7 +91,7 @@ void	check_tokens(t_minishell *minishell)
 	{
 		minishell->error_code = 2;
 		clean_error(syntax_error, minishell);
+		return (false);
 	}
-	check_cmd(minishell);
-	return ;
+	return (true);
 }

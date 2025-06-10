@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/05/15 19:52:26 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/28 15:18:02 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,120 +39,170 @@ static char	**fill_args(t_token **current)
 	}
 	return (args);
 }
-
-void	split_tokens(t_token *tokens, t_minishell *minishell)
+t_token	*extract_redirections(t_token **current, t_token *redir_head)
 {
-	t_token	*current;
+	t_token	*redir_tail;
+	t_token	*redir_token;
+	t_token	*file_token;
+
+	redir_tail = NULL;
+	while (*current && (*current)->type != T_PIPE)
+	{
+		if ((*current)->type >= T_REDIR_IN && (*current)->type <= T_HEREDOC)
+		{
+			redir_token = *current;
+			*current = (*current)->next;
+			file_token = *current;
+			*current = file_token->next;
+			redir_token->next = file_token;
+			file_token->next = NULL;
+			if (!redir_head)
+				redir_head = redir_token;
+			else
+				redir_tail->next = redir_token;
+			redir_tail = file_token;
+		}
+		else
+			(*current) = (*current)->next;
+	}
+	return (redir_head);
+}
+
+void	split_tokens(t_minishell *minishell)
+{
+	t_token	*current_args;
+	t_token	*redir_head;
+	t_token	*current_redir;
 	t_cmds	*new;
 	char	**args;
 
-	current = tokens;
-	while (current != NULL)
+	redir_head = NULL;
+	current_args = minishell->tokens;
+	current_redir = minishell->tokens;
+	while (current_args && current_redir)
 	{
-		args = fill_args(&current);
+		args = fill_args(&current_args);
 		new = create_cmds(args);
+		new->redirs = extract_redirections(&current_redir, redir_head);
+		new->cmdfound = check_cmd(minishell, args[0]);
 		add_cmds_back(&minishell->cmds, new);
-		if (current != NULL)
-			current = current->next;
+		if (current_args != NULL)
+			current_args = current_args->next;
+		if (current_redir != NULL)
+			current_redir = current_redir->next;
 		else
 			return ;
 	}
 	return ;
 }
 
-int	setup_redirections(t_token *tokens, t_minishell *minishell)
+int	setup_redirections(t_token *current, t_minishell *minishell, bool cmdfound)
 {
-	t_token	*current;
+	int	errfound;
 
-	current = tokens;
+	errfound = 0;
 	while (current)
 	{
 		if (current->type == T_REDIR_IN)
-		{
-			minishell->input_fd = open(current->next->value, O_RDONLY);
-			if (minishell->input_fd < 0)
-				return (perror(current->next->value), -1);
-			if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
-			{
-				perror("dup2");
-				close(minishell->input_fd);
-				return (-1);
-			}
-			close(minishell->input_fd);
-		}
+			errfound = redir_in(minishell, current, cmdfound);
 		else if (current->type == T_REDIR_OUT)
-		{
-			minishell->output_fd = open(current->next->value,
-					O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (minishell->output_fd < 0)
-				return (perror(current->next->value), -1);
-			if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
-			{
-				perror("dup2");
-				close(minishell->output_fd);
-				return (-1);
-			}
-			close(minishell->output_fd);
-		}
+			errfound = redir_out(minishell, current, cmdfound);
 		else if (current->type == T_APPEND)
-		{
-			minishell->output_fd = open(current->next->value,
-					O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (minishell->output_fd < 0)
-				return (perror(current->next->value), -1);
-			if (dup2(minishell->output_fd, STDOUT_FILENO) < 0)
-			{
-				perror("dup2");
-				close(minishell->output_fd);
-				return (-1);
-			}
-			close(minishell->output_fd);
-		}
+			errfound = redir_append(minishell, current, cmdfound);
 		else if (current->type == T_HEREDOC)
-		{
-			create_heredoc(current->next->value, minishell);
-			if (minishell->input_fd < 0)
-				return (-1);
-			if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
-			{
-				perror("dup2");
-				close(minishell->input_fd);
-				return (-1);
-			}
-			close(minishell->input_fd);
-		}
+			errfound = redir_heredoc(minishell, current, cmdfound);
+		if (errfound < 0)
+			return (-1);
 		current = current->next;
 	}
 	return (0);
 }
 
-void	execute_single_command(t_minishell *minishell, t_cmds *cmds)
+void	reset_redir(t_minishell *minishell)
 {
-	pid_t	pid;
-	int		status;
+	if (minishell->saved_inputfd > 2)
+	{
+		if (dup2(minishell->saved_inputfd, STDIN_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->saved_inputfd);
+		}
+		close(minishell->saved_inputfd);
+		minishell->saved_inputfd = -1;
+	}
+	if (minishell->saved_outputfd > 2)
+	{
+		if (dup2(minishell->saved_outputfd, STDOUT_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->saved_outputfd);
+		}
+		close(minishell->saved_outputfd);
+		minishell->saved_outputfd = -1;
+	}
+}
+
+void	wait_thechild(pid_t pid, t_minishell *minishell)
+{
+	int	status;
 
 	status = 0;
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		minishell->error_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		minishell->error_code = 128 + WTERMSIG(status);
+}
+int	before_builtins(t_cmds *cmds, t_minishell *minishell)
+{
+	if (cmds->cmdfound == false)
+	{
+		setup_redirections(cmds->redirs, minishell, cmds->cmdfound);
+		return (-1);
+	}
+	if (is_a_builtins(cmds->args[0]))
+	{
+		if (setup_redirections(cmds->redirs, minishell, cmds->cmdfound) < 0)
+		{
+			reset_redir(minishell);
+			return (-1);
+		}
+		exec_builtins(minishell, cmds);
+		reset_redir(minishell);
+		return (-1);
+	}
+	return (0);
+}
+void	execute_single_command(t_minishell *minishell)
+{
+	pid_t	pid;
+	t_cmds	*cmds;
+	char	*path;
+
+	cmds = minishell->cmds;
+	if (before_builtins(cmds, minishell) < 0)
+		return ;
 	pid = fork();
 	if (pid == 0)
 	{
-		if (setup_redirections(minishell->tokens, minishell) < 0)
-			exit(1);
-		if (is_a_builtins(cmds->args[0]))
-			exit(exec_builtins(minishell));
-		else
-			execve(find_path(cmds->args[0], minishell->envp_tab, 0), cmds->args,
-				minishell->envp_tab);
-		perror("execve");
-		clean_error(NULL, minishell);
+		if (setup_redirections(cmds->redirs, minishell, cmds->cmdfound) < 0)
+			exit_and_clear_child(minishell->error_code, minishell);
+		if (cmds->cmdfound == true)
+		{
+			path = find_path(cmds->args[0], minishell->envp_tab, 0);
+			printf("path : %s\n", path);
+			if (ft_strnstr("/home/egache/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/egache/.dotnet/tools",
+					path, ft_strlen(path)) == NULL)
+			{
+				printf("pas bon\n");
+				exit_and_clear_child(minishell->error_code, minishell);
+			}
+			execve(path, cmds->args, minishell->envp_tab);
+			perror("execve");
+			exit_and_clear_child(minishell->error_code, minishell);
+		}
 	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			minishell->error_code = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			minishell->error_code = 128 + WTERMSIG(status);
-	}
+	wait_thechild(pid, minishell);
 	return ;
 }
 
@@ -160,15 +210,21 @@ void	exec_tokens(t_minishell *minishell)
 {
 	t_cmds	*current;
 
-	split_tokens(minishell->tokens, minishell);
+	split_tokens(minishell);
 	// print_cmds(minishell->cmds);
 	current = minishell->cmds;
-	while (current)
+	if (current->next == NULL)
+		execute_single_command(minishell);
+	else
+		execute_piped_command(minishell, current);
+	if (minishell->saved_inputfd != -1)
 	{
-		// if (minishell->cmds->next != NULL)
-		// 	// execute_piped_command();
-		// else
-		execute_single_command(minishell, current);
-		current = current->next;
+		close(minishell->saved_inputfd);
+		minishell->saved_inputfd = -1;
+	}
+	if (minishell->saved_outputfd != -1)
+	{
+		close(minishell->saved_outputfd);
+		minishell->saved_outputfd = -1;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/15 16:26:12 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/27 17:18:34 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,34 +59,24 @@ char	*find_path(char *arg, char **envp, int i)
 	return (NULL);
 }
 
-int	exec_builtins(t_minishell *minishell)
+int	exec_builtins(t_minishell *minishell, t_cmds *cmds)
 {
-	int		len;
-	// int		fd;
-	t_cmds	*cmds;
-
-	// if (minishell->fd != 0)
-	// 	fd = minishell->fd;
-	// else
-	// 	fd = STDOUT_FILENO;
-	cmds = minishell->cmds;
+	int	len;
+	
 	len = ft_strlen(cmds->args[0]);
-	// if (ft_strncmp(cmds->args[0], "cd", len) == 0 && len == 2)
-	// 	ft_cd(&cmds);
- 	if (ft_strncmp(cmds->args[0], "echo", len) == 0 && len == 4)
-	{
-		ft_echo(&cmds);
-		free_minishell(minishell);
-	}
-	// else if (ft_strncmp(cmds->args[0], "env", len) == 0 && len == 3)
-	// 	ft_env(fd, minishell);
-	// else if (ft_strncmp(cmds->args[0], "exit", len) == 0 && len == 4)
-	// 	return ;
-	// else if (ft_strncmp(cmds->args[0], "export", len) == 0 && len == 6)
-	// 	ft_export(minishell);
-	// else if (ft_strncmp(cmds->args[0], "pwd", len) == 0 && len == 3)
-	// 	ft_pwd();
-	// else if (ft_strncmp(cmds->args[0], "unset", len) == 0 && len == 5)
-	// 	return ;
-	return (1) ;
+	if (ft_strncmp(cmds->args[0], "cd", len) == 0 && len == 2)
+		minishell->error_code = ft_cd(&cmds);
+	else if (ft_strncmp(cmds->args[0], "echo", len) == 0 && len == 4)
+		minishell->error_code = ft_echo(&cmds);
+	else if (ft_strncmp(cmds->args[0], "env", len) == 0 && len == 3)
+		minishell->error_code = ft_env(minishell);
+	else if (ft_strncmp(cmds->args[0], "exit", len) == 0 && len == 4)
+		ft_exit(minishell, minishell->error_code);
+	else if (ft_strncmp(cmds->args[0], "export", len) == 0 && len == 6)
+		minishell->error_code = ft_export(minishell);
+	else if (ft_strncmp(cmds->args[0], "pwd", len) == 0 && len == 3)
+		minishell->error_code = ft_pwd();
+	else if (ft_strncmp(cmds->args[0], "unset", len) == 0 && len == 5)
+		minishell->error_code = ft_unset(minishell);
+	return (minishell->error_code);
 }

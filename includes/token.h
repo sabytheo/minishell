@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:29:35 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 13:25:42 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/26 13:21:10 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ typedef struct s_token
 typedef struct s_cmds
 {
 	char			**args;
-	int				*type;
+	t_token			*redirs;
+	bool			cmdfound;
 	struct s_cmds	*next;
 }					t_cmds;
 

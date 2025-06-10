@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/15 16:53:37 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/28 13:55:44 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,29 +70,28 @@ char	*get_entry(t_minishell *minishell)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char		*entry;
 	t_minishell	minishell;
 
 	init_minishell(&minishell, envp);
 	check_args_count(argc, argv, &minishell);
 	signal_initialisation();
-	chainedlst_to_tab(&minishell, minishell.envp);
+	chainedlst_to_tab(&minishell);
 	while (minishell.is_running == true)
 	{
-		entry = get_entry(&minishell);
-		if (entry == NULL)
+		minishell.entry = get_entry(&minishell);
+		printf("entry : %s\n", minishell.entry);
+		if (minishell.entry == NULL)
 			break ;
-		add_history(entry);
-		tokens(&minishell, entry);
-		// exec_builtins(&minishell);
-		free_cmds(&minishell.cmds);
-		free_tokens(&minishell.tokens);
-		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
-		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
-		free(entry);
-		// FAIRE UNE FONCTION POUR FREE A CHAQUE APPEL
+		if (ft_strlen(minishell.entry) > 0)
+		{
+			add_history(minishell.entry);
+			tokens(&minishell, minishell.entry);
+			free_cmds(&minishell.cmds);
+			free_tokens(&minishell.tokens);
+		}
+		free(minishell.entry);
+		minishell.errfound = false;
 	}
-	free(minishell.envp_tab);
 	free_minishell(&minishell);
 	return (0);
 }

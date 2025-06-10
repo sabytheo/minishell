@@ -1,53 +1,26 @@
-#Exec :
-	Avant toute commande -> parcourir la liste (c'est surement du parsing)
-		- Si on trouve un heredoc << -> Exec en premier.
-	Reparcourir la liste tant qu'on trouve pas un pipe
-		Check si on trouve < ou > ou >> ET SKIP <<
-			- Si type != 0 -> change le fd (dup2 a a executer apres les commandes)
-		Execute la commande
-			- Check le ERRNO pour voir si erreur ou non
-	Reparcourir a partir du pipe
-		- Redirection pipe THEO
-		- Si un pipe fail, qd meme executer le suivant
+#A FAIRe
 
-Ordre de shell :
-	- heredoc en premier
-	- verifier les binaires dans l'ordre -> check path et existence
-	- ouvrir les fd
-	- exec tout en meme temps
+- Ligne vide ------------------------------------------ GOOD
+- Erreurs de syntax ne doivent pas quitter minishell -- GOOD
+- Heredoc
+- Double free cmd "$PWD"
+- echo expand "$"
+- "$EMPTY" -> permission denied / Bash just return
+- Si **cmd est vide -> on le prend qd meme
+- . . . . . . . . lance une commande somehow
+- cat vide apres un pipe
+- Signaux dans heredoc
 
 
-	Structure commande :
-		- Avec double tableau qui contient chaque arg entre pipe
+#BESOIN DE CHECK SI ON A LA PERMISSION POUR UN FICHIER/DOSSIER
+#BESOIN DE CHECK SI LA COMMANDE S'EXE AVEC UN FICHIER OU UN DOSSIER
+	- Pouvoir differencier fichier et dossier
 
-		noeud 1 -> noeud 2 -> noeud 3
-		  DT1       DT2        DT3			=== RESULT
-				    RES1	   RES2
+- cd sans permissions fichiers ---------------------------------------------- GOOD ?
+- /directory -> code erreur 127 / "No such file or directory" ---------------
+	- Fonction is_valid_cmd (Pas la bonne fonction)
+- try to execute a dir -> code erreur 126 / "Is a directory"
+	- Fonction findpath -> need to differencier path de commandes et path classique
+- executable sans permission -> code erreur 126 / "permission denied"
+- execute non existent file -> code erreur 127 / "No such file or directory"
 
-#En fonction  :
-
-if check_errors == yes
-	return ;
-if heredoc == yes
-	do heredoc;
-if operator == yes
-	change fd
-strcmp pour trouver la commande a exec
-	execute commande correspondante
-if pipe == yes
-	execute command with old output
-
-#Fonction a faire:
-
-
-#check sur un autre minishell :
-
-bash-5.1$ caca | caca | >
-bash: syntax error near unexpected token `newline'
-
-caca | echo salut
-
-
-#A VOIR
-
-- errno.h / Une variable errno existe deja !!!

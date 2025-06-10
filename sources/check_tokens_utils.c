@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:27:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/14 16:52:46 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/28 15:26:57 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,12 @@ bool	is_a_builtins(char *cmd)
 
 bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 {
-	char	*path;
+	char			*path;
 
 	if (is_a_builtins(cmd))
 		return (true);
-	chainedlst_to_tab(minishell, minishell->envp);
 	path = find_path(cmd, minishell->envp_tab, 0);
-	// printf("path : %s\n", path);
-	if (path != NULL)
+		if (path != NULL)
 	{
 		free(path);
 		return (true);

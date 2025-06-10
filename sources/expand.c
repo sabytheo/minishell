@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 11:57:14 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/27 14:47:33 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,19 +43,19 @@ static char	*extract_var_name(char *str, int *i)
 	return (ft_substr(str, start, len));
 }
 
-static char	*get_values(char *name, t_envp *envp, t_minishell *minishell)
+static char	*get_values(char *name, t_denvp *envp, t_minishell *minishell)
 {
 	size_t	len;
 
 	if (!name)
 		return (ft_strdup(""));
 	if (ft_strncmp(name, "?", 1) == 0)
-		return (ft_strdup(ft_itoa(minishell->error_code)));
+		return (ft_itoa(minishell->error_code));
 	len = ft_strlen(name);
-	while (envp)
+	while (envp != NULL)
 	{
-		if (ft_strncmp(envp->value, name, len) == 0 && envp->value[len] == '=')
-			return (ft_strdup(envp->value + len + 1));
+		if (ft_strcmp(envp->var[0], name) == 0)
+			return (ft_strdup(envp->var[1] + 1));
 		envp = envp->next;
 	}
 	return (ft_strdup(""));

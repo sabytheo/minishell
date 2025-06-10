@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/05/15 19:24:34 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/28 14:46:49 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include "get_next_line.h"
 # include "libft.h"
 # include "token.h"
+# include <errno.h>
+# include <dirent.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -43,27 +45,36 @@
 
 extern volatile sig_atomic_t	g_signal_value;
 
-typedef struct s_envp
+typedef struct s_denvp
 {
-	char						*value;
-	struct s_envp				*next;
-}								t_envp;
+	char						**var;
+	struct s_denvp				*next;
+}								t_denvp;
 
 typedef struct s_minishell
 {
 	int							launch_mode;
 	int							input_fd;
 	int							output_fd;
+	int							saved_inputfd;
+	int							saved_outputfd;
 	int							heredoc_fd;
 	int							error_code;
 	char						*error_item;
 	char						**envp_tab;
 	int							envp_countline;
+	int							fd;
+	int							cmds_count;
+	int							**pipes;
+	pid_t						*pids;
 	bool						is_running;
+	bool						errfound;
+	bool						cmdfound;
+	char						*entry;
 	t_token						*tokens;
 	t_expand					*expand;
-	t_envp						*envp;
-	t_envp						*export_envp;
+	t_denvp						*envp;
+	t_denvp						*export;
 	t_cmds						*cmds;
 
 }								t_minishell;
@@ -83,7 +94,9 @@ void							free_minishell(t_minishell *minishell);
 void							free_tokens(t_token **tokens);
 void							free_tab(char **tab);
 void							free_cmds(t_cmds **cmds);
-void							free_envp(t_envp **envp);
+void							free_denvp(t_denvp **envp);
+int								exit_and_clear_child(int error_code,
+									t_minishell *minishell);
 
 // main.c --->
 void							clean_error(char *error_message,
@@ -95,11 +108,7 @@ char							*get_entry(t_minishell *minishell);
 // init.c --->
 void							init_minishell(t_minishell *minishell,
 									char **envp);
-void							copy_envp(char **envp, t_minishell *minishell);
-t_envp							*create_node(char *val);
-void							add_node_back(t_envp **list_envp, t_envp *new);
-void							copy_envp_bis(char **envp,
-									t_minishell *minishell);
+void							split_envp(t_minishell *minishell, char **envp);
 
 // tokens.c --->
 bool							has_closed_quotes(char *str);
@@ -112,8 +121,8 @@ void							tokens(t_minishell *minishell, char *entry);
 char							*remove_quotes(const char *str);
 
 // check_tokens.c --->
-void							check_tokens(t_minishell *minishell);
-int								check_cmd(t_minishell *minishell);
+bool							check_tokens(t_minishell *minishell);
+bool							check_cmd(t_minishell *minishell, char *arg);
 char							*check_syntax(t_minishell *minishell);
 
 // check_tokens_utils.c
@@ -133,13 +142,11 @@ char							*expand_variable(char *str,
 
 // utils_expand.c --->
 int								is_valid_var_char(char c, int len);
-void							chainedlst_to_tab(t_minishell *minishell,
-									t_envp *envp);
-int								envp_size(t_envp *envp);
+void							chainedlst_to_tab(t_minishell *minishell);
+int								envp_size(t_denvp *envp);
 
 // debug.c --->
 void							print_tokens(t_token *tokens);
-void							print_envp(t_envp *envp);
 void							print_cmds(t_cmds *cmds);
 
 // signals.c --->
@@ -149,26 +156,53 @@ void							signal_handler(int signum);
 
 // builtins.c --->
 int								ft_echo(t_cmds **cmds);
-void							ft_cd(t_cmds **cmds);
-void							ft_pwd(void);
-void							ft_env(int fd, t_minishell *minishell);
-void							ft_export(t_minishell *minishell);
+int								ft_cd(t_cmds **cmds);
+int								ft_pwd(void);
+int								ft_env(t_minishell *minishell);
+int								ft_export(t_minishell *minishell);
+int								ft_unset(t_minishell *minishell);
+void							ft_exit(t_minishell *minishell, int state);
+
+// ft_export.c --->
+int								ft_strcmp(const char *s1, const char *s2);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);
-int								exec_builtins(t_minishell *minishell);
+int								exec_builtins(t_minishell *minishell,
+									t_cmds *cmds);
 void							exec_tokens(t_minishell *minishell);
 
 // exec_tokens.c --->
 
-void							split_tokens(t_token *tokens,
+void							split_tokens(t_minishell *minishell);
+int								create_heredoc(char *eof,
 									t_minishell *minishell);
+int								setup_redirections(t_token *current,
+									t_minishell *minishell, bool cmdfound);
 
 // exec_tokens_utils.c --->
 t_cmds							*create_cmds(char **val);
 void							add_cmds_back(t_cmds **list_cmds, t_cmds *new);
 int								get_cmds_size(t_token *tokens);
 
-int	create_heredoc(char *eof, t_minishell *minishell);
+// redirection.c --->
+int								redir_in(t_minishell *minishell,
+									t_token *current, bool cmdfound);
+int								redir_out(t_minishell *minishell,
+									t_token *current, bool cmdfound);
+int								redir_append(t_minishell *minishell,
+									t_token *current, bool cmdfound);
+int								redir_heredoc(t_minishell *minishell,
+									t_token *current, bool cmdfound);
 
+// exec_pipe.c --->
+void							execute_piped_command(t_minishell *minishell,
+									t_cmds *cmds);
+void							wait_allchild(t_minishell *minishell);
+
+// exec_pipe_utils.c --->
+
+void							close_pipes_inchild(t_minishell *minishell);
+void							cleanup_pipes(int **pipes, int pipe_count);
+void							getcmd_count(t_minishell *minishell);
 #endif

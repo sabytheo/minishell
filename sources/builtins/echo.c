@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/05/15 16:29:47 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/05/27 16:49:47 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,38 +22,10 @@ static bool	find_newline(char *str)
 	return (false);
 }
 
-// int	ft_echo(int fd, t_cmds **cmds)
-// {
-// 	bool	newline;
-// 	int		i;
-
-// 	newline = false;
-// 	i = 1;
-// 	if ((*cmds) == NULL)
-// 		return (1);
-// 	newline = find_newline((*cmds)->args[i]);
-// 	if (newline == true)
-// 		i++;
-// 	while ((*cmds)->args[i] != NULL)
-// 	{
-// 		ft_putstr_fd((*cmds)->args[i], fd);
-// 		if ((*cmds)->args[i + 1] != NULL)
-// 		{
-// 			ft_putstr_fd(" ", fd);
-// 			i++;
-// 		}
-// 		else
-// 			i++;
-// 	}
-// 	if (newline == false)
-// 		ft_putstr_fd("\n", fd);
-// 	return ((0));
-// }
-
 int	ft_echo(t_cmds **cmds)
 {
-	bool newline;
-	int i;
+	bool	newline;
+	int		i;
 
 	newline = false;
 	i = 1;
@@ -71,12 +43,9 @@ int	ft_echo(t_cmds **cmds)
 			i++;
 		}
 		else
-		{
-			if (newline == false)
-				ft_putstr_fd("\n", STDOUT_FILENO);
 			i++;
-			return (0);
-		}
 	}
+	if (newline == false)
+		ft_putstr_fd("\n", STDOUT_FILENO);
 	return (0);
 }

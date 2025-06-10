@@ -6,22 +6,23 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:17:00 by egache            #+#    #+#             */
-/*   Updated: 2025/05/14 18:55:19 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:45:47 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_env(int fd, t_minishell *minishell)
+int	ft_env(t_minishell *minishell)
 {
-	int	i;
+	t_denvp	*current;
 
-	//chainedlst_to_tab(minishell, minishell->envp);
-	i = 0;
-	while (minishell->envp_tab[i] != NULL)
+	current = minishell->envp;
+	if (minishell->cmds->args[1] != NULL)
+		return (127);
+	while (current != NULL)
 	{
-		ft_printf_fd(fd, "%s\n", minishell->envp_tab[i]);
-		i++;
+		ft_printf_fd(STDOUT_FILENO, "%s%s\n", current->var[0], current->var[1]);
+		current = current->next;
 	}
-	return ;
+	return (0);
 }

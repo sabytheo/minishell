@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:42:30 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/13 16:43:33 by egache           ###   ########.fr       */
+/*   Updated: 2025/05/27 14:46:07 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,50 @@ void	print_tokens(t_token *tokens)
 	}
 }
 
+void	print_redirs(t_token *redirs)
+{
+	int		i;
+	t_token	*current;
+
+	i = 0;
+	current = redirs;
+	if (!redirs)
+	{
+		printf("  No redirections.\n");
+		return ;
+	}
+	while (current)
+	{
+		printf("  Redir %d: type=%d, value=(%s)\n", i, current->type,
+			current->value);
+		current = current->next;
+		i++;
+	}
+}
+
 void	print_cmds(t_cmds *cmds)
 {
 	int	i;
 
-	i = 0;
 	while (cmds)
 	{
-		printf("\n NEW NODE \n");
-		while (cmds->args[i] != NULL)
+		printf("---- NEW NODE ----\n");
+		if (!cmds->args)
+			printf("No args in this node.\n");
+		else
 		{
-			printf("\nargs[%d] : (%s)\n", i, cmds->args[i]);
-			i++;
+			i = 0;
+			while (cmds->args[i] != NULL)
+			{
+				printf("args[%d] : (%s)\n", i, cmds->args[i]);
+				i++;
+			}
 		}
+		printf("Redirections:\n");
+		print_redirs(cmds->redirs);
+		printf("Cmdfound:\n 0 pour false\n 1 pour true\n");
+		printf("cmdfound: (%d)\n", cmds->cmdfound);
+		printf("------------------\n");
 		cmds = cmds->next;
-		i = 0;
-	}
-}
-
-void	print_envp(t_envp *envp)
-{
-	while (envp)
-	{
-		printf("envp: %s\n", envp->value);
-		envp = envp->next;
 	}
 }

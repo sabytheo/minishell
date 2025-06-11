@@ -1,0 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/11 10:19:50 by tsaby             #+#    #+#             */
+/*   Updated: 2025/06/11 18:47:47 by tsaby            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+t_heredoc	*create_heredoc_node(char *filename)
+{
+	t_heredoc	*new;
+
+	new = malloc(sizeof(t_heredoc));
+	if (new == NULL)
+		return (NULL);
+	new->filename = filename;
+	new->next = NULL;
+	return (new);
+}
+
+void	add_heredoc_back(t_heredoc **list_heredoc, t_heredoc *new)
+{
+	t_heredoc	*current;
+
+	if (!*list_heredoc)
+	{
+		*list_heredoc = new;
+		return ;
+	}
+	current = *list_heredoc;
+	while (current->next)
+		current = current->next;
+	current->next = new;
+}
+
+void	cleanup_heredocs(t_minishell *minishell)
+{
+	t_heredoc	*current;
+	t_heredoc	*tmp;
+
+	current = minishell->heredoc;
+	while (current)
+	{
+		unlink(current->filename);
+		free(current->filename);
+		tmp = current;
+		current = current->next;
+		free(tmp);
+	}
+	minishell->heredoc = NULL;
+}
+
+

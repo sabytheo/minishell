@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 13:04:59 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/03 18:08:21 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/11 12:43:06 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,31 @@ int	redir_append(t_minishell *minishell, t_token *current, bool cmdfound)
 	close(minishell->output_fd);
 	return (0);
 }
-int	redir_heredoc(t_minishell *minishell, t_token *current, bool cmdfound)
+
+static char	*get_filename(t_minishell *minishell)
 {
-	create_heredoc(current->next->value, minishell);
+	t_heredoc	*current;
+	char		*filename;
+
+	current = minishell->heredoc;
+	if (!current)
+		return (NULL);
+	filename = current->filename;
+	minishell->heredoc = current->next;
+	free(current);
+	return (filename);
+}
+int	redir_heredoc(t_minishell *minishell, bool cmdfound)
+{
+	char	*filename;
+
+	filename = get_filename(minishell);
+	if (!filename)
+	{
+		perror("filename missing");
+		return (-1);
+	}
+	minishell->input_fd = open(filename, O_RDONLY);
 	if (minishell->input_fd < 0)
 		return (-1);
 	if (minishell->saved_inputfd == -1)
@@ -103,5 +125,6 @@ int	redir_heredoc(t_minishell *minishell, t_token *current, bool cmdfound)
 		}
 	}
 	close(minishell->input_fd);
+	unlink(filename);
 	return (0);
 }

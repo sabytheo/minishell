@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/03 18:17:51 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/11 12:42:17 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # include "get_next_line.h"
 # include "libft.h"
 # include "token.h"
-# include <errno.h>
 # include <dirent.h>
+# include <errno.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -51,6 +51,12 @@ typedef struct s_denvp
 	struct s_denvp				*next;
 }								t_denvp;
 
+typedef struct s_heredoc
+{
+	char						*filename;
+	struct s_heredoc			*next;
+}								t_heredoc;
+
 typedef struct s_minishell
 {
 	int							launch_mode;
@@ -71,6 +77,7 @@ typedef struct s_minishell
 	bool						errfound;
 	bool						cmdfound;
 	char						*entry;
+	t_heredoc					*heredoc;
 	t_token						*tokens;
 	t_expand					*expand;
 	t_denvp						*envp;
@@ -175,7 +182,9 @@ void							exec_tokens(t_minishell *minishell);
 // exec_tokens.c --->
 
 void							split_tokens(t_minishell *minishell);
-int								create_heredoc(char *eof,
+// int								create_heredoc(char *eof,
+// 									t_minishell *minishell);
+void							create_heredoc(char *limiter,
 									t_minishell *minishell);
 int								setup_redirections(t_token *current,
 									t_minishell *minishell, bool cmdfound);
@@ -193,7 +202,7 @@ int								redir_out(t_minishell *minishell,
 int								redir_append(t_minishell *minishell,
 									t_token *current, bool cmdfound);
 int								redir_heredoc(t_minishell *minishell,
-									t_token *current, bool cmdfound);
+									bool cmdfound);
 
 // exec_pipe.c --->
 void							execute_piped_command(t_minishell *minishell,
@@ -206,5 +215,13 @@ void							close_pipes_inchild(t_minishell *minishell);
 void							cleanup_pipes(int **pipes, int pipe_count);
 void							getcmd_count(t_minishell *minishell);
 
-void	reset_redir(t_minishell *minishell);
+void							reset_redir(t_minishell *minishell);
+
+void							add_heredoc_back(t_heredoc **list_heredoc,
+									t_heredoc *new);
+t_heredoc						*create_heredoc_node(char *filename);
+void							cleanup_heredocs(t_minishell *minishell);
+int								prepare_heredocs(t_minishell *minishell,
+									t_cmds *cmds);
+
 #endif

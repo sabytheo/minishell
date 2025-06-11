@@ -3,55 +3,85 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/03 18:18:04 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/11 19:28:38 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define HEREDOC_TMP ".heredoc_tmp"
-
-int	create_heredoc(char *eof, t_minishell *minishell)
+int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
 {
-	char	*line;
-	size_t	len;
+	t_cmds	*current;
+	t_token	*token;
 
-	len = ft_strlen(eof);
-	minishell->heredoc_fd = open(HEREDOC_TMP, O_CREAT | O_WRONLY | O_TRUNC,
+	current = cmds;
+	while (current)
+	{
+		token = current->redirs;
+		while (token)
+		{
+			if (token->type == T_HEREDOC)
+			{
+				create_heredoc(token->next->value, minishell);
+				if (minishell->input_fd < 0)
+				{
+					perror("heredoc");
+					return (-1);
+				}
+				close(minishell->input_fd);
+			}
+			token = token->next;
+		}
+		current = current->next;
+	}
+	return (0);
+}
+
+void	create_heredoc(char *limiter, t_minishell *minishell)
+{
+	static int	heredoc_id = 1;
+	char		*id;
+	char		*tmp_filename;
+	char		*tmp;
+	char		*line;
+
+	id = ft_itoa(heredoc_id++);
+	tmp = ft_strjoin(".heredoc_tmp_", id);
+	tmp_filename = tmp;
+	free(id);
+	minishell->heredoc_fd = open(tmp_filename, O_CREAT | O_WRONLY | O_TRUNC,
 			0600);
 	if (minishell->heredoc_fd < 0)
-		return (perror("open heredoc"), -1);
+	{
+		perror("open heredoc_fd");
+		free(tmp_filename);
+		minishell->input_fd = -1;
+		return ;
+	}
 	while (1)
 	{
-		ft_printf("minishell_heredoc>");
-		if( minishell->saved_inputfd > 2)
-			reset_redir(minishell);
-		line = get_next_line(STDIN_FILENO);
-		if (line == NULL)
-		{
-			printf("test\n");
-			break ;
-		}
-		if (strncmp(line, eof, len) == 0 && line[len] == '\n')
+		line = readline("> ");
+		if (!line || ft_strcmp(line, limiter) == 0)
 		{
 			free(line);
 			break ;
 		}
-		// ft_printf_fd(minishell->heredoc_fd,"%s",line);
 		write(minishell->heredoc_fd, line, ft_strlen(line));
+		write(minishell->heredoc_fd, "\n", 1);
 		free(line);
 	}
 	close(minishell->heredoc_fd);
-	minishell->input_fd = open(HEREDOC_TMP, O_RDONLY);
-	if (minishell->input_fd < 0)
+	t_heredoc	*new;
+	new = create_heredoc_node(tmp_filename);
+	if (!new)
 	{
-		perror("open heredoc");
-		unlink(HEREDOC_TMP);
-		return (-1);
+		perror("malloc_heredoc");
+		free(tmp_filename);
+		return ;
 	}
-	unlink(HEREDOC_TMP);
-	return (0);
+	add_heredoc_back(&minishell->heredoc, new);
+	minishell->input_fd = open(tmp_filename, O_RDONLY);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
+#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/05/27 16:45:31 by egache           ###   ########.fr        #
+#    Updated: 2025/06/11 12:43:46 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ SRCS		:=		main.c \
 					exec_tokens.c \
 					exec_tokens_utils.c \
 					heredoc.c \
+					heredoc_utils.c \
 					redirection.c \
 					exec_pipes.c \
 					exec_pipes_utils.c \

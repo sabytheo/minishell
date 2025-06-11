@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/03 18:57:44 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/11 12:57:18 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	setup_redirections(t_token *current, t_minishell *minishell, bool cmdfound)
 		else if (current->type == T_APPEND)
 			errfound = redir_append(minishell, current, cmdfound);
 		else if (current->type == T_HEREDOC)
-			errfound = redir_heredoc(minishell, current, cmdfound);
+			errfound = redir_heredoc(minishell, cmdfound);
 		if (errfound < 0)
 			return (-1);
 		current = current->next;
@@ -181,6 +181,8 @@ void	execute_single_command(t_minishell *minishell)
 	char	*path;
 
 	cmds = minishell->cmds;
+	if (prepare_heredocs(minishell,cmds) < 0)
+		return (cleanup_heredocs(minishell));
 	if (before_builtins(cmds, minishell) < 0)
 		return ;
 	pid = fork();

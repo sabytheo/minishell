@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/11 12:42:17 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/12 16:03:09 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void							free_cmds(t_cmds **cmds);
 void							free_denvp(t_denvp **envp);
 int								exit_and_clear_child(int error_code,
 									t_minishell *minishell);
+void							free_heredoc(t_heredoc **heredoc);
 
 // main.c --->
 void							clean_error(char *error_message,
@@ -184,8 +185,8 @@ void							exec_tokens(t_minishell *minishell);
 void							split_tokens(t_minishell *minishell);
 // int								create_heredoc(char *eof,
 // 									t_minishell *minishell);
-void							create_heredoc(char *limiter,
-									t_minishell *minishell);
+int								create_heredoc(char *limiter,
+									t_minishell *minishell, t_token *redir);
 int								setup_redirections(t_token *current,
 									t_minishell *minishell, bool cmdfound);
 
@@ -220,7 +221,7 @@ void							reset_redir(t_minishell *minishell);
 void							add_heredoc_back(t_heredoc **list_heredoc,
 									t_heredoc *new);
 t_heredoc						*create_heredoc_node(char *filename);
-void							cleanup_heredocs(t_minishell *minishell);
+// void							cleanup_heredocs(t_minishell *minishell);
 int								prepare_heredocs(t_minishell *minishell,
 									t_cmds *cmds);
 

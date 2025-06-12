@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/06/03 18:59:48 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/12 10:09:27 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ bool	check_cmd(t_minishell *minishell, char *arg)
 {
 	if (is_valid_cmd(arg, minishell) == true)
 	{
-		printf("errno if valid_cmd : %d\n", errno);
+		// printf("errno if valid_cmd : %d\n", errno);
 		return (true);
 	}
 	minishell->error_code = 127;

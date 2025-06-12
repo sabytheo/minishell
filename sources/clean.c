@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/28 12:06:01 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/12 15:54:32 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int	exit_and_clear_child(int error_code, t_minishell *minishell)
 		free_denvp(&minishell->envp);
 	if (minishell->envp_tab)
 		free_tab(minishell->envp_tab);
+	if (minishell->heredoc)
+		free_heredoc(&minishell->heredoc);
 	close_fds(minishell);
 	exit(error_code);
 }
@@ -76,7 +78,7 @@ void	free_tokens(t_token **tokens)
 	while (current)
 	{
 		next = current->next;
-		free(current->value);
+		// free(current->value);
 		free(current);
 		current = next;
 	}
@@ -99,6 +101,24 @@ void	free_cmds(t_cmds **cmds)
 		current = next;
 	}
 	*cmds = NULL;
+}
+
+void	free_heredoc(t_heredoc **heredoc)
+{
+	t_heredoc	*current;
+	t_heredoc	*next;
+
+	if (!heredoc || !*heredoc)
+		return ;
+	current = *heredoc;
+	while (current)
+	{
+		next = current->next;
+		free(current->filename);
+		free(current);
+		current = next;
+	}
+	*heredoc = NULL;
 }
 
 void	free_denvp(t_denvp **envp)

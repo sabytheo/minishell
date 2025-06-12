@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/11 19:28:38 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/12 17:53:04 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,11 @@ int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
 		{
 			if (token->type == T_HEREDOC)
 			{
-				create_heredoc(token->next->value, minishell);
-				if (minishell->input_fd < 0)
+				if (create_heredoc(token->next->value, minishell,token) < 0)
 				{
 					perror("heredoc");
 					return (-1);
 				}
-				close(minishell->input_fd);
 			}
 			token = token->next;
 		}
@@ -40,7 +38,7 @@ int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
 	return (0);
 }
 
-void	create_heredoc(char *limiter, t_minishell *minishell)
+int	create_heredoc(char *limiter, t_minishell *minishell, t_token *redir)
 {
 	static int	heredoc_id = 1;
 	char		*id;
@@ -59,7 +57,7 @@ void	create_heredoc(char *limiter, t_minishell *minishell)
 		perror("open heredoc_fd");
 		free(tmp_filename);
 		minishell->input_fd = -1;
-		return ;
+		return (-1);
 	}
 	while (1)
 	{
@@ -74,14 +72,7 @@ void	create_heredoc(char *limiter, t_minishell *minishell)
 		free(line);
 	}
 	close(minishell->heredoc_fd);
-	t_heredoc	*new;
-	new = create_heredoc_node(tmp_filename);
-	if (!new)
-	{
-		perror("malloc_heredoc");
-		free(tmp_filename);
-		return ;
-	}
-	add_heredoc_back(&minishell->heredoc, new);
-	minishell->input_fd = open(tmp_filename, O_RDONLY);
+	free(redir->next->value);
+	redir->next->value = tmp_filename;
+	return(0);
 }

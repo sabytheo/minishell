@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/11 13:21:24 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/12 16:05:01 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,9 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 	current = cmds;
 	getcmd_count(minishell);
 	if (prepare_heredocs(minishell, cmds) < 0)
-		return (cleanup_heredocs(minishell));
+		return ;
 	if (init_pipes_and_pids(minishell) < 0)
-		return (cleanup_heredocs(minishell));
+		return ;
 	i = 0;
 	while (i < minishell->cmds_count)
 	{
@@ -132,5 +132,5 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 	wait_allchild(minishell);
 	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
 	free(minishell->pids);
-	cleanup_heredocs(minishell);
+	// cleanup_heredocs(minishell);
 }

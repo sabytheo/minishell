@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/02 16:54:07 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/12 10:08:54 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	main(int argc, char **argv, char **envp)
 	while (minishell.is_running == true)
 	{
 		minishell.entry = get_entry(&minishell);
-		printf("entry : %s\n", minishell.entry);
+		// printf("entry : %s\n", minishell.entry);
 		if (minishell.entry == NULL)
 			break ;
 		if (ft_strlen(minishell.entry) > 0)
@@ -87,6 +87,7 @@ int	main(int argc, char **argv, char **envp)
 			add_history(minishell.entry);
 			tokens(&minishell, minishell.entry);
 			free_cmds(&minishell.cmds);
+			free_heredoc(&minishell.heredoc);
 			free_tokens(&minishell.tokens);
 		}
 		free(minishell.entry);

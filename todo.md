@@ -38,7 +38,7 @@
 - try to execute a dir -> code erreur 126 + "Is a directory"
 ------------ "No such file or directory" + code 127
 - Double free cmd "$PWD"
------------- DOUBLE FREE + SEGFAULT
+------------ GOOD
 
 - ls /etc/ into tab into ctrl + c into espace -> invalid read sur le readline
 

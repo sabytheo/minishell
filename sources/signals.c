@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:19:44 by egache            #+#    #+#             */
-/*   Updated: 2025/04/30 13:55:29 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/13 19:00:14 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,31 @@ void	signal_handler(int signum)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		g_signal_value = 0;
 	}
 	else if (signum == SIGQUIT)
 	{
 		g_signal_value = signum;
 		rl_on_new_line();
 		rl_redisplay();
+		g_signal_value = 0;
 	}
+}
+
+void	heredoc_signal_handler(int signum)
+{
+	(void)signum;
+	g_signal_value = 1;
+}
+
+int	stop_readline(void)
+{
+	if (g_signal_value)
+	{
+		rl_done = 1;
+		return (1);
+	}
+	return (0);
 }
 
 /*

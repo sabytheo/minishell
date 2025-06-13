@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/12 16:04:33 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 13:44:49 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,15 +190,17 @@ void	execute_single_command(t_minishell *minishell)
 			exit_and_clear_child(minishell->error_code, minishell);
 		if (cmds->cmdfound == true)
 		{
-			path = find_path(cmds->args[0], minishell->envp_tab, 0);
-			// printf("path : %s\n", path);
-			// printf("cmds->args[0] : %s\n", cmds->args[0]);
+			if (ft_strnstr(cmds->args[0],"/", ft_strlen(cmds->args[0])) != NULL)
+				path = cmds->args[0];
+			else
+				path = find_path(cmds->args[0], minishell->envp_tab, 0);
 			execve(path, cmds->args, minishell->envp_tab);
 			perror("execve");
 			exit_and_clear_child(minishell->error_code, minishell);
 		}
 	}
 	wait_thechild(pid, minishell);
+	cleanup_heredocs(minishell);
 	return ;
 }
 

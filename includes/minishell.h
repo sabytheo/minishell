@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/12 16:03:09 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 13:01:57 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 # include <unistd.h>
 
 /*open*/
@@ -221,7 +223,7 @@ void							reset_redir(t_minishell *minishell);
 void							add_heredoc_back(t_heredoc **list_heredoc,
 									t_heredoc *new);
 t_heredoc						*create_heredoc_node(char *filename);
-// void							cleanup_heredocs(t_minishell *minishell);
+void							cleanup_heredocs(t_minishell *minishell);
 int								prepare_heredocs(t_minishell *minishell,
 									t_cmds *cmds);
 

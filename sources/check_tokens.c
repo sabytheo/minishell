@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/06/12 10:09:27 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 13:55:34 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,30 @@ char	*check_syntax(t_minishell *minishell)
 
 bool	check_cmd(t_minishell *minishell, char *arg)
 {
-	if (is_valid_cmd(arg, minishell) == true)
+	struct stat fs;
+
+	if (stat(arg, &fs) == 0 && !S_ISREG(fs.st_mode))
 	{
-		// printf("errno if valid_cmd : %d\n", errno);
-		return (true);
+		ft_printf_fd(2, E_IS_DIR, arg);
+		minishell->error_code = 126;
+		return (false);
 	}
+	if (is_valid_cmd(arg, minishell) == true)
+		return (true);
+	if (ft_strnstr(arg,"/", ft_strlen(arg)) != NULL)
+	{
+		access(arg, X_OK);
+		if (errno == 13)
+			ft_printf_fd(2, E_NO_PERM, arg);
+		else if (errno == 2)
+			ft_printf_fd(2, E_NSFOD, arg);
+		else if (errno == 0)
+			return (true);
+		minishell->error_code = 127;
+		return(false);
+	}
+	ft_printf_fd(2, E_PARS_CMD_NF, arg);
 	minishell->error_code = 127;
-	ft_printf_fd(2, "minishell: %s: ", arg);
-	perror(NULL);
-	// ft_printf_fd(2, E_PARS_CMD_NF, arg);
 	return (false);
 }
 

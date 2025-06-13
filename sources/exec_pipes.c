@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/12 16:05:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 14:21:57 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	dup_pipes(t_minishell *minishell, int cmd_index)
 void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 		int cmd_index)
 {
+	char *path;
+
 	if (dup_pipes(minishell, cmd_index) < 0)
 		exit_and_clear_child(minishell->error_code, minishell);
 	close_pipes_inchild(minishell);
@@ -51,9 +53,13 @@ void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 		}
 		else
 		{
-			execve(find_path(cmd->args[0], minishell->envp_tab, 0), cmd->args,
-				minishell->envp_tab);
+			if (ft_strnstr(cmd->args[0],"/", ft_strlen(cmd->args[0])) != NULL)
+				path = cmd->args[0];
+			else
+				path = find_path(cmd->args[0], minishell->envp_tab, 0);
+			execve(path, cmd->args,minishell->envp_tab);
 			perror("execve");
+			minishell->error_code = errno;
 		}
 	}
 	exit_and_clear_child(minishell->error_code, minishell);
@@ -132,5 +138,5 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 	wait_allchild(minishell);
 	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
 	free(minishell->pids);
-	// cleanup_heredocs(minishell);
+	cleanup_heredocs(minishell);
 }

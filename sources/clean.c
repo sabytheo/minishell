@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/12 15:54:32 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 15:40:34 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@ void	close_fds(t_minishell *minishell)
 
 int	exit_and_clear_child(int error_code, t_minishell *minishell)
 {
-	if (minishell->cmds)
-		free_cmds(&minishell->cmds);
+
 	if (minishell->tokens)
 		free_tokens(&minishell->tokens);
+	if (minishell->cmds)
+		free_cmds(&minishell->cmds);
 	if (minishell->entry)
 		free(minishell->entry);
 	if (minishell->export)
@@ -78,7 +79,7 @@ void	free_tokens(t_token **tokens)
 	while (current)
 	{
 		next = current->next;
-		// free(current->value);
+		free(current->value);
 		free(current);
 		current = next;
 	}

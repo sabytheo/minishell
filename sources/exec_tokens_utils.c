@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 09:37:33 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/26 18:54:52 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 16:12:39 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,23 @@ void	add_cmds_back(t_cmds **list_cmds, t_cmds *new)
 	while (current->next)
 		current = current->next;
 	current->next = new;
+}
+t_token *duplicate_token(t_token *token)
+{
+	t_token *new_token;
+
+	if (!token)
+		return(NULL);
+	new_token = malloc(sizeof(t_token));
+	if (!new_token)
+		return(NULL);
+	new_token->type = token->type ;
+	new_token->value = ft_strdup(token->value);
+	if (!new_token->value)
+	{
+		free(new_token);
+		return(NULL);
+	}
+	new_token->next = NULL;
+	return (new_token);
 }

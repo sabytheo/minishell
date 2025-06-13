@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/13 13:01:57 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 16:13:02 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/stat.h>
 # include <sys/time.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <sys/stat.h>
 # include <unistd.h>
 
 /*open*/
@@ -196,6 +196,7 @@ int								setup_redirections(t_token *current,
 t_cmds							*create_cmds(char **val);
 void							add_cmds_back(t_cmds **list_cmds, t_cmds *new);
 int								get_cmds_size(t_token *tokens);
+t_token							*duplicate_token(t_token *token);
 
 // redirection.c --->
 int								redir_in(t_minishell *minishell,

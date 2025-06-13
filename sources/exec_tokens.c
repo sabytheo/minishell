@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/13 13:44:49 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 16:19:31 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,25 +42,29 @@ static char	**fill_args(t_token **current)
 t_token	*extract_redirections(t_token **current, t_token *redir_head)
 {
 	t_token	*redir_tail;
-	t_token	*redir_token;
-	t_token	*file_token;
+	t_token	*redir_token_copy;
+	t_token	*file_token_copy;
 
 	redir_tail = NULL;
 	while (*current && (*current)->type != T_PIPE)
 	{
 		if ((*current)->type >= T_REDIR_IN && (*current)->type <= T_HEREDOC)
 		{
-			redir_token = *current;
+			redir_token_copy = duplicate_token(*current);
+			if(!redir_token_copy)
+				return(NULL); // NEED FREE
 			*current = (*current)->next;
-			file_token = *current;
-			*current = file_token->next;
-			redir_token->next = file_token;
-			file_token->next = NULL;
+			file_token_copy = duplicate_token(*current);
+			if(!file_token_copy)
+				return(NULL); // NEED FREE
+			*current = (*current)->next;
+			redir_token_copy->next = file_token_copy;
+			file_token_copy->next = NULL;
 			if (!redir_head)
-				redir_head = redir_token;
+				redir_head = redir_token_copy;
 			else
-				redir_tail->next = redir_token;
-			redir_tail = file_token;
+				redir_tail->next = redir_token_copy;
+			redir_tail = file_token_copy;
 		}
 		else
 			(*current) = (*current)->next;

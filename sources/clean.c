@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/13 15:40:34 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 16:21:40 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	free_cmds(t_cmds **cmds)
 	while (current)
 	{
 		next = current->next;
+		free_tokens(&current->redirs);
 		free_tab(current->args);
 		free(current);
 		current = next;

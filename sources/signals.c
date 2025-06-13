@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:19:44 by egache            #+#    #+#             */
-/*   Updated: 2025/06/13 19:00:14 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/13 20:28:52 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	signal_handler(int signum)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		rl_reset_after_signal();
 		g_signal_value = 0;
 	}
 	else if (signum == SIGQUIT)
@@ -49,6 +50,7 @@ void	signal_handler(int signum)
 		g_signal_value = signum;
 		rl_on_new_line();
 		rl_redisplay();
+		rl_reset_after_signal();
 		g_signal_value = 0;
 	}
 }

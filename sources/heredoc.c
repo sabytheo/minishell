@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/13 18:29:29 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/13 19:05:06 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,14 @@ int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
 
 static int	handle_heredoc_input(int fd, char *limiter, t_minishell *minishell)
 {
-	char				*line;
-
+	char	*line;
 
 	rl_event_hook = stop_readline;
 	signal(SIGINT, heredoc_signal_handler);
 	while (1)
 	{
 		if (g_signal_value == 1)
-			break;
+			break ;
 		line = readline("> ");
 		if (!line || ft_strcmp(line, limiter) == 0)
 		{

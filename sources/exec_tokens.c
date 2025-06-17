@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/13 13:44:49 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/17 19:36:25 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,10 @@ void	split_tokens(t_minishell *minishell)
 		new = create_cmds(args);
 		new->redirs = extract_redirections(&current_redir, redir_head);
 		if (args[0] != NULL)
+		{
+			printf("going to check cmd because args[0] = (%s)\n", args[0]);
 			new->cmdfound = check_cmd(minishell, args[0]);
+		}
 		add_cmds_back(&minishell->cmds, new);
 		if (current_args != NULL)
 			current_args = current_args->next;
@@ -179,18 +182,21 @@ void	execute_single_command(t_minishell *minishell)
 	char	*path;
 
 	cmds = minishell->cmds;
-	if (prepare_heredocs(minishell,cmds) < 0)
+	if (prepare_heredocs(minishell, cmds) < 0)
 		return ;
 	if (before_builtins(cmds, minishell) < 0)
 		return ;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
 		if (setup_redirections(cmds->redirs, minishell, cmds->cmdfound) < 0)
 			exit_and_clear_child(minishell->error_code, minishell);
 		if (cmds->cmdfound == true)
 		{
-			if (ft_strnstr(cmds->args[0],"/", ft_strlen(cmds->args[0])) != NULL)
+			if (ft_strnstr(cmds->args[0], "/", ft_strlen(cmds->args[0])) != NULL)
 				path = cmds->args[0];
 			else
 				path = find_path(cmds->args[0], minishell->envp_tab, 0);
@@ -209,7 +215,7 @@ void	exec_tokens(t_minishell *minishell)
 	t_cmds	*current;
 
 	split_tokens(minishell);
-	//print_cmds(minishell->cmds);
+	// print_cmds(minishell->cmds);
 	current = minishell->cmds;
 	if (current->next == NULL)
 		execute_single_command(minishell);

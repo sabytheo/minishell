@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:27:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/13 16:37:55 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/17 18:46:54 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 		return (true);
 	path = find_path(cmd, minishell->envp_tab, 0);
 	if (path != NULL)
+	{
+		free(path);
 		return (true);
+	}
 	free(path);
 	return (false);
 }

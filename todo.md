@@ -12,9 +12,9 @@
 - echo "$" -> Bash write $
 ------------ ON RETOURNE UNE LIGNE VIDE (Pb d'expand)
 - "$EMPTY" -> Bash just return
------------- EXECVE PERMISSION DENIED
+------------ PROBLEME DANS PATH CAR c'est avec n' importe quelle variable qui existe pas
 - . . . . . . . . lance une commande somehow
------------- EXECVE PERMISSION DENIED
+------------ GOOD
 - cat vide apres un pipe
 
 - Signaux dans heredoc

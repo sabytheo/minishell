@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/18 09:30:10 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/18 19:27:52 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ typedef struct s_minishell
 	bool						is_running;
 	bool						errfound;
 	bool						cmdfound;
+	int							shlvl;
 	char						*entry;
 	t_heredoc					*heredoc;
 	t_token						*tokens;

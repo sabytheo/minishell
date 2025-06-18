@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:17:00 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 16:45:47 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/18 17:40:31 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_env(t_minishell *minishell)
 	current = minishell->envp;
 	if (minishell->cmds->args[1] != NULL)
 		return (127);
-	while (current != NULL)
+	while (current != NULL && current->var)
 	{
 		ft_printf_fd(STDOUT_FILENO, "%s%s\n", current->var[0], current->var[1]);
 		current = current->next;

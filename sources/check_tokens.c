@@ -91,8 +91,11 @@ bool	check_cmd(t_minishell *minishell, char *arg)
 		minishell->error_code = 127;
 		return(false);
 	}
-	ft_printf_fd(2, E_PARS_CMD_NF, arg);
-	minishell->error_code = 127;
+	if (arg[0] != '\0')
+	{
+		ft_printf_fd(2, E_PARS_CMD_NF, arg);
+		minishell->error_code = 127;
+	}
 	return (false);
 }
 

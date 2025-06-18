@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/18 09:39:34 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/18 15:03:04 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static char	*get_values(char *name, t_denvp *envp, t_minishell *minishell)
 	{
 		if (ft_strcmp(envp->var[0], name) == 0)
 			return (ft_strdup(envp->var[1] + 1));
-									envp = envp->next;
+		envp = envp->next;
 	}
 	return (ft_strdup(""));
 }
@@ -68,7 +68,8 @@ static char	*handle_expand(char *str, int *i, t_minishell *minishell,
 	char	*value;
 	char	tmp[2];
 
-	if (str[*i] == '$' && str[*i + 1] && expand->in_squote == false)
+	if (str[*i] == '$' && (str[*i + 1] != ' ' && str[*i + 1] != '"' && str[*i
+			+ 1] != '\0') && expand->in_squote == false)
 	{
 		(*i)++;
 		name = extract_var_name(str, i);

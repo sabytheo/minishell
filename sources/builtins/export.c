@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 16:41:42 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/18 17:50:03 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,13 @@ int	ft_strcmp(const char *s1, const char *s2)
 	size_t	i;
 
 	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	if (s2 && s1)
+	{
+		while (s1[i] && s2[i] && s1[i] == s2[i])
+			i++;
+		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	}
+	return ((unsigned char)s1[i]);
 }
 
 char	*ft_strldup(char *src, int size)
@@ -54,8 +58,6 @@ int	ft_strlen_equal(char *str)
 		i++;
 	return (i);
 }
-
-
 
 static char	**fill_variables(char *value)
 {
@@ -93,7 +95,7 @@ void	add_denvp_back(t_denvp **list_denvp, t_denvp *new)
 {
 	t_denvp	*tmp;
 
-	if (!*list_denvp)
+	if (!*list_denvp || !(*list_denvp)->var)
 	{
 		*list_denvp = new;
 		return ;
@@ -111,7 +113,7 @@ bool	display_export(t_minishell *minishell)
 	if (minishell->cmds->args[1] == NULL)
 	{
 		current = minishell->export;
-		while (current != NULL)
+		while (current != NULL && current->var)
 		{
 			printf("export %s", current->var[0]);
 			if (current->var[1] != NULL)
@@ -131,7 +133,7 @@ bool	already_exist(t_minishell *minishell, t_denvp *list)
 
 	args = fill_variables(minishell->cmds->args[1]);
 	current = list;
-	while (current != NULL)
+	while (current != NULL && current->var)
 	{
 		if (ft_strcmp(args[0], list->var[0]) == 0)
 		{
@@ -191,7 +193,7 @@ bool	replace_node(t_denvp *current, char *arg)
 
 	size1 = ft_strlen_equal(arg);
 	size2 = ft_strlen(arg) - size1;
-	while (current)
+	while (current && current->var)
 	{
 		if (ft_strncmp(arg, current->var[0], ft_strlen(current->var[0])) == 0)
 		{
@@ -207,19 +209,18 @@ bool	replace_node(t_denvp *current, char *arg)
 	return (false);
 }
 
-void	add_to_list(t_minishell *minishell, t_denvp *list)
+void	add_to_list(t_minishell *minishell, t_denvp **list)
 {
 	t_denvp	*current;
 	t_denvp	*new;
 	char	**var;
 
-	current = list;
+	current = *list;
 	while (current != NULL && current->next != NULL)
 		current = current->next;
 	var = fill_variables(minishell->cmds->args[1]);
 	new = create_denvp(var);
-	current = list;
-	add_denvp_back(&current, new);
+	add_denvp_back(list, new);
 }
 
 void	split_envp(t_minishell *minishell, char **envp)
@@ -230,8 +231,13 @@ void	split_envp(t_minishell *minishell, char **envp)
 	char	**var1;
 	char	**var2;
 
-	if (envp == NULL)
-		return ;
+	if (envp[0] == NULL)
+	{
+		new_export = create_denvp(NULL);
+		new_denvp = create_denvp(NULL);
+		add_denvp_back(&minishell->export, new_export);
+		add_denvp_back(&minishell->envp, new_denvp);
+	}
 	i = 0;
 	while (envp[i] != NULL)
 	{
@@ -255,19 +261,20 @@ int	ft_export(t_minishell *minishell)
 	if (export_parsing(minishell->cmds->args[1]) == 0)
 	{
 		if (replace_node(minishell->export, minishell->cmds->args[1]) == false)
-			add_to_list(minishell, minishell->export);
+			add_to_list(minishell, &minishell->export);
 		if (replace_node(minishell->envp, minishell->cmds->args[1]) == false)
-			add_to_list(minishell, minishell->envp);
+			add_to_list(minishell, &minishell->envp);
 	}
 	else if (export_parsing(minishell->cmds->args[1]) == 2)
 	{
 		if (replace_node(minishell->export, minishell->cmds->args[1]) == false)
-			add_to_list(minishell, minishell->export);
+			add_to_list(minishell, &minishell->export);
 	}
 	else
 	{
 		ft_printf_fd(2, E_EXPORT_ARG, minishell->cmds->args[1]);
 		return (1);
 	}
+	chainedlst_to_tab(minishell);
 	return (0);
 }

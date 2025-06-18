@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:19:44 by egache            #+#    #+#             */
-/*   Updated: 2025/06/17 21:15:59 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/18 15:05:07 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	signal_handler(int signum)
 	disable_control_echo();
 	if (signum == SIGINT)
 	{
-		printf("-");
 		g_signal_value = signum;
 		ft_putchar_fd('\n', 1);
 		rl_replace_line("", 0);

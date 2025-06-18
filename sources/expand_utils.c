@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:07:22 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/27 14:47:33 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/18 15:42:47 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	chainedlst_to_tab(t_minishell *minishell) {
       malloc(sizeof(char *) * (minishell->envp_countline + 1));
   if (minishell->envp_tab == NULL)
     return ;
-  while (current) {
+  while (current && current->var) {
     minishell->envp_tab[i] = ft_strjoin(current->var[0], current->var[1]);
     i++;
     current = current->next;

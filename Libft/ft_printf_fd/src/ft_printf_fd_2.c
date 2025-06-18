@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:01:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/06 14:04:40 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/18 13:39:56 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_printchar_fd(int c, int i, int fd)
 {
-	return (i += write(1, &c, fd));
+	return (i += write(fd, &c, 1));
 }
 
 int	ft_printstr_fd(char *s, int i, int fd)

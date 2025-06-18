@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/06/18 17:50:03 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/18 19:12:56 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,16 @@ void	add_to_list(t_minishell *minishell, t_denvp **list)
 	add_denvp_back(list, new);
 }
 
+void	fill_envpnull(t_minishell *minishell, char *var)
+{
+	t_denvp	*new_denvp;
+	t_denvp	*new_export;
+
+	new_export = create_denvp(fill_variables(var));
+	new_denvp = create_denvp(fill_variables(var));
+	add_denvp_back(&minishell->export, new_export);
+	add_denvp_back(&minishell->envp, new_denvp);
+}
 void	split_envp(t_minishell *minishell, char **envp)
 {
 	t_denvp	*new_denvp;
@@ -233,10 +243,9 @@ void	split_envp(t_minishell *minishell, char **envp)
 
 	if (envp[0] == NULL)
 	{
-		new_export = create_denvp(NULL);
-		new_denvp = create_denvp(NULL);
-		add_denvp_back(&minishell->export, new_export);
-		add_denvp_back(&minishell->envp, new_denvp);
+		fill_envpnull(minishell, ft_strjoin("PWD=",getcwd(NULL, 0)));
+		fill_envpnull(minishell, "SHLVL=1");
+		fill_envpnull(minishell, "_=/usr/bin/env");
 	}
 	i = 0;
 	while (envp[i] != NULL)

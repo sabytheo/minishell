@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/06/11 12:43:46 by tsaby            ###   ########.fr        #
+#    Updated: 2025/06/18 18:16:03 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -155,7 +155,7 @@ valgrind		:
 				valgrind-listener 4242
 
 run:
-				valgrind $(VFLAGS) ./$(NAME)
+				valgrind $(VFLAGS) env -i ./$(NAME)
 
 #re_bonus	:	fclean bonus
 

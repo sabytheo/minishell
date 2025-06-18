@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/13 16:49:03 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/18 09:39:34 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static char	*get_values(char *name, t_denvp *envp, t_minishell *minishell)
 	{
 		if (ft_strcmp(envp->var[0], name) == 0)
 			return (ft_strdup(envp->var[1] + 1));
-		envp = envp->next;
+									envp = envp->next;
 	}
 	return (ft_strdup(""));
 }

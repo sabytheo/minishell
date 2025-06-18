@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/18 09:30:41 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/18 10:45:06 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,7 @@ void	split_tokens(t_minishell *minishell)
 		new = create_cmds(args);
 		new->redirs = extract_redirections(&current_redir, redir_head);
 		if (args[0] != NULL)
-		{
-			printf("going to check cmd because args[0] = (%s)\n", args[0]);
 			new->cmdfound = check_cmd(minishell, args[0]);
-		}
 		add_cmds_back(&minishell->cmds, new);
 		if (current_args != NULL)
 			current_args = current_args->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/03 20:03:36 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/18 10:52:27 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char	*find_path(char *arg, char **envp, int i)
 	char	**path_arg;
 	char	*path;
 
+	path = NULL ;
 	while (envp[i] && (ft_strncmp(envp[i], "PATH=", 5) != 0))
 		i++;
 	if (!envp[i])
@@ -45,9 +46,13 @@ char	*find_path(char *arg, char **envp, int i)
 	i = 0;
 	while (path_arg != NULL && path_arg[i] && arg)
 	{
-		path = get_a_path(path_arg[i++], arg);
+		if (arg[0] != '\0')
+			path = get_a_path(path_arg[i++], arg);
 		if (!path)
+		{
+			free_tab(path_arg);
 			return (NULL);
+		}
 		if (access(path, X_OK) == 0)
 		{
 			free_tab(path_arg);

@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/02 16:32:00 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/18 10:17:28 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool has_closed_quotes(char *str)
+bool	has_closed_quotes(char *str)
 {
-	int i;
-	bool squote;
-	bool dquote;
+	int		i;
+	bool	squote;
+	bool	dquote;
 
 	i = 0;
 	squote = false;
@@ -36,13 +36,13 @@ bool has_closed_quotes(char *str)
 	return (squote || dquote);
 }
 
-t_token *define_tokens(char *entry)
+t_token	*define_tokens(char *entry)
 {
-	t_token *token;
-	t_token *new;
-	char *token_str;
-	t_token_type type;
-	int i;
+	t_token			*token;
+	t_token			*new;
+	char			*token_str;
+	t_token_type	type;
+	int				i;
 
 	token = NULL;
 	i = 0;
@@ -52,7 +52,7 @@ t_token *define_tokens(char *entry)
 		if (!token_str || token_str[0] == '\0')
 		{
 			free(token_str);
-			continue;
+			continue ;
 		}
 		type = get_type(token_str);
 		new = create_token(token_str, type);
@@ -61,10 +61,10 @@ t_token *define_tokens(char *entry)
 	return (token);
 }
 
-void format_tokens(t_token *tokens, t_minishell *minishell)
+void	format_tokens(t_token *tokens, t_minishell *minishell)
 {
-	char *cleaned;
-	char *expanded;
+	char	*cleaned;
+	char	*expanded;
 
 	while (tokens)
 	{
@@ -78,14 +78,14 @@ void format_tokens(t_token *tokens, t_minishell *minishell)
 	}
 }
 
-void tokens(t_minishell *minishell, char *entry)
+void	tokens(t_minishell *minishell, char *entry)
 {
 	if (has_closed_quotes(entry))
-		return;
+		return ;
 	minishell->tokens = define_tokens(entry);
 	format_tokens(minishell->tokens, minishell);
 	if (check_tokens(minishell) == false)
 		return ;
 	exec_tokens(minishell);
-	//print_tokens(minishell->tokens);
+	// print_tokens(minishell->tokens);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/13 09:54:15 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/13 19:05:06 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,12 @@ static int	handle_heredoc_input(int fd, char *limiter, t_minishell *minishell)
 {
 	char	*line;
 
+	rl_event_hook = stop_readline;
+	signal(SIGINT, heredoc_signal_handler);
 	while (1)
 	{
+		if (g_signal_value == 1)
+			break ;
 		line = readline("> ");
 		if (!line || ft_strcmp(line, limiter) == 0)
 		{
@@ -55,6 +59,8 @@ static int	handle_heredoc_input(int fd, char *limiter, t_minishell *minishell)
 		write(fd, "\n", 1);
 		free(line);
 	}
+	rl_event_hook = NULL;
+	signal(SIGINT, signal_handler);
 	close(fd);
 	return (0);
 }

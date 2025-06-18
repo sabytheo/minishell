@@ -8,21 +8,18 @@
 ------------ GOOD
 
 - Multiples Heredoc
------------- FONCTIONNE MAIS A REFAIRE AVANT FORK ET DUP2 (PAS SUR DE MA PHRASE LOL)
+------------ GOOD
 - echo "$" -> Bash write $
 ------------ ON RETOURNE UNE LIGNE VIDE (Pb d'expand)
 - "$EMPTY" -> Bash just return
------------- EXECVE PERMISSION DENIED
+------------ PROBLEME DANS PATH CAR c'est avec n' importe quelle variable qui existe pas
 - . . . . . . . . lance une commande somehow
------------- EXECVE PERMISSION DENIED
+------------ GOOD
 - cat vide apres un pipe
+
 - Signaux dans heredoc
------------- SE RENSEIGNER / CA A L'AIR DE FONCTIONNE EN VRAI ? ? RETEST QUAND HEREDOC CLEAR CAR A MON AVIS CA FONCTIONNE PAS 100%
+------------ GOOD
 
-
-#BESOIN DE CHECK SI ON A LA PERMISSION POUR UN FICHIER/DOSSIER
-#BESOIN DE CHECK SI LA COMMANDE S'EXE AVEC UN FICHIER OU UN DOSSIER
-	- Pouvoir differencier fichier et dossier
 
 - cd sans permissions fichiers
 ------------ GOOD
@@ -31,14 +28,16 @@
 ------------ GOOD
 
 - executable sans permission -> code erreur 126 / "permission denied"
------------- Pour l'instant on a 127 avec "No such file or directory"
+------------ GOOD
 
-- execute non existent file -> code erreur 127 / "No such file or directory" ------------ GOOD
+- execute non existent file -> code erreur 127 / "No such file or directory"
+------------ GOOD
 
 - try to execute a dir -> code erreur 126 + "Is a directory"
------------- "No such file or directory" + code 127
+------------ GOOD
+
 - Double free cmd "$PWD"
------------- DOUBLE FREE + SEGFAULT
+------------ GOOD
 
 - ls /etc/ into tab into ctrl + c into espace -> invalid read sur le readline
 

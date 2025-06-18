@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/13 16:13:02 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/18 09:30:10 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,8 @@ void							print_cmds(t_cmds *cmds);
 void							disable_control_echo(void);
 void							signal_initialisation(void);
 void							signal_handler(int signum);
+void							heredoc_signal_handler(int signum);
+int								stop_readline(void);
 
 // builtins.c --->
 int								ft_echo(t_cmds **cmds);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 09:37:33 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/13 16:12:39 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/19 14:41:13 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	add_cmds_back(t_cmds **list_cmds, t_cmds *new)
 		current = current->next;
 	current->next = new;
 }
+
 t_token *duplicate_token(t_token *token)
 {
 	t_token *new_token;

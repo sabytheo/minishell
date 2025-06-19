@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 13:04:59 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/12 15:33:04 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/19 14:44:33 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	redir_out(t_minishell *minishell, t_token *current, bool cmdfound)
 	close(minishell->output_fd);
 	return (0);
 }
+
 int	redir_append(t_minishell *minishell, t_token *current, bool cmdfound)
 {
 	minishell->output_fd = open(current->next->value,

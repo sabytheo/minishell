@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/18 18:13:18 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/19 14:52:32 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,6 @@ void	exec_tokens(t_minishell *minishell)
 	t_cmds	*current;
 
 	split_tokens(minishell);
-	// print_cmds(minishell->cmds);
 	current = minishell->cmds;
 	if (current->next == NULL)
 		execute_single_command(minishell);

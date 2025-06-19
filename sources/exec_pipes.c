@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/13 14:21:57 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/19 14:51:37 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 				path = find_path(cmd->args[0], minishell->envp_tab, 0);
 			execve(path, cmd->args,minishell->envp_tab);
 			perror("execve");
-			minishell->error_code = errno;
 		}
 	}
 	exit_and_clear_child(minishell->error_code, minishell);
@@ -91,6 +90,7 @@ int	init_pipes_and_pids(t_minishell *minishell)
 	}
 	return (0);
 }
+
 void	wait_allchild(t_minishell *minishell)
 {
 	int	i;
@@ -111,6 +111,7 @@ void	wait_allchild(t_minishell *minishell)
 		i++;
 	}
 }
+
 void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 {
 	t_cmds	*current;

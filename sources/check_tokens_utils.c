@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:27:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/18 09:30:27 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/19 14:37:11 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 	path = find_path(cmd, minishell->envp_tab, 0);
 	if (path != NULL)
 	{
-		free(path);
+		if (ft_strcmp(cmd, "./minishell") != 0)
+			free(path);
 		return (true);
 	}
 	free(path);

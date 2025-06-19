@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 15:56:19 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 16:12:08 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,14 @@ bool	check_cmd(t_minishell *minishell, char *arg)
 	}
 	else
 	{
-		if (is_valid_cmd(arg, minishell) == true)
-			return (true);
-		ft_printf_fd(2, E_PARS_CMD_NF, arg);
-		minishell->error_code = 127;
-		return (false);
+		if (arg[0] != '\0')
+		{
+			if (is_valid_cmd(arg, minishell) == true)
+				return (true);
+			ft_printf_fd(2, E_PARS_CMD_NF, arg);
+			minishell->error_code = 127;
+			return (false);
+		}
 	}
 	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/06/18 20:21:03 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 11:39:01 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	ft_strlen_equal(char *str)
 	return (i);
 }
 
-static char	**fill_variables(char *value)
+char	**fill_variables(char *value)
 {
 	char	**var;
 	int		size1;
@@ -221,47 +221,6 @@ void	add_to_list(t_minishell *minishell, t_denvp **list)
 	var = fill_variables(minishell->cmds->args[1]);
 	new = create_denvp(var);
 	add_denvp_back(list, new);
-}
-
-void	fill_envpnull(t_minishell *minishell, char *var)
-{
-	t_denvp	*new_denvp;
-	t_denvp	*new_export;
-
-	new_export = create_denvp(fill_variables(var));
-	new_denvp = create_denvp(fill_variables(var));
-	add_denvp_back(&minishell->export, new_export);
-	add_denvp_back(&minishell->envp, new_denvp);
-}
-void	split_envp(t_minishell *minishell, char **envp)
-{
-	t_denvp	*new_denvp;
-	t_denvp	*new_export;
-	int		i;
-	char	**var1;
-	char	**var2;
-
-	// printf("getenvhiih : %s\n", getenv("SHLVL"));
-	// if (getenv("SHLVL"))
-	// 	printf("getenv + 1 : %d", ft_atoi(getenv("SHLVL")) + 1);
-	if (envp[0] == NULL)
-	{
-		fill_envpnull(minishell, ft_strjoin("PWD=", getcwd(NULL, 0)));
-		fill_envpnull(minishell, "SHLVL=1");
-		fill_envpnull(minishell, "_=/usr/bin/env");
-	}
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		var1 = fill_variables(envp[i]);
-		var2 = fill_variables(envp[i]);
-		new_export = create_denvp(var1);
-		new_denvp = create_denvp(var2);
-		add_denvp_back(&minishell->export, new_export);
-		add_denvp_back(&minishell->envp, new_denvp);
-		i++;
-	}
-	return ;
 }
 
 int	ft_export(t_minishell *minishell)

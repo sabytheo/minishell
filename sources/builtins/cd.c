@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 12:43:26 by egache            #+#    #+#             */
-/*   Updated: 2025/06/02 15:42:31 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 12:44:22 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,30 +28,20 @@ path depuis le root root
 */
 #include "minishell.h"
 
-int	ft_cd(t_cmds **cmds)
+int	ft_cd(t_minishell *minishell, t_cmds **cmds)
 {
-	char	*pwd;
 	int		cd;
 
-	pwd = getcwd(NULL, 0);
-	free(pwd);
 	if ((*cmds)->args[1] == NULL)
 		cd = chdir("/home");
 	else
 		cd = chdir((*cmds)->args[1]);
-	pwd = getcwd(NULL, 0);
-	free(pwd);
+	update_pwd(minishell);
 	if (cd != 0)
 	{
-	// 	if (errno == ENOTDIR)
-	// 	ft_printf_fd(2, "minishell: cd: %s: Not a directory\n", (*cmds)->args[1]);
-	// else if (errno == ENOENT)
-	// ft_printf_fd(2, "minishell: cd: %s: No such file or directory\n", (*cmds)->args[1]);
-	// else if (errno == EACCES)
-	// ft_printf_fd(2, "minishell: cd: %s: Permission denied\n", (*cmds)->args[1]);
-	ft_printf_fd(2, "minishell: cd: %s: ", (*cmds)->args[1]);
-	perror(NULL);
-	return (1);
+		ft_printf_fd(2, "minishell: cd: %s: ", (*cmds)->args[1]);
+		perror(NULL);
+		return (1);
 	}
 	return (0);
 }

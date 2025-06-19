@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
+#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/06/18 18:16:03 by tsaby            ###   ########.fr        #
+#    Updated: 2025/06/19 12:47:26 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -155,7 +155,7 @@ valgrind		:
 				valgrind-listener 4242
 
 run:
-				valgrind $(VFLAGS) env -i ./$(NAME)
+				valgrind $(VFLAGS) ./$(NAME)
 
 #re_bonus	:	fclean bonus
 

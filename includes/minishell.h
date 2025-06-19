@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/18 19:27:52 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 13:28:16 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,9 @@ char							*get_entry(t_minishell *minishell);
 void							init_minishell(t_minishell *minishell,
 									char **envp);
 void							split_envp(t_minishell *minishell, char **envp);
+void							define_shlvl(t_minishell *minishell);
+void							fill_envpnull(t_minishell *minishell,
+									char *var);
 
 // tokens.c --->
 bool							has_closed_quotes(char *str);
@@ -169,8 +172,9 @@ int								stop_readline(void);
 
 // builtins.c --->
 int								ft_echo(t_cmds **cmds);
-int								ft_cd(t_cmds **cmds);
-int								ft_pwd(void);
+int								ft_cd(t_minishell *minishell, t_cmds **cmds);
+int								ft_pwd(t_minishell *minishell);
+void							update_pwd(t_minishell *minishell);
 int								ft_env(t_minishell *minishell);
 int								ft_export(t_minishell *minishell);
 int								ft_unset(t_minishell *minishell);
@@ -178,6 +182,10 @@ void							ft_exit(t_minishell *minishell, int state);
 
 // ft_export.c --->
 int								ft_strcmp(const char *s1, const char *s2);
+t_denvp							*create_denvp(char **var);
+void							add_denvp_back(t_denvp **list_denvp,
+									t_denvp *new);
+char							**fill_variables(char *value);
 
 // exec.c --->
 char							*find_path(char *arg, char **envp, int i);

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 15:17:20 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 18:37:59 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,7 @@ void	execute_single_command(t_minishell *minishell)
 				path = find_path(cmds->args[0], minishell->envp_tab, 0);
 			execve(path, cmds->args, minishell->envp_tab);
 			perror("execve");
+			free(path);
 			exit_and_clear_child(minishell->error_code, minishell);
 		}
 	}

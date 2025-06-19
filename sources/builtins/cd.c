@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 12:43:26 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 12:44:22 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 17:09:27 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ int	ft_cd(t_minishell *minishell, t_cmds **cmds)
 {
 	int		cd;
 
+	if ((*cmds)->args[2] != NULL)
+	{
+		ft_printf_fd(2, "minishell: cd: too many arguments\n");
+		return (1);
+	}
 	if ((*cmds)->args[1] == NULL)
 		cd = chdir("/home");
 	else

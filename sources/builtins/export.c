@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 11:39:01 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 18:37:35 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ bool	replace_node(t_denvp *current, char *arg)
 	size2 = ft_strlen(arg) - size1;
 	while (current && current->var)
 	{
-		if (ft_strncmp(arg, current->var[0], ft_strlen(current->var[0])) == 0)
+		if (ft_strncmp(arg, current->var[0], size1) == 0)
 		{
 			if (arg[size1] != '\0')
 			{
@@ -228,7 +228,10 @@ int	ft_export(t_minishell *minishell)
 	if (display_export(minishell) == true)
 		return (0);
 	if (already_exist(minishell, minishell->export) == true)
+	{
+		printf("caca\n");
 		return (0);
+	}
 	if (export_parsing(minishell->cmds->args[1]) == 0)
 	{
 		if (replace_node(minishell->export, minishell->cmds->args[1]) == false)

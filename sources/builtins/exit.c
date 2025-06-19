@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 14:07:43 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 18:51:10 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 18:56:15 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_exit(t_minishell *minishell, int state)
 	{
 		ft_printf_fd(2, "minishell: exit: too many arguments\n");
 		free_minishell(minishell);
-		exit(2);
+		exit(1);
 	}
 	if (minishell->cmds->args[1] == NULL)
 	{

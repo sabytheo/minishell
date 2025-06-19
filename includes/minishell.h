@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 13:28:16 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 15:13:28 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,11 @@ void							print_tokens(t_token *tokens);
 void							print_cmds(t_cmds *cmds);
 
 // signals.c --->
-void							disable_control_echo(void);
 void							signal_initialisation(void);
+void							signal_ignore(void);
+void							disable_control_echo(void);
+
+// signals_handler.c
 void							signal_handler(int signum);
 void							heredoc_signal_handler(int signum);
 int								stop_readline(void);

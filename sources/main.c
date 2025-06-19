@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/19 11:38:07 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 15:11:10 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int	main(int argc, char **argv, char **envp)
 	while (minishell.is_running == true)
 	{
 		g_signal_value = 0;
+		signal_initialisation();
 		minishell.entry = get_entry(&minishell);
 		if (minishell.entry == NULL)
 			break ;

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 14:52:32 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/19 15:17:20 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,7 @@ void	execute_single_command(t_minishell *minishell)
 		return ;
 	if (before_builtins(cmds, minishell) < 0)
 		return ;
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	signal_ignore();
 	pid = fork();
 	if (pid == 0)
 	{

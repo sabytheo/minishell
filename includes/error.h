@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:33:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/13 13:56:24 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/19 16:02:00 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define E_PARS_OPE_D "minishell: syntax error near unexpected token '%s'\n"
 # define E_PARS_OPE_E "minishell: syntax error near unexpected token '\\n'\n"
 # define E_PARS_CMD_NF "minishell: %s: command not found\n"
-# define E_EXPORT_ARG "minishell: export '%s': is not a valid identifier\n"
+# define E_EXPORT_ARG "minishell: export '%s': not a valid identifier\n"
 # define E_IS_DIR "minishell: '%s': Is a directory\n"
 # define E_NO_PERM "minishell: '%s': Permission denied\n"
 # define E_NSFOD "minishell: '%s': No such file or directory\n"

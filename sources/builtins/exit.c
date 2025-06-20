@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 14:07:43 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 18:56:15 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/20 16:49:25 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@ bool	is_numeric_argument(char *str)
 
 void	ft_exit(t_minishell *minishell, int state)
 {
+	if (minishell->cmds->args[1] == NULL)
+	{
+		free_minishell(minishell);
+		exit(state);
+	}
 	if (is_numeric_argument(minishell->cmds->args[1]) == false
 		&& minishell->cmds->args[1] != NULL)
 	{
@@ -57,11 +62,6 @@ void	ft_exit(t_minishell *minishell, int state)
 		ft_printf_fd(2, "minishell: exit: too many arguments\n");
 		free_minishell(minishell);
 		exit(1);
-	}
-	if (minishell->cmds->args[1] == NULL)
-	{
-		free_minishell(minishell);
-		exit(state);
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:06:39 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/20 11:31:29 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/20 13:44:49 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ static bool	ft_is_quote(char c)
 }
 
 static int	ft_handle_unmatched_quote(char *result, const char *str,
-		int quote_start, int j)
+									int quote_start, int j)
 {
 	result[j] = str[quote_start];
 	return (j + 1);
 }
 
 static int	ft_process_quoted_content(const char *str, int *i, char *result,
-		int j, char quote_char)
+										int j, char quote_char)
 {
 	while (str[*i])
 	{
@@ -34,8 +34,8 @@ static int	ft_process_quoted_content(const char *str, int *i, char *result,
 			(*i)++;
 			return (j);
 		}
-		else if ((quote_char == '"' && str[*i] == '\'') || (quote_char == '\''
-				&& str[*i] == '"'))
+		else if ((quote_char == '"' && str[*i] == '\'')
+			|| (quote_char == '\'' && str[*i] == '"'))
 			result[j++] = str[(*i)++];
 		else
 			result[j++] = str[(*i)++];
@@ -54,7 +54,10 @@ static int	ft_handle_quote_pair(const char *str, int *i, char *result, int j)
 	(*i)++;
 	new_j = ft_process_quoted_content(str, i, result, j, quote_char);
 	if (new_j == -1)
+	{
+		*i = quote_start + 1;
 		return (ft_handle_unmatched_quote(result, str, quote_start, j));
+	}
 	return (new_j);
 }
 

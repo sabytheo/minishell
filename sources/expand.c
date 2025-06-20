@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/19 18:19:34 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/20 17:16:36 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ static char	*handle_expand(char *str, int *i, t_minishell *minishell,
 	char	*value;
 	char	tmp[2];
 
-	if (str[*i] == '$' && (str[*i + 1] != ' ' && str[*i + 1] != '"' && str[*i
-			+ 1] != '\0') && expand->in_squote == false)
+	if (str[*i] == '$' && (ft_isalpha(str[*i + 1]) == 1 || str[*i + 1] == '_' || str[*i + 1] == '?')
+		&& str[*i + 1] != '\0' && minishell->expansion_map[*i] == true)
 	{
 		(*i)++;
 		name = extract_var_name(str, i);
@@ -94,16 +94,8 @@ char	*expand_variable(char *str, t_minishell *minishell)
 	t_expand	expand;
 
 	i = 0;
-	expand.in_squote = false;
-	expand.in_dquote = false;
 	expand.expanded = ft_strdup("");
 	while (str[i])
-	{
-		if (str[i] == '\'' && expand.in_dquote == false)
-			expand.in_squote = !expand.in_squote;
-		else if (str[i] == '"' && expand.in_squote == false)
-			expand.in_dquote = !expand.in_dquote;
 		expand.expanded = handle_expand(str, &i, minishell, &expand);
-	}
 	return (expand.expanded);
 }

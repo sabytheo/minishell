@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/20 11:05:39 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/20 17:00:38 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,31 @@ t_token	*define_tokens(char *entry)
 	}
 	return (token);
 }
-bool	contains_outer_quotes(const char *str)
-{
-    int	len;
 
-    if (!str)
-        return (false);
-    len = ft_strlen(str);
-    if (len < 2)
-        return (false);
-    if ((str[0] == '"' && str[len - 1] == '"') ||
-        (str[0] == '\'' && str[len - 1] == '\''))
-        return (true);
-    return (false);
+static bool	*create_expansion_map(char *str)
+{
+	int		i;
+	bool	*map;
+	bool	in_squote = false;
+	bool	in_dquote = false;
+
+	map = malloc(sizeof(bool) * (ft_strlen(str) + 1));
+	if (!map)
+		return (NULL);
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (str[i] == '"' && !in_squote)
+			in_dquote = !in_dquote;
+		map[i] = !in_squote;
+	}
+	map[i] = false;
+	return (map);
+
 }
+
 void	format_tokens(t_token *tokens, t_minishell *minishell)
 {
 	char	*cleaned;
@@ -84,12 +95,15 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 
 	while (tokens)
 	{
-		expanded = expand_variable(tokens->value, minishell);
+		minishell->expansion_map = create_expansion_map(tokens->value);
+		cleaned = remove_quotes(tokens->value);
 		free(tokens->value);
-		cleaned = remove_quotes(expanded);
-		free(expanded);
-		if (cleaned)
-			tokens->value = cleaned;
+		expanded = expand_variable(cleaned, minishell);
+		free(cleaned);
+		free(minishell->expansion_map);
+		minishell->expansion_map = NULL;
+		if (expanded)
+			tokens->value = expanded;
 		tokens = tokens->next;
 	}
 }

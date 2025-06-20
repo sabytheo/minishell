@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/19 18:46:31 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/20 11:05:39 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	has_closed_quotes(char *str)
+bool	has_closed_quotes(char *str, bool message)
 {
 	int		i;
 	bool	squote;
@@ -29,10 +29,13 @@ bool	has_closed_quotes(char *str)
 			dquote = !dquote;
 		i++;
 	}
-	if (squote == true)
+	if (message == true)
+	{
+		if (squote == true)
 		ft_putendl_fd("minishell : syntax error : unclosed single quote ", 2);
-	else if (dquote == true)
+		else if (dquote == true)
 		ft_putendl_fd("minishell : syntax error : unclosed double quote ", 2);
+	}
 	return (squote || dquote);
 }
 
@@ -60,7 +63,20 @@ t_token	*define_tokens(char *entry)
 	}
 	return (token);
 }
+bool	contains_outer_quotes(const char *str)
+{
+    int	len;
 
+    if (!str)
+        return (false);
+    len = ft_strlen(str);
+    if (len < 2)
+        return (false);
+    if ((str[0] == '"' && str[len - 1] == '"') ||
+        (str[0] == '\'' && str[len - 1] == '\''))
+        return (true);
+    return (false);
+}
 void	format_tokens(t_token *tokens, t_minishell *minishell)
 {
 	char	*cleaned;
@@ -69,10 +85,8 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 	while (tokens)
 	{
 		expanded = expand_variable(tokens->value, minishell);
-		//printf("expanded : %s\n", expanded);
 		free(tokens->value);
 		cleaned = remove_quotes(expanded);
-		//printf("cleaned : %s\n", cleaned);
 		free(expanded);
 		if (cleaned)
 			tokens->value = cleaned;
@@ -82,7 +96,7 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 
 void	tokens(t_minishell *minishell, char *entry)
 {
-	if (has_closed_quotes(entry))
+	if (has_closed_quotes(entry,true))
 		return ;
 	minishell->tokens = define_tokens(entry);
 	format_tokens(minishell->tokens, minishell);

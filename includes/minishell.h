@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 15:13:28 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/20 10:08:33 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void							fill_envpnull(t_minishell *minishell,
 									char *var);
 
 // tokens.c --->
-bool							has_closed_quotes(char *str);
+bool							has_closed_quotes(char *str, bool message);
 t_token							*define_tokens(char *line);
 void							format_tokens(t_token *tokens,
 									t_minishell *minishell);

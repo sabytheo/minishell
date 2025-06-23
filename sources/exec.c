@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/19 15:59:37 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/23 10:12:19 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*find_path(char *arg, char **envp, int i)
 	if (ft_strnstr(arg, "/", ft_strlen(arg)) != NULL)
 	{
 		if (access(arg, X_OK) == 0)
-			return (arg);
+			return (ft_strdup(arg));
 	}
 	path_arg = ft_split(envp[i] + 5, ':');
 	i = 0;

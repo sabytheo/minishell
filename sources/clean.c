@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/19 15:35:17 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/23 16:06:15 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void	close_fds(t_minishell *minishell)
 
 int	exit_and_clear_child(int error_code, t_minishell *minishell)
 {
-
+	if (!minishell->cmds->next)
+		free(minishell->path);
 	if (minishell->tokens)
 		free_tokens(&minishell->tokens);
 	if (minishell->cmds)
@@ -116,7 +117,7 @@ void	free_heredoc(t_heredoc **heredoc)
 	while (current)
 	{
 		next = current->next;
-		free(current->filename);
+		// free(current->filename);
 		free(current);
 		current = next;
 	}

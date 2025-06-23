@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/20 16:41:08 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/23 15:24:17 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_minishell
 	bool						cmdfound;
 	int							shlvl;
 	char						*entry;
+	char						*path;
 	t_heredoc					*heredoc;
 	t_token						*tokens;
 	t_expand					*expand;
@@ -130,7 +131,7 @@ bool							has_closed_quotes(char *str, bool message);
 t_token							*define_tokens(char *line);
 void							format_tokens(t_token *tokens,
 									t_minishell *minishell);
-void							tokens(t_minishell *minishell, char *entry);
+int								tokens(t_minishell *minishell, char *entry);
 
 // format_tokens_utils.c --->
 char							*remove_quotes(const char *str);
@@ -243,4 +244,5 @@ void							cleanup_heredocs(t_minishell *minishell);
 int								prepare_heredocs(t_minishell *minishell,
 									t_cmds *cmds);
 
+bool							*create_expansion_map(char *str);
 #endif

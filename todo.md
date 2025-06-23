@@ -8,3 +8,6 @@
 - Valider minishell
 
 isatty pour ./minishell | ./minishell
+
+
+ft_strnstr(minishell.entry, "|",ft_strlen(minishell.entry)) == NULL

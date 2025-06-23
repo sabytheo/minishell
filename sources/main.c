@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/20 11:49:06 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/23 16:44:40 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,17 @@ int	main(int argc, char **argv, char **envp)
 		if (ft_strlen(minishell.entry) > 0)
 		{
 			add_history(minishell.entry);
-			tokens(&minishell, minishell.entry);
+			if (tokens(&minishell, minishell.entry) == -1)
+			{
+				free_tokens(&minishell.tokens);
+				free(minishell.entry);
+				continue ;
+			}
+			if (minishell.cmds->args && minishell.cmds->args[0]
+				&& !minishell.cmds->next && ft_strcmp(minishell.entry,
+					"./") != 0 && ft_strcmp(minishell.entry, "..") != 0
+				&& ft_strcmp(minishell.entry, ".") != 0)
+				free(minishell.path);
 			free_cmds(&minishell.cmds);
 			free_heredoc(&minishell.heredoc);
 			free_tokens(&minishell.tokens);

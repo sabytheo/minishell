@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:27:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/19 15:46:23 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/23 14:00:59 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,23 @@ bool	is_a_builtins(char *cmd)
 
 bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 {
-	char	*path;
 
+
+	minishell->path = NULL;
 	if (is_a_builtins(cmd))
 		return (true);
-	path = find_path(cmd, minishell->envp_tab, 0);
-	if (path != NULL)
+	minishell->path = find_path(cmd, minishell->envp_tab, 0);
+	if (minishell->path != NULL)
 	{
-		if (ft_strcmp(cmd, "./minishell") != 0)
-			free(path);
+		// if (ft_strcmp(cmd, "./minishell") != 0)
+		// {
+		// 	free(path);
+		// 	path = NULL;
+		// }
+		if(ft_strnstr(minishell->entry,"|",ft_strlen(minishell->entry)) != NULL)
+			free(minishell->path);
 		return (true);
 	}
-	free(path);
+	free(minishell->path);
 	return (false);
 }

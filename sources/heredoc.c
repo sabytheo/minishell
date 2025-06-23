@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/13 19:05:06 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/23 15:49:35 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ static int	handle_heredoc_input(int fd, char *limiter, t_minishell *minishell)
 			free(line);
 			break ;
 		}
+		minishell->expansion_map = create_expansion_map(line);
 		line = expand_variable(line, minishell);
+		free(minishell->expansion_map);
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		free(line);

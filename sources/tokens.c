@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/20 17:00:38 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/23 15:24:00 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_token	*define_tokens(char *entry)
 	return (token);
 }
 
-static bool	*create_expansion_map(char *str)
+bool	*create_expansion_map(char *str)
 {
 	int		i;
 	bool	*map;
@@ -108,13 +108,14 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 	}
 }
 
-void	tokens(t_minishell *minishell, char *entry)
+int	tokens(t_minishell *minishell, char *entry)
 {
 	if (has_closed_quotes(entry,true))
-		return ;
+		return (-1) ;
 	minishell->tokens = define_tokens(entry);
 	format_tokens(minishell->tokens, minishell);
 	if (check_tokens(minishell) == false)
-		return ;
+		return (-1);
 	exec_tokens(minishell);
+	return(0);
 }

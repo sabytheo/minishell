@@ -6,7 +6,7 @@
 #    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/06/24 16:49:06 by egache           ###   ########.fr        #
+#    Updated: 2025/06/24 20:47:10 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,9 +42,10 @@ SRCS		:=		main.c \
 					debug.c \
 					signals.c \
 					signals_handler.c \
-					exec.c \
+					find_path.c \
 					exec_tokens.c \
 					exec_tokens_utils.c \
+					exec_builtins.c \
 					exec_single.c \
 					exec_pipes.c \
 					exec_pipes_utils.c \

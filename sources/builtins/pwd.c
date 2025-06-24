@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:50:34 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 13:32:45 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 20:53:18 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void	new_pwd(t_minishell *minishell, t_denvp *list)
 	}
 	return (free(newpwd));
 }
-
 
 void	update_pwd(t_minishell *minishell)
 {

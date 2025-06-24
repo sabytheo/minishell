@@ -6,15 +6,36 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:32:19 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 13:43:51 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 20:59:56 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	check_ifcmdempty(t_minishell *minishell)
+{
+	int	i;
+
+	if (!minishell || !minishell->cmds || !minishell->cmds->args)
+		return ;
+	if (!minishell->cmds->args[0])
+		return ;
+	if (minishell->cmds->args[0][0] == '\0')
+	{
+		free(minishell->cmds->args[0]);
+		i = 0;
+		while (minishell->cmds->args[i + 1] != NULL)
+		{
+			minishell->cmds->args[i] = minishell->cmds->args[i + 1];
+			i++;
+		}
+		minishell->cmds->args[i] = NULL;
+	}
+}
+
 bool	check_filetype(t_minishell *minishell, char *arg)
 {
-	struct	stat	fs;
+	struct stat	fs;
 
 	if (stat(arg, &fs) == 0 && !S_ISREG(fs.st_mode))
 	{
@@ -66,15 +87,19 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 	minishell->path = NULL;
 	if (is_a_builtins(cmd))
 		return (true);
-	minishell->path = find_path(cmd, minishell->envp_tab, 0);
+	minishell->path = find_path(cmd, minishell->envp_tab);
 	if (minishell->path != NULL)
 	{
 		if (ft_strnstr(minishell->entry, "|",
 				ft_strlen(minishell->entry)) != NULL)
+		{
 			free(minishell->path);
+			minishell->path = NULL;
+		}
 		return (true);
 	}
 	free(minishell->path);
+	minishell->path = NULL;
 	return (false);
 }
 
@@ -85,7 +110,8 @@ bool	check_cmd(t_minishell *minishell, char *arg)
 		ft_printf_fd(2, "minishell: %s : check the usage\n", arg);
 		return (false);
 	}
-	else if (ft_strncmp("./", arg, 2) == 0 || ft_strncmp("/", arg, 1) == 0)
+	else if (ft_strncmp("./", arg, 2) == 0 || ft_strncmp("/", arg, 1) == 0
+		|| ft_strncmp("../", arg, 3) == 0)
 		return (check_filetype(minishell, arg));
 	else
 	{

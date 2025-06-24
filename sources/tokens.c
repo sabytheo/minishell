@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/23 15:24:00 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 21:03:35 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ bool	has_closed_quotes(char *str, bool message)
 	if (message == true)
 	{
 		if (squote == true)
-		ft_putendl_fd("minishell : syntax error : unclosed single quote ", 2);
+			ft_putendl_fd(E_UNCLOSE_SQUOTE, 2);
 		else if (dquote == true)
-		ft_putendl_fd("minishell : syntax error : unclosed double quote ", 2);
+			ft_putendl_fd(E_UNCLOSE_DQUOTE, 2);
 	}
 	return (squote || dquote);
 }
@@ -68,9 +68,11 @@ bool	*create_expansion_map(char *str)
 {
 	int		i;
 	bool	*map;
-	bool	in_squote = false;
-	bool	in_dquote = false;
+	bool	in_squote;
+	bool	in_dquote;
 
+	in_squote = false;
+	in_dquote = false;
 	map = malloc(sizeof(bool) * (ft_strlen(str) + 1));
 	if (!map)
 		return (NULL);
@@ -85,7 +87,6 @@ bool	*create_expansion_map(char *str)
 	}
 	map[i] = false;
 	return (map);
-
 }
 
 void	format_tokens(t_token *tokens, t_minishell *minishell)
@@ -110,12 +111,12 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 
 int	tokens(t_minishell *minishell, char *entry)
 {
-	if (has_closed_quotes(entry,true))
-		return (-1) ;
+	if (has_closed_quotes(entry, true))
+		return (-1);
 	minishell->tokens = define_tokens(entry);
 	format_tokens(minishell->tokens, minishell);
 	if (check_tokens(minishell) == false)
 		return (-1);
 	exec_tokens(minishell);
-	return(0);
+	return (0);
 }

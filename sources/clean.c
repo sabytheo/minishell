@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 16:51:15 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 20:18:01 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	close_fds(t_minishell *minishell)
 	close(STDERR_FILENO);
 	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
 	free(minishell->pids);
+	minishell->pids = NULL;
 }
 
 int	exit_and_clear_child(int error_code, t_minishell *minishell)

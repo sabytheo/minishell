@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 13:34:59 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 21:04:18 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ char	*check_syntax(t_minishell *minishell)
 	}
 	return (NULL);
 }
-
 
 bool	check_tokens(t_minishell *minishell)
 {

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 15:26:18 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 21:00:24 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,7 @@ char							*check_syntax(t_minishell *minishell);
 
 // check_cmd.c --->
 bool							check_cmd(t_minishell *minishell, char *arg);
+void							check_ifcmdempty(t_minishell *minishell);
 bool							check_filetype(t_minishell *minishell,
 									char *arg);
 bool							is_a_builtins(char *cmd);
@@ -183,11 +184,11 @@ int								ft_cd(t_minishell *minishell, t_cmds **cmds);
 int								ft_pwd(t_minishell *minishell);
 void							update_pwd(t_minishell *minishell);
 int								ft_env(t_minishell *minishell);
-int								ft_export(t_minishell *minishell);
 int								ft_unset(t_minishell *minishell);
 void							ft_exit(t_minishell *minishell, int state);
 
 // export.c --->
+int								ft_export(t_minishell *minishell);
 int								ft_strcmp(const char *s1, const char *s2);
 t_denvp							*create_denvp(char **var);
 void							add_denvp_back(t_denvp **list_denvp,
@@ -195,11 +196,9 @@ void							add_denvp_back(t_denvp **list_denvp,
 char							**fill_variables(char *value);
 
 // export_display.c
-
 bool							export_display(t_minishell *minishell);
 
 // export_utils.c
-
 int								ft_strlen_equal(char *str);
 t_denvp							*create_denvp(char **var);
 void							add_denvp_back(t_denvp **list_denvp,
@@ -208,17 +207,13 @@ bool							valid_id(char c);
 void							add_to_list(t_minishell *minishell,
 									t_denvp **list);
 
-// exec.c --->
-char							*find_path(char *arg, char **envp, int i);
+// find_path.c --->
+char							*find_path(char *arg, char **envp);
 int								exec_builtins(t_minishell *minishell,
 									t_cmds *cmds);
-void							exec_tokens(t_minishell *minishell);
 
 // exec_tokens.c --->
-
-void							split_tokens(t_minishell *minishell);
-// int								create_heredoc(char *eof,
-// 									t_minishell *minishell);
+void							exec_tokens(t_minishell *minishell);
 int								create_heredoc(char *limiter,
 									t_minishell *minishell, t_token *redir);
 
@@ -243,18 +238,16 @@ void							reset_redir(t_minishell *minishell);
 void							execute_single_command(t_minishell *minishell);
 void							wait_thechild(pid_t pid,
 									t_minishell *minishell);
-int								before_builtins(t_cmds *cmds,
+int								single_builtins(t_cmds *cmds,
 									t_minishell *minishell);
-// exec_pipe.c --->
+// exec_pipes.c --->
 void							execute_piped_command(t_minishell *minishell,
 									t_cmds *cmds);
-void							wait_allchild(t_minishell *minishell);
 
-// exec_pipe_utils.c --->
-
-void							close_pipes_inchild(t_minishell *minishell);
-void							cleanup_pipes(int **pipes, int pipe_count);
+// exec_pipes_utils.c --->
 void							getcmd_count(t_minishell *minishell);
+void							cleanup_pipes(int **pipes, int pipe_count);
+void							close_pipes_inchild(t_minishell *minishell);
 
 void							add_heredoc_back(t_heredoc **list_heredoc,
 									t_heredoc *new);

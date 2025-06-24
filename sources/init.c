@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 16:35:53 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 21:01:52 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ void	fill_envp(t_minishell *minishell, char **envp)
 
 void	split_envp(t_minishell *minishell, char **envp)
 {
-	char *get_pwd;
-	char *pwd_var;
+	char	*get_pwd;
+	char	*pwd_var;
 
 	get_pwd = getcwd(NULL, 0);
 	pwd_var = ft_strjoin("PWD=", get_pwd);
@@ -101,16 +101,6 @@ void	split_envp(t_minishell *minishell, char **envp)
 		define_shlvl(&minishell->envp);
 		define_shlvl(&minishell->export);
 	}
-	// else
-	// {
-		// fill_envp(minishell, envp);
-	// 	else
-	// 	{
-	// 		fill_envpnull(minishell, pwd_var);
-	// 		fill_envpnull(minishell, "SHLVL=1");
-	// 		fill_envpnull(minishell, "_=/usr/bin/env");
-	// 	}
-	// }
 	free(get_pwd);
 	return (free(pwd_var));
 }

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 14:41:43 by egache            #+#    #+#             */
-/*   Updated: 2025/05/27 17:22:44 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 20:53:37 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,9 @@ static bool	check_arg(char *arg, char *denvp_var)
 }
 
 static int	unset_list(t_cmds *cmds, t_denvp **current)
-
 {
-	t_denvp *tmp;
-	t_denvp *head;
+	t_denvp	*tmp;
+	t_denvp	*head;
 
 	head = (*current);
 	if (check_arg(cmds->args[1], (*current)->var[0]) == true)

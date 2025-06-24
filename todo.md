@@ -11,22 +11,14 @@
 
 CLEAN.C
 
-EXEC_SINGLE.C
-	- execute_single_command
-		- Split la fonction avec une fonction exec_bin
-		- Voir pour modifier "before builtins"
-
-EXEC_TOKENS.C
-	- extract_redirections
-	- split_tokens
-
-EXEC.C
-	- Rename fichier
-		- Voir en fonctions des fonctions dans le fichier
-		- Peut etre diviser en 2 fichiers : exec_builtins \ exec_bin
+UNSET.C
+	- Fonction unset_list trop longue
 
 MAIN.c
-	- main
+	- main a rearranger
+
+FORMAT_TOKENS_UTILS.C
+	- Fonction avec 5 arguments (4 MAX) -> process_quoted_content
 
 isatty pour ./minishell | ./minishell
 

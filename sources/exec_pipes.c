@@ -6,13 +6,13 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 16:44:44 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 20:49:06 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	dup_pipes(t_minishell *minishell, int cmd_index)
+static int	dup_pipes(t_minishell *minishell, int cmd_index)
 {
 	if (cmd_index > 0) // Pas la première commande
 	{
@@ -34,10 +34,11 @@ int	dup_pipes(t_minishell *minishell, int cmd_index)
 	}
 	return (0);
 }
-void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
+
+static void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 		int cmd_index)
 {
-	char *path;
+	char	*path;
 
 	if (dup_pipes(minishell, cmd_index) < 0)
 		exit_and_clear_child(minishell->error_code, minishell);
@@ -53,18 +54,18 @@ void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 		}
 		else
 		{
-			if (ft_strnstr(cmd->args[0],"/", ft_strlen(cmd->args[0])) != NULL)
+			if (ft_strnstr(cmd->args[0], "/", ft_strlen(cmd->args[0])) != NULL)
 				path = cmd->args[0];
 			else
-				path = find_path(cmd->args[0], minishell->envp_tab, 0);
-			execve(path, cmd->args,minishell->envp_tab);
+				path = find_path(cmd->args[0], minishell->envp_tab);
+			execve(path, cmd->args, minishell->envp_tab);
 			perror("execve");
 		}
 	}
 	exit_and_clear_child(minishell->error_code, minishell);
 }
 
-int	init_pipes_and_pids(t_minishell *minishell)
+static int	init_pipes_and_pids(t_minishell *minishell)
 {
 	int	i;
 
@@ -91,7 +92,7 @@ int	init_pipes_and_pids(t_minishell *minishell)
 	return (0);
 }
 
-void	wait_allchild(t_minishell *minishell)
+static void	wait_allchild(t_minishell *minishell)
 {
 	int	i;
 	int	status;
@@ -138,5 +139,6 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
 	wait_allchild(minishell);
 	free(minishell->pids);
+	minishell->pids = NULL;
 	cleanup_heredocs(minishell);
 }

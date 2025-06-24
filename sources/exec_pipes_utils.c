@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 11:15:23 by tsaby             #+#    #+#             */
-/*   Updated: 2025/05/26 11:22:18 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 21:00:54 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	getcmd_count(t_minishell *minishell)
 {

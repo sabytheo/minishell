@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/23 15:17:50 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 21:01:07 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,9 @@ static char	*handle_expand(char *str, int *i, t_minishell *minishell,
 	char	*value;
 	char	tmp[2];
 
-	if (str[*i] == '$' && (ft_isalpha(str[*i + 1]) == 1 || str[*i + 1] == '_' || str[*i + 1] == '?')
-		&& str[*i + 1] != '\0' && minishell->expansion_map[*i] == true)
+	if (str[*i] == '$' && (ft_isalpha(str[*i + 1]) == 1 || str[*i + 1] == '_'
+			|| str[*i + 1] == '?') && str[*i + 1] != '\0'
+		&& minishell->expansion_map[*i] == true)
 	{
 		(*i)++;
 		name = extract_var_name(str, i);

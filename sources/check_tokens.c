@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/06/23 13:22:55 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 12:54:01 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ bool	check_cmd(t_minishell *minishell, char *arg)
 {
 	struct stat	fs;
 
-	if (ft_strcmp(arg,".") == 0 || ft_strcmp(arg,"..") == 0)
+	if (ft_strcmp(arg,".") == 0)
 		{
 			ft_printf_fd(2,"minishell: %s : check the usage\n",arg);
 			return(false);

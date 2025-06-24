@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/23 13:28:35 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 13:00:48 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,8 @@ void	execute_single_command(t_minishell *minishell)
 				path = find_path(cmds->args[0], minishell->envp_tab, 0);
 			execve(path, cmds->args, minishell->envp_tab);
 			perror("execve");
-			free(path);
+			if(ft_strncmp(cmds->args[0],"../",3) != 0)
+				free(path);
 			exit_and_clear_child(minishell->error_code, minishell);
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 12:52:19 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 16:51:23 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
+	// printf("env[0] in main : %s\n", envp[0]);
+	// printf("envp address in main : %p\n", envp);
 	init_minishell(&minishell, envp);
 	check_args_count(argc, argv, &minishell);
 	signal_initialisation();

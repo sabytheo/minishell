@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/23 13:50:43 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 16:44:44 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,6 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 		i++;
 	}
 	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
-	// close_pipes_inchild(minishell);
 	wait_allchild(minishell);
 	free(minishell->pids);
 	cleanup_heredocs(minishell);

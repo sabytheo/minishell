@@ -6,58 +6,11 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/06/19 18:37:35 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 13:23:05 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t	i;
-
-	i = 0;
-	if (s2 && s1)
-	{
-		while (s1[i] && s2[i] && s1[i] == s2[i])
-			i++;
-		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-	}
-	return ((unsigned char)s1[i]);
-}
-
-char	*ft_strldup(char *src, int size)
-{
-	char	*dest;
-	int		i;
-
-	i = 0;
-	dest = (char *)malloc((size + 1) * sizeof(char));
-	if (!dest)
-		return (NULL);
-	if (!src)
-	{
-		dest[i] = '\0';
-		return (dest);
-	}
-	while (src[i] && i < size)
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-int	ft_strlen_equal(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0' && str[i] != '=')
-		i++;
-	return (i);
-}
 
 char	**fill_variables(char *value)
 {
@@ -77,53 +30,6 @@ char	**fill_variables(char *value)
 	else
 		var[1] = NULL;
 	return (var);
-}
-
-t_denvp	*create_denvp(char **var)
-{
-	t_denvp	*new;
-
-	new = malloc(sizeof(t_denvp));
-	if (!new)
-		return (NULL);
-	new->var = var;
-	new->next = NULL;
-	return (new);
-}
-
-void	add_denvp_back(t_denvp **list_denvp, t_denvp *new)
-{
-	t_denvp	*tmp;
-
-	if (!*list_denvp || !(*list_denvp)->var)
-	{
-		*list_denvp = new;
-		return ;
-	}
-	tmp = *list_denvp;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-}
-
-bool	display_export(t_minishell *minishell)
-{
-	t_denvp	*current;
-
-	if (minishell->cmds->args[1] == NULL)
-	{
-		current = minishell->export;
-		while (current != NULL && current->var)
-		{
-			printf("export %s", current->var[0]);
-			if (current->var[1] != NULL)
-				printf("%s", current->var[1]);
-			printf("\n");
-			current = current->next;
-		}
-		return (true);
-	}
-	return (false);
 }
 
 bool	already_exist(t_minishell *minishell, t_denvp *list)
@@ -149,14 +55,6 @@ bool	already_exist(t_minishell *minishell, t_denvp *list)
 	return (false);
 }
 
-static bool	valid_id(char c)
-{
-	if (ft_isalnum(c) == 1 || c == '_')
-		return (true);
-	else
-		return (false);
-}
-
 static int	export_parsing(char *str)
 {
 	int	i;
@@ -177,15 +75,13 @@ static int	export_parsing(char *str)
 			}
 			return (0);
 		}
-		else
-		{
-			if (valid_id(str[i]) == false || ft_isalpha(str[0]) == 0)
-				return (1);
-			i++;
-		}
+		else if (valid_id(str[i]) == false || ft_isalpha(str[0]) == 0)
+			return (1);
+		i++;
 	}
 	return (2);
 }
+
 bool	replace_node(t_denvp *current, char *arg)
 {
 	int	size1;
@@ -209,29 +105,12 @@ bool	replace_node(t_denvp *current, char *arg)
 	return (false);
 }
 
-void	add_to_list(t_minishell *minishell, t_denvp **list)
-{
-	t_denvp	*current;
-	t_denvp	*new;
-	char	**var;
-
-	current = *list;
-	while (current != NULL && current->next != NULL)
-		current = current->next;
-	var = fill_variables(minishell->cmds->args[1]);
-	new = create_denvp(var);
-	add_denvp_back(list, new);
-}
-
 int	ft_export(t_minishell *minishell)
 {
-	if (display_export(minishell) == true)
+	if (export_display(minishell) == true)
 		return (0);
 	if (already_exist(minishell, minishell->export) == true)
-	{
-		printf("caca\n");
 		return (0);
-	}
 	if (export_parsing(minishell->cmds->args[1]) == 0)
 	{
 		if (replace_node(minishell->export, minishell->cmds->args[1]) == false)

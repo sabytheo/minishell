@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 12:54:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 19:29:17 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ bool	check_cmd(t_minishell *minishell, char *arg)
 			ft_printf_fd(2,"minishell: %s : check the usage\n",arg);
 			return(false);
 		}
-	else if (ft_strncmp("./", arg, 2) == 0 || ft_strncmp("/", arg, 1) == 0)
+	else if (ft_strncmp("./", arg, 2) == 0 || ft_strncmp("/", arg, 1) == 0 || ft_strncmp("../", arg, 3) == 0)
 	{
 		if (stat(arg, &fs) == 0 && !S_ISREG(fs.st_mode))
 		{

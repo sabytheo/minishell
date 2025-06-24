@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:27:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/23 14:00:59 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 19:32:48 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 	minishell->path = NULL;
 	if (is_a_builtins(cmd))
 		return (true);
+	if (ft_strcmp(cmd,"..") == 0)
+		return (false);
 	minishell->path = find_path(cmd, minishell->envp_tab, 0);
 	if (minishell->path != NULL)
 	{
@@ -50,9 +52,13 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 		// 	path = NULL;
 		// }
 		if(ft_strnstr(minishell->entry,"|",ft_strlen(minishell->entry)) != NULL)
+		{
 			free(minishell->path);
+			minishell->path = NULL;
+		}
 		return (true);
 	}
 	free(minishell->path);
+	minishell->path = NULL;
 	return (false);
 }

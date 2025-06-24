@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/23 10:12:19 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 19:25:41 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ char	*find_path(char *arg, char **envp, int i)
 			return (path);
 		}
 		free(path);
+		path = NULL;
 	}
 	free_tab(path_arg);
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/23 13:50:43 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/24 19:23:14 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,5 +139,6 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 	// close_pipes_inchild(minishell);
 	wait_allchild(minishell);
 	free(minishell->pids);
+	minishell->pids = NULL;
 	cleanup_heredocs(minishell);
 }

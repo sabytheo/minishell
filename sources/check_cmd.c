@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:32:19 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 14:16:29 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/25 14:38:46 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,26 @@
 void	check_ifcmdempty(t_minishell *minishell)
 {
 	int	i;
+	int	j;
 
 	if (!minishell || !minishell->cmds || !minishell->cmds->args)
 		return ;
-	if (!minishell->cmds->args[0])
-		return ;
-	if (minishell->cmds->args[0][0] == '\0')
+	i = 0;
+	while (minishell->cmds->args[i] != NULL)
 	{
-		free(minishell->cmds->args[0]);
-		i = 0;
-		while (minishell->cmds->args[i + 1] != NULL)
+		if (minishell->cmds->args[i][0] == '\0')
 		{
-			minishell->cmds->args[i] = minishell->cmds->args[i + 1];
-			i++;
+			free(minishell->cmds->args[i]);
+			j = i;
+			while (minishell->cmds->args[j + 1] != NULL)
+			{
+				minishell->cmds->args[j] = minishell->cmds->args[j + 1];
+				j++;
+			}
+			minishell->cmds->args[j] = NULL;
+			i--;
 		}
-		minishell->cmds->args[i] = NULL;
+		i++;
 	}
 }
 

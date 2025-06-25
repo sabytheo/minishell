@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 21:01:52 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 15:36:44 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	minishell->errfound = false;
 	minishell->cmds_count = 0;
 	split_envp(minishell, envp);
+	chainedlst_to_tab(minishell);
+	signal_initialisation();
 }
 
 void	define_shlvl(t_denvp **list)

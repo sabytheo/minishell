@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 14:41:43 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 20:53:37 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 15:38:45 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,18 @@ static void	ft_delnode(void (*del)(void *), t_denvp *to_delete)
 	free(to_delete);
 }
 
-static bool	check_arg(char *arg, char *denvp_var)
+static bool	unset_first(char *arg, t_denvp **current)
 {
-	if (ft_strcmp(arg, denvp_var) == 0)
-		return (true);
-	return (false);
+	t_denvp	*tmp;
+
+	if (ft_strcmp(arg, (*current)->var[0]) == 0)
+	{
+		tmp = (*current)->next;
+		ft_delnode(del_tab, (*current));
+		(*current) = tmp;
+		return (0);
+	}
+	return (1);
 }
 
 static int	unset_list(t_cmds *cmds, t_denvp **current)
@@ -37,18 +44,13 @@ static int	unset_list(t_cmds *cmds, t_denvp **current)
 	t_denvp	*head;
 
 	head = (*current);
-	if (check_arg(cmds->args[1], (*current)->var[0]) == true)
-	{
-		tmp = (*current)->next;
-		ft_delnode(del_tab, (*current));
-		(*current) = tmp;
+	if (unset_first(cmds->args[1], current) == 0)
 		return (0);
-	}
 	else
 	{
 		while ((*current) && (*current)->next != NULL)
 		{
-			if (check_arg(cmds->args[1], (*current)->next->var[0]) == true)
+			if (ft_strcmp(cmds->args[1], (*current)->next->var[0]) == 0)
 			{
 				tmp = (*current)->next->next;
 				ft_delnode(del_tab, (*current)->next);

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 21:00:24 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 15:50:27 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,12 @@ typedef struct sigaction		t_sigaction;
 
 // clean.c --->
 void							free_minishell(t_minishell *minishell);
+void							free_running_minishell(t_minishell *minishell);
 void							free_tokens(t_token **tokens);
 void							free_tab(char **tab);
 void							free_cmds(t_cmds **cmds);
 void							free_denvp(t_denvp **envp);
+void							free_exit_pipes(t_minishell *minishell);
 int								exit_and_clear_child(int error_code,
 									t_minishell *minishell);
 void							free_heredoc(t_heredoc **heredoc);

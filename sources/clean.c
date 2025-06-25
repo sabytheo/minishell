@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 12:27:32 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/25 15:51:06 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@ void	close_fds(t_minishell *minishell)
 	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
 	free(minishell->pids);
 	minishell->pids = NULL;
+}
+
+void	free_exit_pipes(t_minishell *minishell)
+{
+	if (minishell->pipes)
+		cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
+	if (minishell->pids)
+		free(minishell->pids);
 }
 
 int	exit_and_clear_child(int error_code, t_minishell *minishell)
@@ -156,6 +164,25 @@ void	clean_error(char *error_message, t_minishell *minishell)
 	// exit(minishell->error_code);
 }
 
+void	free_running_minishell(t_minishell *minishell)
+{
+	if (ft_strlen(minishell->entry) > 0)
+	{
+		if (minishell->cmds->args && minishell->cmds->args[0]
+			&& !minishell->cmds->next)
+		{
+			free(minishell->path);
+			minishell->path = NULL;
+		}
+		free_cmds(&minishell->cmds);
+		free_heredoc(&minishell->heredoc);
+		free_tokens(&minishell->tokens);
+	}
+	free(minishell->entry);
+	minishell->cmds_count = 0;
+	minishell->errfound = false;
+}
+
 void	free_minishell(t_minishell *minishell)
 {
 	// int line;
@@ -174,6 +201,8 @@ void	free_minishell(t_minishell *minishell)
 		free_tokens(&minishell->tokens);
 	if (minishell->cmds)
 		free_cmds(&minishell->cmds);
+	if (minishell->cmds_count != 0)
+			free_exit_pipes(minishell);
 	rl_clear_history();
 	if (minishell->input_fd > 2)
 		close(minishell->input_fd);

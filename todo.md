@@ -10,15 +10,7 @@
 #REFACTO R1 :
 
 CLEAN.C
-
-UNSET.C
-	- Fonction unset_list trop longue
-
-MAIN.c
-	- main a rearranger
-
-FORMAT_TOKENS_UTILS.C
-	- Fonction avec 5 arguments (4 MAX) -> process_quoted_content
+ - 2/3 fichiers 
 
 isatty pour ./minishell | ./minishell
 

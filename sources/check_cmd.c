@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:32:19 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 14:38:46 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/25 15:28:07 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,24 +112,28 @@ bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 
 bool	check_cmd(t_minishell *minishell, char *arg)
 {
-	if (ft_strcmp(arg, ".") == 0)
+	if (arg != NULL)
 	{
-		ft_printf_fd(2, "minishell: %s : check the usage\n", arg);
-		return (false);
-	}
-	else if (ft_strncmp("./", arg, 2) == 0 || ft_strncmp("/", arg, 1) == 0
-		|| ft_strncmp("../", arg, 3) == 0)
-		return (check_filetype(minishell, arg));
-	else
-	{
-		if (arg[0] != '\0')
+		if (ft_strcmp(arg, ".") == 0)
 		{
-			if (is_valid_cmd(arg, minishell) == true)
-				return (true);
-			ft_printf_fd(2, E_PARS_CMD_NF, arg);
-			minishell->error_code = 127;
+			ft_printf_fd(2, "minishell: %s : check the usage\n", arg);
 			return (false);
 		}
+		else if (ft_strncmp("./", arg, 2) == 0 || ft_strncmp("/", arg, 1) == 0
+			|| ft_strncmp("../", arg, 3) == 0)
+			return (check_filetype(minishell, arg));
+		else
+		{
+			if (arg[0] != '\0')
+			{
+				if (is_valid_cmd(arg, minishell) == true)
+					return (true);
+				ft_printf_fd(2, E_PARS_CMD_NF, arg);
+				minishell->error_code = 127;
+				return (false);
+			}
+		}
+		return (false);
 	}
 	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 16:51:23 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 15:38:18 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,10 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
-	// printf("env[0] in main : %s\n", envp[0]);
-	// printf("envp address in main : %p\n", envp);
 	init_minishell(&minishell, envp);
 	check_args_count(argc, argv, &minishell);
-	signal_initialisation();
-	chainedlst_to_tab(&minishell);
 	while (minishell.is_running == true)
 	{
-		g_signal_value = 0;
 		signal_initialisation();
 		minishell.entry = get_entry(&minishell);
 		if (minishell.entry == NULL)
@@ -94,18 +89,8 @@ int	main(int argc, char **argv, char **envp)
 				free(minishell.entry);
 				continue ;
 			}
-			if (minishell.cmds->args && minishell.cmds->args[0]
-				&& !minishell.cmds->next)
-				{
-					free(minishell.path);
-					minishell.path= NULL;
-				}
-			free_cmds(&minishell.cmds);
-			free_heredoc(&minishell.heredoc);
-			free_tokens(&minishell.tokens);
 		}
-		free(minishell.entry);
-		minishell.errfound = false;
+		free_running_minishell(&minishell);
 	}
 	free_minishell(&minishell);
 	return (0);

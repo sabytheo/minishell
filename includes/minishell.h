@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 15:50:27 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 16:49:46 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,8 @@ enum							e_launch_modes
 typedef struct sigaction		t_sigaction;
 
 // clean.c --->
-void							free_minishell(t_minishell *minishell);
+void							free_minishell(t_minishell *minishell,
+									char *error_message, bool exit_needed);
 void							free_running_minishell(t_minishell *minishell);
 void							free_tokens(t_token **tokens);
 void							free_tab(char **tab);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:33:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 21:03:12 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 16:53:30 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,5 @@
 # define E_NSFOD "minishell: '%s': No such file or directory\n"
 # define E_UNCLOSE_SQUOTE "minishell : syntax error : unclosed single quote "
 # define E_UNCLOSE_DQUOTE "minishell : syntax error : unclosed double quote "
+# define E_AFAILED "Error : alloc failed\n"
 #endif

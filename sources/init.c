@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 15:36:44 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 16:58:26 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,15 @@ void	fill_envp(t_minishell *minishell, char **envp)
 	{
 		var1 = fill_variables(envp[i]);
 		var2 = fill_variables(envp[i]);
-		new_export = create_denvp(var1);
+		new_export =  NULL; //create_denvp(var1);
+		if (!new_export)
+			return (free_minishell(minishell,E_AFAILED,true));
 		new_denvp = create_denvp(var2);
+		if (!new_denvp)
+		{
+			free(new_export);
+			return (free_minishell(minishell,E_AFAILED,true));
+		}
 		add_denvp_back(&minishell->export, new_export);
 		add_denvp_back(&minishell->envp, new_denvp);
 		i++;
@@ -89,7 +96,14 @@ void	split_envp(t_minishell *minishell, char **envp)
 	char	*pwd_var;
 
 	get_pwd = getcwd(NULL, 0);
+	if (!get_pwd)
+		return (free_minishell(minishell,E_AFAILED,true));
 	pwd_var = ft_strjoin("PWD=", get_pwd);
+	if (!pwd_var)
+	{
+		free(get_pwd);
+		return (free_minishell(minishell, E_AFAILED, true));
+	}
 	if (envp[0] != NULL)
 		fill_envp(minishell, envp);
 	if (envp[0] == NULL || (envp[0] != NULL && getenv("SHLVL") == NULL))

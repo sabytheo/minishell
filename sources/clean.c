@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 16:30:02 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 16:48:37 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ void	free_running_minishell(t_minishell *minishell)
 	minishell->errfound = false;
 }
 
-void	free_minishell(t_minishell *minishell)
+void	free_minishell(t_minishell *minishell, char *error_message, bool exit_needed)
 {
 	if (!minishell)
 		return ;
@@ -208,4 +208,8 @@ void	free_minishell(t_minishell *minishell)
 		close(minishell->input_fd);
 	if (minishell->output_fd > 2)
 		close(minishell->output_fd);
+	if (error_message != NULL)
+		ft_printf_fd(2, "%s\n", error_message);
+	if (exit_needed == true)
+		exit(EXIT_FAILURE);
 }

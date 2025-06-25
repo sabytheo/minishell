@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 15:38:18 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 16:51:00 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		free_running_minishell(&minishell);
 	}
-	free_minishell(&minishell);
+	free_minishell(&minishell, NULL, false);
 	return (0);
 }

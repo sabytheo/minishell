@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:32:19 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 12:43:22 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/25 14:16:29 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ bool	is_a_builtins(char *cmd)
 bool	is_valid_cmd(char *cmd, t_minishell *minishell)
 {
 	minishell->path = NULL;
-	if(ft_strcmp("..", cmd) == 0)
+	if (ft_strcmp("..", cmd) == 0)
 		return (false);
 	if (is_a_builtins(cmd))
 		return (true);
@@ -113,7 +113,7 @@ bool	check_cmd(t_minishell *minishell, char *arg)
 		return (false);
 	}
 	else if (ft_strncmp("./", arg, 2) == 0 || ft_strncmp("/", arg, 1) == 0
-		|| ft_strncmp("../", arg, 3) == 0 )
+		|| ft_strncmp("../", arg, 3) == 0)
 		return (check_filetype(minishell, arg));
 	else
 	{

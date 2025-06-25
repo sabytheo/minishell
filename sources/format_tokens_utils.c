@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   format_tokens_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:06:39 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 21:09:01 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 14:15:32 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,12 @@ static int	handle_unmatched_quote(char *result, const char *str,
 	return (j + 1);
 }
 
-static int	process_quoted_content(const char *str, int *i, char *result, int j,
+static int	process_quoted_content(const char *str, int *i, char *result,
 		char quote_char)
 {
+	int	j;
+
+	j = 0;
 	while (str[*i])
 	{
 		if (str[*i] == quote_char)
@@ -52,13 +55,13 @@ static int	handle_quote_pair(const char *str, int *i, char *result, int j)
 	quote_char = str[*i];
 	quote_start = *i;
 	(*i)++;
-	new_j = process_quoted_content(str, i, result, j, quote_char);
+	new_j = process_quoted_content(str, i, result + j, quote_char);
 	if (new_j == -1)
 	{
 		*i = quote_start + 1;
 		return (handle_unmatched_quote(result, str, quote_start, j));
 	}
-	return (new_j);
+	return (j + new_j);
 }
 
 char	*remove_quotes(const char *str)

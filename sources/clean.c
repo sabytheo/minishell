@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 15:51:06 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 16:30:02 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,8 +185,6 @@ void	free_running_minishell(t_minishell *minishell)
 
 void	free_minishell(t_minishell *minishell)
 {
-	// int line;
-	// line = 0;
 	if (!minishell)
 		return ;
 	if (minishell->entry)
@@ -199,10 +197,12 @@ void	free_minishell(t_minishell *minishell)
 		free_denvp(&minishell->export);
 	if (minishell->tokens)
 		free_tokens(&minishell->tokens);
+	if (minishell->heredoc)
+		free_heredoc(&minishell->heredoc);
 	if (minishell->cmds)
 		free_cmds(&minishell->cmds);
 	if (minishell->cmds_count != 0)
-			free_exit_pipes(minishell);
+		free_exit_pipes(minishell);
 	rl_clear_history();
 	if (minishell->input_fd > 2)
 		close(minishell->input_fd);

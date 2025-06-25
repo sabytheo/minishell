@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 15:51:59 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 15:55:37 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,8 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 
 	current = cmds;
 	getcmd_count(minishell);
-	if (prepare_heredocs(minishell, cmds) < 0 || init_pipes_and_pids(minishell) < 0)
+	if (prepare_heredocs(minishell, cmds) < 0
+		|| init_pipes_and_pids(minishell) < 0)
 		return ;
 	i = 0;
 	while (i < minishell->cmds_count)

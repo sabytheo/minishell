@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:53:58 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 20:32:38 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/25 11:39:01 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	single_builtins(t_cmds *cmds, t_minishell *minishell)
 	if (cmds->cmdfound == false)
 	{
 		setup_redirections(cmds->redirs, minishell, cmds->cmdfound);
+		cleanup_heredocs(minishell);
 		return (-1);
 	}
 	if (is_a_builtins(cmds->args[0]))

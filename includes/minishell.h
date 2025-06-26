@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 16:49:46 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/26 11:45:16 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,13 +125,18 @@ char							*get_entry(t_minishell *minishell);
 void							init_minishell(t_minishell *minishell,
 									char **envp);
 void							split_envp(t_minishell *minishell, char **envp);
-void							define_shlvl(t_denvp **list);
-void							fill_envpnull(t_minishell *minishell,
+
+// init.c --->
+
+int								fill_envp(t_minishell *minishell, char **envp);
+int								fill_envpnull(t_minishell *minishell,
 									char *var);
+int								define_shlvl(t_denvp **list);
 
 // tokens.c --->
 bool							has_closed_quotes(char *str, bool message);
-t_token							*define_tokens(char *line);
+void								define_tokens(char *line,
+									t_minishell *minishell);
 void							format_tokens(t_token *tokens,
 									t_minishell *minishell);
 int								tokens(t_minishell *minishell, char *entry);

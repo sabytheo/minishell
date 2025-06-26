@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 21:01:07 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/26 13:07:19 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ static char	*append_and_free(char *base, char *addition)
 	if (!base || !addition)
 		return (NULL);
 	new = ft_strjoin(base, addition);
+	if (!new)
+	{
+		free(base);
+		return(NULL);
+	}
 	free(base);
 	return (new);
 }
@@ -74,8 +79,25 @@ static char	*handle_expand(char *str, int *i, t_minishell *minishell,
 	{
 		(*i)++;
 		name = extract_var_name(str, i);
+		if(!name)
+		{
+			free(expand->expanded);
+			return (NULL);
+		}
 		value = get_values(name, minishell->envp, minishell);
+		if(!value)
+		{
+			free(expand->expanded);
+			free(name);
+			return(NULL);
+		}
 		expand->expanded = append_and_free(expand->expanded, value);
+		if (!expand->expanded)
+		{
+			free(name);
+			free(value);
+			return(NULL);
+		}
 		free(name);
 		free(value);
 	}
@@ -84,6 +106,8 @@ static char	*handle_expand(char *str, int *i, t_minishell *minishell,
 		tmp[0] = str[*i];
 		tmp[1] = '\0';
 		expand->expanded = append_and_free(expand->expanded, tmp);
+		if (!expand->expanded)
+			return (NULL);
 		(*i)++;
 	}
 	return (expand->expanded);
@@ -96,7 +120,16 @@ char	*expand_variable(char *str, t_minishell *minishell)
 
 	i = 0;
 	expand.expanded = ft_strdup("");
+	if(!expand.expanded)
+		return (NULL);
 	while (str[i])
+	{
 		expand.expanded = handle_expand(str, &i, minishell, &expand);
+		if (!expand.expanded)
+		{
+			free(expand.expanded);
+			return(NULL);
+		}
+	}
 	return (expand.expanded);
 }

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 16:58:26 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/26 10:47:06 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,64 +30,28 @@ void	init_minishell(t_minishell *minishell, char **envp)
 	signal_initialisation();
 }
 
-void	define_shlvl(t_denvp **list)
+static int	handle_empty_env(t_minishell *minishell, char *pwd_var)
 {
-	t_denvp	*current;
-	char	*shlvl;
-
-	shlvl = ft_itoa(ft_atoi(getenv("SHLVL")) + 1);
-	current = (*list);
-	while (current)
-	{
-		if (ft_strcmp("SHLVL", current->var[0]) == 0)
-		{
-			free(current->var[1]);
-			current->var[1] = ft_strjoin("=", shlvl);
-			return (free(shlvl));
-		}
-		current = current->next;
-	}
-	return (free(shlvl));
+	if (fill_envpnull(minishell, pwd_var) < 0 || fill_envpnull(minishell,
+			"SHLVL=1") < 0 || fill_envpnull(minishell, "_=/usr/bin/env") < 0)
+		return (-1);
+	return (0);
 }
 
-void	fill_envpnull(t_minishell *minishell, char *var)
+static int	handle_shlvl(t_minishell *minishell)
 {
-	t_denvp	*new_denvp;
-	t_denvp	*new_export;
-
-	new_export = create_denvp(fill_variables(var));
-	new_denvp = create_denvp(fill_variables(var));
-	add_denvp_back(&minishell->export, new_export);
-	add_denvp_back(&minishell->envp, new_denvp);
+	if (define_shlvl(&minishell->envp) < 0
+		|| define_shlvl(&minishell->export) < 0)
+		return (-1);
+	return (0);
 }
 
-void	fill_envp(t_minishell *minishell, char **envp)
+static void	cleanup_and_exit(t_minishell *minishell, char *get_pwd,
+		char *pwd_var)
 {
-	t_denvp	*new_denvp;
-	t_denvp	*new_export;
-	int		i;
-	char	**var1;
-	char	**var2;
-
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		var1 = fill_variables(envp[i]);
-		var2 = fill_variables(envp[i]);
-		new_export =  NULL; //create_denvp(var1);
-		if (!new_export)
-			return (free_minishell(minishell,E_AFAILED,true));
-		new_denvp = create_denvp(var2);
-		if (!new_denvp)
-		{
-			free(new_export);
-			return (free_minishell(minishell,E_AFAILED,true));
-		}
-		add_denvp_back(&minishell->export, new_export);
-		add_denvp_back(&minishell->envp, new_denvp);
-		i++;
-	}
-	return ;
+	free(get_pwd);
+	free(pwd_var);
+	return (free_minishell(minishell, E_AFAILED, true));
 }
 
 void	split_envp(t_minishell *minishell, char **envp)
@@ -97,26 +61,20 @@ void	split_envp(t_minishell *minishell, char **envp)
 
 	get_pwd = getcwd(NULL, 0);
 	if (!get_pwd)
-		return (free_minishell(minishell,E_AFAILED,true));
+		return (free_minishell(minishell, E_AFAILED, true));
 	pwd_var = ft_strjoin("PWD=", get_pwd);
 	if (!pwd_var)
 	{
 		free(get_pwd);
 		return (free_minishell(minishell, E_AFAILED, true));
 	}
-	if (envp[0] != NULL)
-		fill_envp(minishell, envp);
-	if (envp[0] == NULL || (envp[0] != NULL && getenv("SHLVL") == NULL))
-	{
-		fill_envpnull(minishell, pwd_var);
-		fill_envpnull(minishell, "SHLVL=1");
-		fill_envpnull(minishell, "_=/usr/bin/env");
-	}
-	if (getenv("SHLVL") != NULL)
-	{
-		define_shlvl(&minishell->envp);
-		define_shlvl(&minishell->export);
-	}
+	if (envp[0] != NULL && fill_envp(minishell, envp) < 0)
+		return (cleanup_and_exit(minishell, get_pwd, pwd_var));
+	if ((envp[0] == NULL || (envp[0] != NULL && getenv("SHLVL") == NULL))
+		&& handle_empty_env(minishell, pwd_var) < 0)
+		return (cleanup_and_exit(minishell, get_pwd, pwd_var));
+	if (getenv("SHLVL") != NULL && handle_shlvl(minishell) < 0)
+		return (cleanup_and_exit(minishell, get_pwd, pwd_var));
 	free(get_pwd);
-	return (free(pwd_var));
+	free(pwd_var);
 }

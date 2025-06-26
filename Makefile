@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
+#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/06/24 20:47:10 by egache           ###   ########.fr        #
+#    Updated: 2025/06/26 10:42:27 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ SRCS_BUILTINS  :=	builtins/echo.c \
 
 SRCS		:=		main.c \
 					init.c \
+					init_envp.c \
 					clean.c \
 					tokens.c \
 					check_tokens.c \

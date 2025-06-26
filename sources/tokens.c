@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 21:03:35 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/26 12:17:10 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool	has_closed_quotes(char *str, bool message)
 	return (squote || dquote);
 }
 
-t_token	*define_tokens(char *entry)
+void define_tokens(char *entry, t_minishell *minishell)
 {
 	t_token			*token;
 	t_token			*new;
@@ -52,16 +52,18 @@ t_token	*define_tokens(char *entry)
 	while (entry[i])
 	{
 		token_str = extract_token(entry, &i);
-		if (!token_str || token_str[0] == '\0')
-		{
-			free(token_str);
-			continue ;
-		}
+		if (!token_str)
+			return (free_minishell(minishell,E_AFAILED,true));
 		type = get_type(token_str);
 		new = create_token(token_str, type);
+		if (!new)
+		{
+			free(token_str);
+			return (free_minishell(minishell,E_AFAILED,true));
+		}
 		add_token_back(&token, new);
 	}
-	return (token);
+	minishell->tokens = token;
 }
 
 bool	*create_expansion_map(char *str)
@@ -97,9 +99,22 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 	while (tokens)
 	{
 		minishell->expansion_map = create_expansion_map(tokens->value);
+		if (!minishell->expansion_map)
+			return (free_minishell(minishell,E_AFAILED,true));
 		cleaned = remove_quotes(tokens->value);
-		free(tokens->value);
+		if(!cleaned)
+		{
+			free(minishell->expansion_map);
+			return (free_minishell(minishell,E_AFAILED,true));
+		}
 		expanded = expand_variable(cleaned, minishell);
+		if(!expanded)
+		{
+			free(cleaned);
+			free(minishell->expansion_map);
+			return (free_minishell(minishell,E_AFAILED,true));
+		}
+		free(tokens->value);
 		free(cleaned);
 		free(minishell->expansion_map);
 		minishell->expansion_map = NULL;
@@ -113,7 +128,7 @@ int	tokens(t_minishell *minishell, char *entry)
 {
 	if (has_closed_quotes(entry, true))
 		return (-1);
-	minishell->tokens = define_tokens(entry);
+	define_tokens(entry, minishell);
 	format_tokens(minishell->tokens, minishell);
 	if (check_tokens(minishell) == false)
 		return (-1);

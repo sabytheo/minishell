@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/06/26 10:42:27 by tsaby            ###   ########.fr        #
+#    Updated: 2025/06/26 15:02:17 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ SRCS		:=		main.c \
 					init_envp.c \
 					clean.c \
 					tokens.c \
+					chainedlst_totab.c \
 					check_tokens.c \
 					check_cmd.c \
 					format_tokens_utils.c \

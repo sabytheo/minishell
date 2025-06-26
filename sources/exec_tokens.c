@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 21:06:34 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/26 17:37:02 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,12 @@ static char	**fill_args(t_token **current)
 {
 	char	**args;
 	int		i;
-	int		size;
 
 	i = 0;
-	size = get_cmds_size((*current));
-	args = malloc(sizeof(char *) * (size + 1));
+	args = malloc(sizeof(char *) * (get_cmds_size((*current)) + 1));
 	if (args == NULL)
-		return (NULL); // NEED FREE ?
-	args[size] = NULL;
+		return (NULL);
+	args[get_cmds_size((*current))] = NULL;
 	while ((*current) != NULL && (*current)->type != T_PIPE)
 	{
 		if ((*current)->type >= T_REDIR_IN && (*current)->type <= T_HEREDOC)
@@ -32,7 +30,10 @@ static char	**fill_args(t_token **current)
 		{
 			args[i] = ft_strdup((*current)->value);
 			if (args[i] == NULL)
-				return (NULL); // NEED FREE ?
+			{
+				free(args);
+				return (NULL);
+			}
 			i++;
 		}
 		(*current) = (*current)->next;
@@ -40,23 +41,23 @@ static char	**fill_args(t_token **current)
 	return (args);
 }
 
-static void	create_redir_token(t_token **current, t_token **redir_token_copy,
+static int	create_redir_token(t_token **current, t_token **redir_token_copy,
 		t_token **file_token_copy)
 {
 	(*redir_token_copy) = duplicate_token(*current);
 	if (!(*redir_token_copy))
-		return ;
+		return (-1) ;
 	*current = (*current)->next;
 	(*file_token_copy) = duplicate_token(*current);
 	if (!(*file_token_copy))
-		return ;
+		return (-1) ;
 	*current = (*current)->next;
 	(*redir_token_copy)->next = (*file_token_copy);
 	(*file_token_copy)->next = NULL;
-	return ;
+	return (0);
 }
 
-t_token	*extract_redirections(t_token **current)
+t_token	*extract_redirections(t_token **current, t_minishell *minishell, t_cmds *new)
 {
 	t_token	*redir_head;
 	t_token	*redir_tail;
@@ -69,7 +70,12 @@ t_token	*extract_redirections(t_token **current)
 	{
 		if ((*current)->type >= T_REDIR_IN && (*current)->type <= T_HEREDOC)
 		{
-			create_redir_token(current, &redir_token_copy, &file_token_copy);
+			if (create_redir_token(current, &redir_token_copy, &file_token_copy) < 0)
+			{
+				free_tab(new->args);
+				free(new);
+				return (free_minishell(minishell, E_AFAILED, true), NULL);
+			}
 			if (!redir_head)
 				redir_head = redir_token_copy;
 			else
@@ -94,8 +100,15 @@ void	split_tokens(t_minishell *minishell)
 	while (current_args && current_redir)
 	{
 		args = fill_args(&current_args);
+		if (!args)
+			return (free_minishell(minishell, E_AFAILED, true));
 		new = create_cmds(args);
-		new->redirs = extract_redirections(&current_redir);
+		if (!new)
+		{
+			free_tab(args);
+			return (free_minishell(minishell, E_AFAILED, true));
+		}
+		new->redirs = extract_redirections(&current_redir,minishell, new);
 		add_cmds_back(&minishell->cmds, new);
 		check_ifcmdempty(minishell);
 		if (minishell->cmds->args && minishell->cmds->args[0] != NULL)

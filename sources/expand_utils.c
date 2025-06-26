@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:07:22 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/26 11:15:13 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/26 15:08:08 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,53 +19,65 @@ int	is_valid_var_char(char c, int len)
 	return (ft_isalnum(c) || c == '_');
 }
 
-int	envp_size(t_denvp *envp)
+char	*append_char(t_expand *expand, char c)
 {
-	t_denvp	*current;
-	int		len;
+	char	tmp[2];
 
-	len = 0;
-	current = envp;
-	while (current != NULL)
+	tmp[0] = c;
+	tmp[1] = '\0';
+	expand->expanded = append_and_free(expand->expanded, tmp);
+	if (!expand->expanded)
+		return (NULL);
+	return (expand->expanded);
+}
+
+bool	should_expand(char *str, int i, t_minishell *minishell)
+{
+	if (str[i] == '$' && (ft_isalpha(str[i + 1]) == 1 || str[i + 1] == '_'
+			|| str[i + 1] == '?') && str[i + 1] != '\0'
+		&& minishell->expansion_map[i] == true)
+		return (true);
+	else
+		return (false);
+}
+
+char	*append_and_free(char *base, char *addition)
+{
+	char	*new;
+
+	if (!base || !addition)
+		return (NULL);
+	new = ft_strjoin(base, addition);
+	if (!new)
 	{
-		current = current->next;
-		len++;
+		free(base);
+		return (NULL);
 	}
-	free(current);
-	return (len);
+	free(base);
+	return (new);
 }
 
-static void	cleanup_tab_and_exit(t_minishell *minishell, int index)
+bool	*create_expansion_map(char *str)
 {
-	int	j;
-
-	j = 0;
-	while (j <= index)
-		free(minishell->envp_tab[j++]);
-	*minishell->envp_tab = NULL;
-	return (free_minishell(minishell, E_AFAILED, true));
-}
-
-void	chainedlst_to_tab(t_minishell *minishell)
-{
-	t_denvp	*current;
 	int		i;
+	bool	*map;
+	bool	in_squote;
+	bool	in_dquote;
 
-	if (minishell->envp_tab)
-		free_tab(minishell->envp_tab);
-	minishell->envp_countline = envp_size(minishell->envp);
-	current = minishell->envp;
-	i = 0;
-	minishell->envp_tab = malloc(sizeof(char *) * (minishell->envp_countline + 1));
-	if (minishell->envp_tab == NULL)
-		return (free_minishell(minishell, E_AFAILED, true));
-	while (current && current->var)
+	in_squote = false;
+	in_dquote = false;
+	map = malloc(sizeof(bool) * (ft_strlen(str) + 1));
+	if (!map)
+		return (NULL);
+	i = -1;
+	while (str[++i])
 	{
-		minishell->envp_tab[i] = ft_strjoin(current->var[0], current->var[1]);
-		if (!minishell->envp_tab[i])
-			cleanup_tab_and_exit(minishell,i);
-		i++;
-		current = current->next;
+		if (str[i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (str[i] == '"' && !in_squote)
+			in_dquote = !in_dquote;
+		map[i] = !in_squote;
 	}
-	minishell->envp_tab[i] = NULL;
+	map[i] = false;
+	return (map);
 }

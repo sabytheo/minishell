@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 11:54:31 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/26 17:19:28 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ char	*find_path(char *arg, char **envp)
 			return (ft_strdup(arg));
 	}
 	path_arg = ft_split(envp[i] + 5, ':');
+	if (!path_arg)
+		return(NULL);
 	path = find_bin_path(path_arg, arg);
 	if (path != NULL)
 		return (path);

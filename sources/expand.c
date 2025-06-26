@@ -6,27 +6,11 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/26 13:07:19 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/26 15:06:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*append_and_free(char *base, char *addition)
-{
-	char	*new;
-
-	if (!base || !addition)
-		return (NULL);
-	new = ft_strjoin(base, addition);
-	if (!new)
-	{
-		free(base);
-		return(NULL);
-	}
-	free(base);
-	return (new);
-}
 
 static char	*extract_var_name(char *str, int *i)
 {
@@ -66,51 +50,49 @@ static char	*get_values(char *name, t_denvp *envp, t_minishell *minishell)
 	return (ft_strdup(""));
 }
 
-static char	*handle_expand(char *str, int *i, t_minishell *minishell,
+static char	*expand_variable_at_pos(char *str, int *i, t_minishell *minishell,
 		t_expand *expand)
 {
 	char	*name;
 	char	*value;
-	char	tmp[2];
 
-	if (str[*i] == '$' && (ft_isalpha(str[*i + 1]) == 1 || str[*i + 1] == '_'
-			|| str[*i + 1] == '?') && str[*i + 1] != '\0'
-		&& minishell->expansion_map[*i] == true)
+	(*i)++;
+	name = extract_var_name(str, i);
+	if (!name)
 	{
-		(*i)++;
-		name = extract_var_name(str, i);
-		if(!name)
-		{
-			free(expand->expanded);
-			return (NULL);
-		}
-		value = get_values(name, minishell->envp, minishell);
-		if(!value)
-		{
-			free(expand->expanded);
-			free(name);
-			return(NULL);
-		}
-		expand->expanded = append_and_free(expand->expanded, value);
-		if (!expand->expanded)
-		{
-			free(name);
-			free(value);
-			return(NULL);
-		}
+		free(expand->expanded);
+		return (NULL);
+	}
+	value = get_values(name, minishell->envp, minishell);
+	if (!value)
+	{
+		free(expand->expanded);
 		free(name);
-		free(value);
+		return (NULL);
+	}
+	expand->expanded = append_and_free(expand->expanded, value);
+	free(name);
+	free(value);
+	if (!expand->expanded)
+		return (NULL);
+	return (expand->expanded);
+}
+
+static char	*handle_expand(char *str, int *i, t_minishell *minishell,
+		t_expand *expand)
+{
+	char	*result;
+
+	if (should_expand(str, *i, minishell) == true)
+	{
+		result = expand_variable_at_pos(str, i, minishell, expand);
+		return (result);
 	}
 	else
 	{
-		tmp[0] = str[*i];
-		tmp[1] = '\0';
-		expand->expanded = append_and_free(expand->expanded, tmp);
-		if (!expand->expanded)
-			return (NULL);
-		(*i)++;
+		result = append_char(expand, str[(*i)++]);
+		return (result);
 	}
-	return (expand->expanded);
 }
 
 char	*expand_variable(char *str, t_minishell *minishell)
@@ -120,7 +102,7 @@ char	*expand_variable(char *str, t_minishell *minishell)
 
 	i = 0;
 	expand.expanded = ft_strdup("");
-	if(!expand.expanded)
+	if (!expand.expanded)
 		return (NULL);
 	while (str[i])
 	{
@@ -128,7 +110,7 @@ char	*expand_variable(char *str, t_minishell *minishell)
 		if (!expand.expanded)
 		{
 			free(expand.expanded);
-			return(NULL);
+			return (NULL);
 		}
 	}
 	return (expand.expanded);

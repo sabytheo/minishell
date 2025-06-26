@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/26 11:45:16 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/26 16:57:42 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ int								define_shlvl(t_denvp **list);
 
 // tokens.c --->
 bool							has_closed_quotes(char *str, bool message);
-void								define_tokens(char *line,
+void							define_tokens(char *line,
 									t_minishell *minishell);
 void							format_tokens(t_token *tokens,
 									t_minishell *minishell);
@@ -169,6 +169,13 @@ char							*expand_variable(char *str,
 
 // utils_expand.c --->
 int								is_valid_var_char(char c, int len);
+char							*append_char(t_expand *expand, char c);
+bool							should_expand(char *str, int i,
+									t_minishell *minishell);
+char							*append_and_free(char *base, char *addition);
+bool							*create_expansion_map(char *str);
+
+// chainedlst_totab.c --->
 void							chainedlst_to_tab(t_minishell *minishell);
 int								envp_size(t_denvp *envp);
 
@@ -263,7 +270,5 @@ t_heredoc						*create_heredoc_node(char *filename);
 void							cleanup_heredocs(t_minishell *minishell);
 int								prepare_heredocs(t_minishell *minishell,
 									t_cmds *cmds);
-
-bool							*create_expansion_map(char *str);
 
 #endif

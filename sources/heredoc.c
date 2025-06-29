@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/23 15:49:35 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/29 15:46:15 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,20 @@ int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
 	}
 	return (0);
 }
-
+static int process_heredoc_line(char *line, int fd, t_minishell *minishell)
+{
+	minishell->expansion_map = create_expansion_map(line);
+		if (!minishell->expansion_map)
+			return (-1);
+		line = expand_variable(line, minishell);
+		free(minishell->expansion_map);
+		if (!line)
+			return (-1);
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+		return (0);
+}
 static int	handle_heredoc_input(int fd, char *limiter, t_minishell *minishell)
 {
 	char	*line;
@@ -54,12 +67,8 @@ static int	handle_heredoc_input(int fd, char *limiter, t_minishell *minishell)
 			free(line);
 			break ;
 		}
-		minishell->expansion_map = create_expansion_map(line);
-		line = expand_variable(line, minishell);
-		free(minishell->expansion_map);
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);
+		if (process_heredoc_line(line,fd,minishell) < 0)
+			return(-1);
 	}
 	rl_event_hook = NULL;
 	signal(SIGINT, signal_handler);
@@ -74,35 +83,49 @@ int	create_list(char *filename, t_minishell *minishell)
 	new = create_heredoc_node(filename);
 	if (!new)
 	{
-		perror("malloc_heredoc");
-		free(filename);
+		unlink(filename);
 		return (-1);
 	}
 	add_heredoc_back(&minishell->heredoc, new);
 	return (0);
 }
 
-int	create_heredoc(char *limiter, t_minishell *minishell, t_token *redir)
+static char* generate_tmp_filename(void)
 {
 	static int	heredoc_id = 1;
 	char		*id;
-	char		*tmp_filename;
 	char		*tmp;
 
 	id = ft_itoa(heredoc_id++);
+	if (!id)
+		return (NULL);
 	tmp = ft_strjoin(".heredoc_tmp_", id);
-	tmp_filename = tmp;
 	free(id);
-	minishell->heredoc_fd = open(tmp_filename, O_CREAT | O_WRONLY | O_TRUNC,
-			0600);
-	if (minishell->heredoc_fd < 0)
+	return (tmp);
+}
+
+int	create_heredoc(char *limiter, t_minishell *minishell, t_token *redir)
+{
+	char		*tmp_filename;
+
+	tmp_filename = generate_tmp_filename();
+	if(!tmp_filename)
+		return (-1);
+	minishell->h_fd = open(tmp_filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+	if (minishell->h_fd < 0)
 	{
-		perror("open heredoc_fd");
 		free(tmp_filename);
 		minishell->input_fd = -1;
 		return (-1);
 	}
-	handle_heredoc_input(minishell->heredoc_fd, limiter, minishell);
+	if (handle_heredoc_input(minishell->h_fd, limiter, minishell) < 0)
+	{
+		unlink(tmp_filename);
+		if(ft_strcmp(tmp_filename,".heredoc_tmp_1") == 0)
+			close(minishell->h_fd);
+		free(tmp_filename);
+		return(-1);
+	}
 	free(redir->next->value);
 	redir->next->value = tmp_filename;
 	if (create_list(tmp_filename, minishell) < 0)

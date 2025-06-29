@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 15:55:37 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/29 15:52:00 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ static int	init_pipes_and_pids(t_minishell *minishell)
 {
 	int	i;
 
-	minishell->pids = malloc(sizeof(pid_t) * minishell->cmds_count);
-	minishell->pipes = malloc(sizeof(int *) * (minishell->cmds_count - 1));
+	minishell->pids =  malloc(sizeof(pid_t) * minishell->cmds_count);
+	minishell->pipes =  malloc(sizeof(int *) * (minishell->cmds_count - 1));
 	if (!minishell->pipes || !minishell->pids)
 	{
 		perror("malloc");
@@ -82,9 +82,6 @@ static int	init_pipes_and_pids(t_minishell *minishell)
 		minishell->pipes[i] = malloc(sizeof(int *));
 		if (pipe(minishell->pipes[i]) == -1)
 		{
-			perror("pipe");
-			cleanup_pipes(minishell->pipes, i);
-			free(minishell->pids);
 			return (-1);
 		}
 		i++;
@@ -122,7 +119,7 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 	getcmd_count(minishell);
 	if (prepare_heredocs(minishell, cmds) < 0
 		|| init_pipes_and_pids(minishell) < 0)
-		return ;
+		return (free_minishell(minishell, E_AFAILED, true));
 	i = 0;
 	while (i < minishell->cmds_count)
 	{

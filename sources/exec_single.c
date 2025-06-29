@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:53:58 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 11:39:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/29 14:34:15 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,10 @@ void	execute_single_command(t_minishell *minishell)
 
 	cmds = minishell->cmds;
 	if (prepare_heredocs(minishell, cmds) < 0)
-		return ;
+	{
+		free(minishell->path);
+		return (free_minishell(minishell, E_AFAILED, true));
+	}
 	if (single_builtins(cmds, minishell) < 0)
 		return ;
 	signal_ignore();

@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/26 16:57:42 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/29 13:32:01 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include "error.h"
 # include "expand.h"
 # include "ft_printf.h"
@@ -26,7 +27,6 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdbool.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/time.h>
@@ -66,7 +66,7 @@ typedef struct s_minishell
 	int							output_fd;
 	int							saved_inputfd;
 	int							saved_outputfd;
-	int							heredoc_fd;
+	int							h_fd;
 	int							error_code;
 	char						*error_item;
 	char						**envp_tab;

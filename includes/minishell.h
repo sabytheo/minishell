@@ -6,14 +6,13 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/30 10:08:29 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 16:55:14 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdio.h>
 # include "error.h"
 # include "expand.h"
 # include "ft_printf.h"
@@ -27,6 +26,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdbool.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/time.h>
@@ -106,9 +106,13 @@ void							free_minishell(t_minishell *minishell,
 									char *error_message, bool exit_needed);
 void							free_running_minishell(t_minishell *minishell);
 void							free_exit_pipes(t_minishell *minishell);
-int								exit_and_clear_child(int error_code,
-									t_minishell *minishell);
+
 void							free_heredoc(t_heredoc **heredoc);
+;
+// clean_child.c --->
+
+int								exit_and_clear_child_pipe(int error_code, t_minishell *minishell);
+int								exit_and_clear_child(int error_code, t_minishell *minishell);
 
 // clean_lst.c --->
 
@@ -272,5 +276,7 @@ t_heredoc						*create_heredoc_node(char *filename);
 void							cleanup_heredocs(t_minishell *minishell);
 int								prepare_heredocs(t_minishell *minishell,
 									t_cmds *cmds);
+
+void							free_cmds_child(t_cmds **cmds);
 
 #endif

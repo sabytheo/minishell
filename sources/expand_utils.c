@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:07:22 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/29 13:51:20 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 16:55:02 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,27 +57,47 @@ char	*append_and_free(char *base, char *addition)
 	return (new);
 }
 
+static int whats_quote(char *str, int *i, bool *in_squote, bool *in_dquote)
+{
+    if (str[(*i)] == '\'' && !(*in_dquote))
+    {
+        *in_squote = !(*in_squote);
+        (*i)++;
+        return (-1);
+    }
+    else if (str[(*i)] == '"' && !(*in_squote))
+    {
+        *in_dquote = !(*in_dquote);
+        (*i)++;
+        return (-1);
+    }
+    return (0);
+}
+
+
 bool	*create_expansion_map(char *str)
 {
 	int		i;
 	bool	*map;
 	bool	in_squote;
 	bool	in_dquote;
+	int		j;
 
 	in_squote = false;
 	in_dquote = false;
 	map = malloc(sizeof(bool) * (ft_strlen(str) + 1));
 	if (!map)
 		return (NULL);
-	i = -1;
-	while (str[++i])
+	i = 0;
+	j = 0;
+	while (str[i])
 	{
-		if (str[i] == '\'' && !in_dquote)
-			in_squote = !in_squote;
-		else if (str[i] == '"' && !in_squote)
-			in_dquote = !in_dquote;
-		map[i] = !in_squote;
+		if(whats_quote(str,&i,&in_squote,&in_dquote) < 0)
+			continue;
+		map[j] = !in_squote;
+		i++;
+		j++;
 	}
-	map[i] = false;
+	map[j] = false;
 	return (map);
 }

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 10:45:13 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 13:40:31 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,9 @@ static void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 			else
 				path = find_path(cmd->args[0], minishell->envp_tab);
 			execve(path, cmd->args, minishell->envp_tab);
-			perror("execve");
 		}
 	}
-	exit_and_clear_child(minishell->error_code, minishell);
+	exit_and_clear_child_pipe(minishell->error_code, minishell);
 }
 
 static int	init_pipes_and_pids(t_minishell *minishell)

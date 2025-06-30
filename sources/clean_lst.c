@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 10:06:07 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 10:07:15 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 13:33:04 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,25 @@ void	free_tokens(t_token **tokens)
 		current = next;
 	}
 	*tokens = NULL;
+}
+
+void	free_cmds_child(t_cmds **cmds)
+{
+	t_cmds	*current;
+	t_cmds	*next;
+
+	if (!cmds || !*cmds)
+		return ;
+	current = *cmds;
+	while (current)
+	{
+		next = current->next;
+		free_tokens(&current->redirs);
+		free(current->args);
+		free(current);
+		current = next;
+	}
+	*cmds = NULL;
 }
 
 void	free_cmds(t_cmds **cmds)

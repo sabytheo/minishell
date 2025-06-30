@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 14:41:43 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 15:38:45 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/30 15:43:12 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,19 @@ static bool	unset_first(char *arg, t_denvp **current)
 	return (1);
 }
 
-static int	unset_list(t_cmds *cmds, t_denvp **current)
+static int	unset_list(char *arg, t_denvp **current)
 {
 	t_denvp	*tmp;
 	t_denvp	*head;
 
 	head = (*current);
-	if (unset_first(cmds->args[1], current) == 0)
+	if (unset_first(arg, current) == 0)
 		return (0);
 	else
 	{
 		while ((*current) && (*current)->next != NULL)
 		{
-			if (ft_strcmp(cmds->args[1], (*current)->next->var[0]) == 0)
+			if (ft_strcmp(arg, (*current)->next->var[0]) == 0)
 			{
 				tmp = (*current)->next->next;
 				ft_delnode(del_tab, (*current)->next);
@@ -68,13 +68,17 @@ static int	unset_list(t_cmds *cmds, t_denvp **current)
 
 int	ft_unset(t_minishell *minishell)
 {
-	int	ret;
+	int	i;
 
+	i = 1;
 	if (minishell->cmds->args[1] == NULL)
 		return (0);
-	ret = unset_list(minishell->cmds, &minishell->envp);
-	if (ret == 0)
-		chainedlst_to_tab(minishell);
-	unset_list(minishell->cmds, &minishell->export);
+	while (minishell->cmds->args[i] != NULL)
+	{
+		unset_list(minishell->cmds->args[i], &minishell->envp);
+		unset_list(minishell->cmds->args[i], &minishell->export);
+		i++;
+	}
+	chainedlst_to_tab(minishell);
 	return (0);
 }

@@ -6,15 +6,16 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:50:34 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 20:53:18 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/30 19:14:17 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	old_pwd(t_minishell *minishell, t_denvp *list, char *oldpwd)
+int	old_pwd(t_minishell *minishell, t_denvp *list, char *oldpwd)
 {
 	t_denvp	*current;
+	char	*var;
 
 	current = list;
 	while (current)
@@ -23,55 +24,97 @@ void	old_pwd(t_minishell *minishell, t_denvp *list, char *oldpwd)
 		{
 			free(current->var[1]);
 			current->var[1] = ft_strdup(oldpwd);
-			return ;
+			if (current->var[1] == NULL)
+				return (-1);
+			return (0);
 		}
 		current = current->next;
 	}
-	fill_envpnull(minishell, ft_strjoin("OLDPWD", oldpwd));
-	return ;
+	var = ft_strjoin("OLDPWD", oldpwd);
+	if (var == NULL)
+	{
+		free(current->var[1]);
+		return (-1);
+	}
+	if (fill_envpnull(minishell, var) == -1)
+	{
+		free(current->var[1]);
+		free(var);
+		return (-1);
+	}
+	return (0);
 }
 
-void	new_pwd(t_minishell *minishell, t_denvp *list)
+int	new_pwd(t_minishell *minishell, t_denvp *list, char *newpwd)
 {
 	t_denvp	*current;
 	char	*oldpwd;
-	char	*newpwd;
 
-	newpwd = getcwd(NULL, 0);
 	current = list;
 	while (current)
 	{
 		if (ft_strcmp("PWD", current->var[0]) == 0)
 		{
 			oldpwd = ft_strdup(current->var[1]);
+			if (oldpwd == NULL)
+				return (-1);
 			free(current->var[1]);
 			current->var[1] = ft_strjoin("=", newpwd);
-			old_pwd(minishell, list, oldpwd);
+			if (current->var[1] == NULL)
+			{
+				free(oldpwd);
+				return (-1);
+			}
+			if (old_pwd(minishell, list, oldpwd) == -1)
+			{
+				free(oldpwd);
+				free(current->var[1]);
+				return (-1);
+			}
 			free(oldpwd);
-			free(newpwd);
-			return ;
+			return (0);
 		}
 		current = current->next;
 	}
-	return (free(newpwd));
+	return (0);
 }
 
-void	update_pwd(t_minishell *minishell)
+int	update_pwd(t_minishell *minishell)
 {
-	new_pwd(minishell, minishell->envp);
-	new_pwd(minishell, minishell->export);
+	char *pwd;
+
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+	{
+		ft_printf_fd(2, E_NOPWD, "minishell");
+		return (1);
+	}
+	if (new_pwd(minishell, minishell->envp, pwd) == -1)
+	{
+		free(pwd);
+		free_minishell(minishell, E_AFAILED, true);
+	}
+	if (new_pwd(minishell, minishell->export, pwd) == -1)
+	{
+		free(pwd);
+		free_minishell(minishell, E_AFAILED, true);
+	}
 	chainedlst_to_tab(minishell);
-	return ;
+	free(pwd);
+	return (0);
 }
 
 int	ft_pwd(t_minishell *minishell)
 {
 	char	*pwd;
 
-	update_pwd(minishell);
+	(void)minishell;
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
+	{
+		ft_printf_fd(2, E_NOPWD, "minishell");
 		return (1);
+	}
 	ft_printf_fd(1, "%s\n", pwd);
 	free(pwd);
 	return (0);

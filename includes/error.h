@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:33:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/25 16:53:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 20:14:06 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@
 # define E_IS_DIR "minishell: '%s': Is a directory\n"
 # define E_NO_PERM "minishell: '%s': Permission denied\n"
 # define E_NSFOD "minishell: '%s': No such file or directory\n"
-# define E_UNCLOSE_SQUOTE "minishell : syntax error : unclosed single quote "
-# define E_UNCLOSE_DQUOTE "minishell : syntax error : unclosed double quote "
+# define E_UNCLOSE_SQUOTE "minishell : syntax error : unclosed single quote\n"
+# define E_UNCLOSE_DQUOTE "minishell : syntax error : unclosed double quote\n"
 # define E_AFAILED "Error : alloc failed\n"
+# define E_NOPWD "%s: error retrieving current directory\n"
+# define E_CHDIR "chdir: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n"
 #endif

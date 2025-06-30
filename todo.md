@@ -10,8 +10,9 @@
 #REFACTO R1 :
 
 CLEAN.C
- - 2/3 fichiers 
+ - 2/3 fichiers
 
 isatty pour ./minishell | ./minishell
 
 
+PWD peut etre nul attention a pas dereferencé

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/29 13:32:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 10:08:29 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,14 +105,17 @@ typedef struct sigaction		t_sigaction;
 void							free_minishell(t_minishell *minishell,
 									char *error_message, bool exit_needed);
 void							free_running_minishell(t_minishell *minishell);
-void							free_tokens(t_token **tokens);
-void							free_tab(char **tab);
-void							free_cmds(t_cmds **cmds);
-void							free_denvp(t_denvp **envp);
 void							free_exit_pipes(t_minishell *minishell);
 int								exit_and_clear_child(int error_code,
 									t_minishell *minishell);
 void							free_heredoc(t_heredoc **heredoc);
+
+// clean_lst.c --->
+
+void							free_tokens(t_token **tokens);
+void							free_tab(char **tab);
+void							free_cmds(t_cmds **cmds);
+void							free_denvp(t_denvp **envp);
 
 // main.c --->
 void							clean_error(char *error_message,
@@ -127,7 +130,6 @@ void							init_minishell(t_minishell *minishell,
 void							split_envp(t_minishell *minishell, char **envp);
 
 // init.c --->
-
 int								fill_envp(t_minishell *minishell, char **envp);
 int								fill_envpnull(t_minishell *minishell,
 									char *var);

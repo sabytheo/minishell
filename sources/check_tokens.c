@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 21:04:18 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/30 10:47:29 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ bool	check_tokens(t_minishell *minishell)
 	if (syntax_error != NULL)
 	{
 		minishell->error_code = 2;
-		clean_error(syntax_error, minishell);
+		ft_printf_fd(2, "%s", syntax_error);
 		return (false);
 	}
 	return (true);

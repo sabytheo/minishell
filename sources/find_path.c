@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/29 15:35:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 09:38:23 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	*get_a_path(char *path_arg, char *arg)
 	char	*temp;
 	char	*path;
 
-	temp =  ft_strjoin(path_arg, "/");
+	temp = ft_strjoin(path_arg, "/");
 	if (!temp)
 		return (NULL);
 	path = ft_strjoin(temp, arg);
@@ -77,12 +77,12 @@ char	*find_path(char *arg, char **envp)
 	}
 	path_arg = ft_split(envp[i] + 5, ':');
 	if (!path_arg)
-		return(NULL);
+		return (NULL);
 	path = find_bin_path(path_arg, arg);
 	if (path != NULL)
 		return (path);
 	free(path);
-	path = NULL ;
+	path = NULL;
 	return (NULL);
 }
 

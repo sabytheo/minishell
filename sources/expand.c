@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/29 12:16:50 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 09:39:34 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ static char	*extract_var_name(char *str, int *i)
 
 static char	*get_values(char *name, t_denvp *envp, t_minishell *minishell)
 {
-
 	if (!name)
 		return (ft_strdup(""));
 	if (ft_strncmp(name, "?", 1) == 0)

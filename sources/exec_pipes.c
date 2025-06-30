@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/29 15:52:00 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 10:45:13 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	dup_pipes(t_minishell *minishell, int cmd_index)
 {
-	if (cmd_index > 0) // Pas la première commande
+	if (cmd_index > 0)
 	{
 		if (dup2(minishell->pipes[cmd_index - 1][0], STDIN_FILENO) == -1)
 		{
@@ -23,7 +23,7 @@ static int	dup_pipes(t_minishell *minishell, int cmd_index)
 			return (-1);
 		}
 	}
-	if (cmd_index < minishell->cmds_count - 1) // Pas la dernière commande
+	if (cmd_index < minishell->cmds_count - 1)
 	{
 		if (dup2(minishell->pipes[cmd_index][1], STDOUT_FILENO) == -1)
 		{
@@ -69,21 +69,20 @@ static int	init_pipes_and_pids(t_minishell *minishell)
 {
 	int	i;
 
-	minishell->pids =  malloc(sizeof(pid_t) * minishell->cmds_count);
-	minishell->pipes =  malloc(sizeof(int *) * (minishell->cmds_count - 1));
-	if (!minishell->pipes || !minishell->pids)
-	{
-		perror("malloc");
+	minishell->pids = malloc(sizeof(pid_t) * minishell->cmds_count);
+	if (!minishell->pids)
 		return (-1);
-	}
+	minishell->pipes = malloc(sizeof(int *) * (minishell->cmds_count - 1));
+	if (!minishell->pipes)
+		return (-1);
 	i = 0;
 	while (i < minishell->cmds_count - 1)
 	{
 		minishell->pipes[i] = malloc(sizeof(int *));
-		if (pipe(minishell->pipes[i]) == -1)
-		{
+		if (!minishell->pipes[i])
 			return (-1);
-		}
+		if (pipe(minishell->pipes[i]) == -1)
+			return (-1);
 		i++;
 	}
 	return (0);

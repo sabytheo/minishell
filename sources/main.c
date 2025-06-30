@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/26 11:21:43 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 09:40:27 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ volatile sig_atomic_t	g_signal_value;
 void	check_args_count(int argc, char **argv, t_minishell *minishell)
 {
 	if (argc > 2)
-		return (free_minishell(minishell,E_MARGS,true));
+		return (free_minishell(minishell, E_MARGS, true));
 	else if (argc == 2)
 	{
 		minishell->launch_mode = SCRIPT_MODES;
 		minishell->input_fd = open(argv[1], O_RDONLY);
 		if (minishell->input_fd == -1)
-			return (free_minishell(minishell,E_MARGS,true));
+			return (free_minishell(minishell, E_MARGS, true));
 	}
 	else if (argc == 1)
 		minishell->launch_mode = TTY_MODES;

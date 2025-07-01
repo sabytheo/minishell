@@ -27,3 +27,7 @@ redirecting directories leak
 ECHO :
 
 Handle -nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+
+
+			// if (ft_strncmp(cmds->args[0], "../", 3) != 0)
+			// 	free(path);

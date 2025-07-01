@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:53:58 by egache            #+#    #+#             */
-/*   Updated: 2025/06/29 14:34:15 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 21:55:11 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,6 @@ static void	exec_binaries(t_minishell *minishell, t_cmds *cmds)
 				path = find_path(cmds->args[0], minishell->envp_tab);
 			execve(path, cmds->args, minishell->envp_tab);
 			perror("execve");
-			if (ft_strncmp(cmds->args[0], "../", 3) != 0)
-				free(path);
 			exit_and_clear_child(minishell->error_code, minishell);
 		}
 	}

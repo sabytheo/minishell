@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 10:06:07 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 13:33:04 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 21:37:06 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	free_cmds_child(t_cmds **cmds)
 	{
 		next = current->next;
 		free_tokens(&current->redirs);
-		free(current->args);
+		free_tab(current->args);
 		free(current);
 		current = next;
 	}

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:15:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/30 15:33:19 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/01 17:11:43 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,9 @@ bool	export_display(t_minishell *minishell)
 bool	already_exist(t_minishell *minishell, t_denvp *list, char *arg)
 {
 	t_denvp	*current;
-	(void)minishell;
 	char	**args;
 
-	args = fill_variables(arg);
+	args = fill_variables_export(arg);
 	if (args == NULL)
 		free_minishell(minishell, E_AFAILED, true);
 	current = list;

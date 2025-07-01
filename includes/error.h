@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:33:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/01 15:46:34 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 17:09:35 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,5 @@
 # define E_NOPWD "%s: error retrieving current directory\n"
 # define E_CHDIR "chdir: error retrieving current directory: \
 getcwd: cannot access parent directories: No such file or directory\n"
+# define E_NOHOME "minishell: cd: HOME not set\n"
 #endif

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 12:43:26 by egache            #+#    #+#             */
-/*   Updated: 2025/06/30 20:14:10 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/01 20:18:56 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,26 @@ path depuis le root root
 
 #include "minishell.h"
 
+int	do_chdir(char *str)
+{
+	int	cd;
+
+	cd = chdir(str);
+	if (cd != 0)
+	{
+		ft_printf_fd(2, "minishell: cd: %s: ", str);
+		perror(NULL);
+		return (1);
+	}
+	return (0);
+}
+
 int	cd_home(t_minishell *minishell)
 {
 	char	*home;
 	t_denvp	*current;
-	int		cd;
 
+	home = NULL;
 	current = minishell->envp;
 	while (current != NULL)
 	{
@@ -39,13 +53,13 @@ int	cd_home(t_minishell *minishell)
 			home = current->var[1] + 1;
 		current = current->next;
 	}
-	cd = chdir(home);
-	if (cd != 0)
+	if (home == NULL)
 	{
-		ft_printf_fd(2, "minishell: cd: %s: ", home);
-		perror(NULL);
+		ft_printf_fd(2, E_NOHOME);
 		return (1);
 	}
+	if (do_chdir(home) == 1)
+		return (1);
 	if (update_pwd(minishell) == 1)
 		return (1);
 	return (0);
@@ -53,8 +67,7 @@ int	cd_home(t_minishell *minishell)
 
 int	ft_cd(t_minishell *minishell, t_cmds **cmds)
 {
-	int	cd;
-	char *check_pwd;
+	char	*check_pwd;
 
 	if ((*cmds)->args[1] == NULL)
 		return (cd_home(minishell));
@@ -68,13 +81,8 @@ int	ft_cd(t_minishell *minishell, t_cmds **cmds)
 		ft_printf_fd(2, E_CHDIR);
 	else
 		free(check_pwd);
-	cd = chdir((*cmds)->args[1]);
-	if (cd != 0)
-	{
-		ft_printf_fd(2, "minishell: cd: %s: ", (*cmds)->args[1]);
-		perror(NULL);
+	if (do_chdir((*cmds)->args[1]) == 1)
 		return (1);
-	}
 	if (update_pwd(minishell) == 1)
 		return (1);
 	return (0);

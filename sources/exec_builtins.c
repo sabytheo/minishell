@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 20:46:38 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 20:46:55 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/01 18:29:11 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	exec_builtins(t_minishell *minishell, t_cmds *cmds)
 	else if (ft_strncmp(cmds->args[0], "exit", len) == 0 && len == 4)
 		ft_exit(minishell, minishell->error_code);
 	else if (ft_strncmp(cmds->args[0], "export", len) == 0 && len == 6)
-		minishell->error_code = ft_export(minishell);
+		minishell->error_code = ft_export(minishell, cmds);
 	else if (ft_strncmp(cmds->args[0], "pwd", len) == 0 && len == 3)
 		minishell->error_code = ft_pwd(minishell);
 	else if (ft_strncmp(cmds->args[0], "unset", len) == 0 && len == 5)

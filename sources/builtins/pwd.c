@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teatime <teatime@student.42.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:50:34 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 12:38:55 by teatime          ###   ########.fr       */
+/*   Updated: 2025/07/01 17:11:56 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int old_pwd(t_minishell *minishell, t_denvp *list, char *oldpwd)
+int	old_pwd(t_minishell *minishell, t_denvp *list, char *oldpwd)
 {
-	t_denvp *current;
-	char *var;
+	t_denvp	*current;
+	char	*var;
 
 	current = list;
 	while (current)
@@ -40,10 +40,10 @@ int old_pwd(t_minishell *minishell, t_denvp *list, char *oldpwd)
 	return (0);
 }
 
-int new_pwd(t_minishell *minishell, t_denvp *list, char *newpwd)
+int	new_pwd(t_minishell *minishell, t_denvp *list, char *newpwd)
 {
-	t_denvp *current;
-	char *oldpwd;
+	t_denvp	*current;
+	char	*oldpwd;
 
 	current = list;
 	while (current)
@@ -69,9 +69,9 @@ int new_pwd(t_minishell *minishell, t_denvp *list, char *newpwd)
 	return (0);
 }
 
-int update_pwd(t_minishell *minishell)
+int	update_pwd(t_minishell *minishell)
 {
-	char *pwd;
+	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
@@ -94,9 +94,9 @@ int update_pwd(t_minishell *minishell)
 	return (0);
 }
 
-int ft_pwd(t_minishell *minishell)
+int	ft_pwd(t_minishell *minishell)
 {
-	char *pwd;
+	char	*pwd;
 
 	(void)minishell;
 	pwd = getcwd(NULL, 0);

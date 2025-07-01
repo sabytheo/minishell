@@ -17,10 +17,10 @@ int	fill_envpnull(t_minishell *minishell, char *var)
 	t_denvp	*new_denvp;
 	t_denvp	*new_export;
 
-	new_export = create_denvp(fill_variables(var));
+	new_export = create_denvp(fill_variables_export(var));
 	if (!new_export)
 		return (-1);
-	new_denvp = create_denvp(fill_variables(var));
+	new_denvp = create_denvp(fill_variables_envp(var));
 	if (!new_denvp)
 	{
 		free_tab(new_export->var);
@@ -95,10 +95,10 @@ int	fill_envp(t_minishell *minishell, char **envp)
 	var2 = NULL;
 	while (envp[i] != NULL)
 	{
-		var1 = fill_variables(envp[i]);
+		var1 = fill_variables_export(envp[i]);
 		if (!var1)
 			return (-1);
-		var2 = fill_variables(envp[i]);
+		var2 = fill_variables_envp(envp[i]);
 		if (!var2)
 		{
 			free_tab(var1);

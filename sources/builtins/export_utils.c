@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:15:43 by egache            #+#    #+#             */
-/*   Updated: 2025/06/30 15:08:19 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/01 17:11:41 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ bool	valid_id(char c)
 
 void	add_to_list(t_minishell *minishell, t_denvp **list, char *arg)
 {
-	(void)minishell;
 	t_denvp	*current;
 	t_denvp	*new;
 	char	**var;
@@ -67,7 +66,7 @@ void	add_to_list(t_minishell *minishell, t_denvp **list, char *arg)
 	current = *list;
 	while (current != NULL && current->next != NULL)
 		current = current->next;
-	var = fill_variables(arg);
+	var = fill_variables_export(arg);
 	if (var == NULL)
 		free_minishell(minishell, E_AFAILED, true);
 	new = create_denvp(var);

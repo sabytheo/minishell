@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 16:02:22 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 20:18:21 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,12 +211,20 @@ int								ft_unset(t_minishell *minishell);
 void							ft_exit(t_minishell *minishell, int state);
 
 // export.c --->
-int								ft_export(t_minishell *minishell);
-int								ft_strcmp(const char *s1, const char *s2);
-t_denvp							*create_denvp(char **var);
-void							add_denvp_back(t_denvp **list_denvp,
-									t_denvp *new);
-char							**fill_variables(char *value);
+int								ft_export(t_minishell *minishell, t_cmds *cmds);
+char							**fill_variables_envp(char *value);
+void							*free_variables_tab(char **var);
+
+// export_list_export.c --->
+char							**join_and_dup_export(char **var, char *value,
+									int size1, int size2);
+void							export_add_export(t_minishell *minishell,
+									t_denvp **export, char *arg);
+char							*replace_variable_export(char *var, char *arg,
+									int size1, int size2);
+bool							replace_node_export(t_minishell *minishell,
+									t_denvp *current, char *arg);
+char							**fill_variables_export(char *value);
 
 // export_check.c
 bool							export_display(t_minishell *minishell);

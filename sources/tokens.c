@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 15:42:32 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 15:40:31 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ void	define_tokens(char *entry, t_minishell *minishell)
 	minishell->tokens = token;
 }
 
-static void	cleanup_and_exit(t_minishell *minishell, char *cleaned)
+static void	cleanup_and_exit(t_minishell *minishell, char *expanded)
 {
-	if (cleaned)
-		free(cleaned);
+	if (expanded)
+		free(expanded);
 	if (minishell->expansion_map)
 		free(minishell->expansion_map);
 	return (free_minishell(minishell, E_AFAILED, true));
@@ -85,18 +85,18 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 		minishell->expansion_map = create_expansion_map(tokens->value);
 		if (!minishell->expansion_map)
 			return (free_minishell(minishell, E_AFAILED, true));
-		cleaned = remove_quotes(tokens->value);
-		if (!cleaned)
-			return (cleanup_and_exit(minishell, NULL));
-		expanded = expand_variable(cleaned, minishell);
+		expanded = expand_variable(tokens->value, minishell);
 		if (!expanded)
-			return (cleanup_and_exit(minishell, cleaned));
+			return (cleanup_and_exit(minishell, NULL));
+		cleaned = remove_quotes(expanded);
+		if (!cleaned)
+			return (cleanup_and_exit(minishell, expanded));
 		free(tokens->value);
-		free(cleaned);
+		free(expanded);
 		free(minishell->expansion_map);
 		minishell->expansion_map = NULL;
-		if (expanded)
-			tokens->value = expanded;
+		if (cleaned)
+			tokens->value = cleaned;
 		tokens = tokens->next;
 	}
 }

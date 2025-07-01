@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
+#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/06/30 15:32:00 by egache           ###   ########.fr        #
+#    Updated: 2025/07/01 16:06:44 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,10 +39,12 @@ SRCS		:=		main.c \
 					chainedlst_totab.c \
 					check_tokens.c \
 					check_cmd.c \
+					cmd_lst_utils.c \
 					format_tokens_utils.c \
 					define_tokens_utils.c \
 					expand.c \
 					expand_utils.c \
+					expand_utils_bis.c \
 					debug.c \
 					signals.c \
 					signals_handler.c \

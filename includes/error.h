@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:33:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 20:14:06 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/01 15:46:34 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@
 # define E_UNCLOSE_DQUOTE "minishell : syntax error : unclosed double quote\n"
 # define E_AFAILED "Error : alloc failed\n"
 # define E_NOPWD "%s: error retrieving current directory\n"
-# define E_CHDIR "chdir: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n"
+# define E_CHDIR "chdir: error retrieving current directory: \
+getcwd: cannot access parent directories: No such file or directory\n"
 #endif

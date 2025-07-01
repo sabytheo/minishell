@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/30 10:46:58 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 15:59:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,6 @@ static int	create_redir_token(t_token **current, t_token **redir_token_copy,
 	return (0);
 }
 
-static void	add_redir_to_list(t_token **redir_head, t_token **redir_tail,
-		t_token *redir_token_copy, t_token *file_token_copy)
-{
-	if (!*redir_head)
-		*redir_head = redir_token_copy;
-	else
-		(*redir_tail)->next = redir_token_copy;
-	*redir_tail = file_token_copy;
-}
-
 t_token	*extract_redirections(t_token **current, t_minishell *minishell,
 		t_cmds *new)
 {
@@ -95,22 +85,6 @@ t_token	*extract_redirections(t_token **current, t_minishell *minishell,
 			(*current) = (*current)->next;
 	}
 	return (redir_head);
-}
-
-static void	add_and_lastcheck(t_minishell *minishell, t_cmds *new, char **args)
-{
-	add_cmds_back(&minishell->cmds, new);
-	check_ifcmdempty(minishell);
-	if (minishell->cmds->args && minishell->cmds->args[0] != NULL)
-		new->cmdfound = check_cmd(minishell, args[0]);
-}
-
-static void	next_tokens(t_token **current_args, t_token **current_redir)
-{
-	if (*current_args != NULL)
-		*current_args = (*current_args)->next;
-	if (*current_redir != NULL)
-		*current_redir = (*current_redir)->next;
 }
 
 void	split_tokens(t_minishell *minishell)

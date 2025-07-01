@@ -6,18 +6,11 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:07:22 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 16:55:02 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 16:41:51 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	is_valid_var_char(char c, int len)
-{
-	if (len == 0)
-		return (ft_isalpha(c) || c == '_' || c == '?');
-	return (ft_isalnum(c) || c == '_');
-}
 
 char	*append_char(t_expand *expand, char c)
 {
@@ -57,23 +50,22 @@ char	*append_and_free(char *base, char *addition)
 	return (new);
 }
 
-static int whats_quote(char *str, int *i, bool *in_squote, bool *in_dquote)
+static int	whats_quote(char *str, int *i, bool *in_squote, bool *in_dquote)
 {
-    if (str[(*i)] == '\'' && !(*in_dquote))
-    {
-        *in_squote = !(*in_squote);
-        (*i)++;
-        return (-1);
-    }
-    else if (str[(*i)] == '"' && !(*in_squote))
-    {
-        *in_dquote = !(*in_dquote);
-        (*i)++;
-        return (-1);
-    }
-    return (0);
+	if (str[(*i)] == '\'' && !(*in_dquote))
+	{
+		*in_squote = !(*in_squote);
+		(*i)++;
+		return (-1);
+	}
+	else if (str[(*i)] == '"' && !(*in_squote))
+	{
+		*in_dquote = !(*in_dquote);
+		(*i)++;
+		return (-1);
+	}
+	return (0);
 }
-
 
 bool	*create_expansion_map(char *str)
 {
@@ -92,8 +84,8 @@ bool	*create_expansion_map(char *str)
 	j = 0;
 	while (str[i])
 	{
-		if(whats_quote(str,&i,&in_squote,&in_dquote) < 0)
-			continue;
+		if (whats_quote(str, &i, &in_squote, &in_dquote) < 0)
+			continue ;
 		map[j] = !in_squote;
 		i++;
 		j++;

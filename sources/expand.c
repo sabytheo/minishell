@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 17:50:27 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/01 16:32:02 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,11 @@ static char	*get_values(char *name, t_denvp *envp, t_minishell *minishell)
 	while (envp != NULL)
 	{
 		if (ft_strcmp(envp->var[0], name) == 0)
+		{
+			if (envp->var[1] == NULL)
+				return (ft_strdup(""));
 			return (ft_strdup(envp->var[1] + 1));
+		}
 		envp = envp->next;
 	}
 	return (ft_strdup(""));
@@ -60,7 +64,7 @@ static char	*expand_variable_at_pos(char *str, int *i, t_minishell *minishell,
 		free(expand->expanded);
 		return (NULL);
 	}
-	value = get_values(name, minishell->envp, minishell);
+	value = get_values(name, minishell->export, minishell);
 	if (!value)
 	{
 		free(expand->expanded);

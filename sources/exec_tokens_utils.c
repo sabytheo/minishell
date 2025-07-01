@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 09:37:33 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/26 17:43:44 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 16:02:49 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,33 +28,30 @@ int	get_cmds_size(t_token *tokens)
 	return (size);
 }
 
-t_cmds	*create_cmds(char **val)
+void	add_and_lastcheck(t_minishell *minishell, t_cmds *new, char **args)
 {
-	t_cmds	*new;
-
-	new = malloc(sizeof(t_cmds));
-	if (new == NULL)
-		return (NULL);
-	new->args = val;
-	new->redirs = NULL;
-	new->cmdfound = false;
-	new->next = NULL;
-	return (new);
+	add_cmds_back(&minishell->cmds, new);
+	check_ifcmdempty(minishell);
+	if (minishell->cmds->args && minishell->cmds->args[0] != NULL)
+		new->cmdfound = check_cmd(minishell, args[0]);
 }
 
-void	add_cmds_back(t_cmds **list_cmds, t_cmds *new)
+void	next_tokens(t_token **current_args, t_token **current_redir)
 {
-	t_cmds	*current;
+	if (*current_args != NULL)
+		*current_args = (*current_args)->next;
+	if (*current_redir != NULL)
+		*current_redir = (*current_redir)->next;
+}
 
-	if (*list_cmds == NULL)
-	{
-		*list_cmds = new;
-		return ;
-	}
-	current = *list_cmds;
-	while (current->next)
-		current = current->next;
-	current->next = new;
+void	add_redir_to_list(t_token **redir_head, t_token **redir_tail,
+		t_token *redir_token_copy, t_token *file_token_copy)
+{
+	if (!*redir_head)
+		*redir_head = redir_token_copy;
+	else
+		(*redir_tail)->next = redir_token_copy;
+	*redir_tail = file_token_copy;
 }
 
 t_token	*duplicate_token(t_token *token)

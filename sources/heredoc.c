@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 09:39:53 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 15:48:17 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,20 +75,6 @@ static int	handle_heredoc_input(int fd, char *limiter, t_minishell *minishell)
 	rl_event_hook = NULL;
 	signal(SIGINT, signal_handler);
 	close(fd);
-	return (0);
-}
-
-int	create_list(char *filename, t_minishell *minishell)
-{
-	t_heredoc	*new;
-
-	new = create_heredoc_node(filename);
-	if (!new)
-	{
-		unlink(filename);
-		return (-1);
-	}
-	add_heredoc_back(&minishell->heredoc, new);
 	return (0);
 }
 

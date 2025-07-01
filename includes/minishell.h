@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/06/30 17:02:34 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/01 16:02:22 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,10 @@ void							free_heredoc(t_heredoc **heredoc);
 ;
 // clean_child.c --->
 
-int								exit_and_clear_child_pipe(int error_code, t_minishell *minishell);
-int								exit_and_clear_child(int error_code, t_minishell *minishell);
+int								exit_and_clear_child_pipe(int error_code,
+									t_minishell *minishell);
+int								exit_and_clear_child(int error_code,
+									t_minishell *minishell);
 
 // clean_lst.c --->
 
@@ -245,6 +247,14 @@ t_cmds							*create_cmds(char **val);
 void							add_cmds_back(t_cmds **list_cmds, t_cmds *new);
 int								get_cmds_size(t_token *tokens);
 t_token							*duplicate_token(t_token *token);
+void							add_redir_to_list(t_token **redir_head,
+									t_token **redir_tail,
+									t_token *redir_token_copy,
+									t_token *file_token_copy);
+void							next_tokens(t_token **current_args,
+									t_token **current_redir);
+void							add_and_lastcheck(t_minishell *minishell,
+									t_cmds *new, char **args);
 
 // setup_redirection.c --->
 int								setup_redirections(t_token *current,
@@ -278,6 +288,8 @@ t_heredoc						*create_heredoc_node(char *filename);
 void							cleanup_heredocs(t_minishell *minishell);
 int								prepare_heredocs(t_minishell *minishell,
 									t_cmds *cmds);
+int								create_list(char *filename,
+									t_minishell *minishell);
 
 void							free_cmds_child(t_cmds **cmds);
 

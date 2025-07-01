@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 10:10:12 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/01 14:26:52 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 15:47:54 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@ void	close_fds(t_minishell *minishell)
 		close(minishell->saved_outputfd);
 		minishell->saved_outputfd = -1;
 	}
-	// close(STDIN_FILENO);
-	// close(STDOUT_FILENO);
-	// close(STDERR_FILENO);
 	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
 	free(minishell->pids);
 	minishell->pids = NULL;

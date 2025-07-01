@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 13:40:31 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 13:00:04 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 		if (is_a_builtins(cmd->args[0]))
 		{
 			exec_builtins(minishell, cmd);
-			exit_and_clear_child(minishell->error_code, minishell);
+			exit_and_clear_child_pipe(minishell->error_code, minishell);
 		}
 		else
 		{

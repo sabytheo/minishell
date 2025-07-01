@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 14:07:43 by egache            #+#    #+#             */
-/*   Updated: 2025/06/20 16:49:25 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/25 16:50:30 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Check nbr of arg
 */
 bool	is_numeric_argument(char *str)
 {
-	int		i;
+	int	i;
 
 	if (str[0] == '-' || str[0] == '+' || ft_isdigit(str[0]) == 1)
 	{
@@ -46,7 +46,7 @@ void	ft_exit(t_minishell *minishell, int state)
 {
 	if (minishell->cmds->args[1] == NULL)
 	{
-		free_minishell(minishell);
+		free_minishell(minishell, NULL, false);
 		exit(state);
 	}
 	if (is_numeric_argument(minishell->cmds->args[1]) == false
@@ -54,19 +54,19 @@ void	ft_exit(t_minishell *minishell, int state)
 	{
 		ft_printf_fd(2, "minishell: exit: %s: numeric argument required\n",
 			minishell->cmds->args[1]);
-		free_minishell(minishell);
+		free_minishell(minishell, NULL, false);
 		exit(2);
 	}
 	if (minishell->cmds->args[1] != NULL && minishell->cmds->args[2] != NULL)
 	{
 		ft_printf_fd(2, "minishell: exit: too many arguments\n");
-		free_minishell(minishell);
+		free_minishell(minishell, NULL, false);
 		exit(1);
 	}
 	else
 	{
 		minishell->error_code = ft_atoi(minishell->cmds->args[1]);
-		free_minishell(minishell);
+		free_minishell(minishell, NULL, false);
 		exit(minishell->error_code);
 	}
 }

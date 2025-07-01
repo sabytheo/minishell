@@ -6,27 +6,30 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:06:39 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/20 13:44:49 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/25 14:15:32 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	ft_is_quote(char c)
+static bool	is_quote(char c)
 {
 	return (c == '\'' || c == '"');
 }
 
-static int	ft_handle_unmatched_quote(char *result, const char *str,
-									int quote_start, int j)
+static int	handle_unmatched_quote(char *result, const char *str,
+		int quote_start, int j)
 {
 	result[j] = str[quote_start];
 	return (j + 1);
 }
 
-static int	ft_process_quoted_content(const char *str, int *i, char *result,
-										int j, char quote_char)
+static int	process_quoted_content(const char *str, int *i, char *result,
+		char quote_char)
 {
+	int	j;
+
+	j = 0;
 	while (str[*i])
 	{
 		if (str[*i] == quote_char)
@@ -34,8 +37,8 @@ static int	ft_process_quoted_content(const char *str, int *i, char *result,
 			(*i)++;
 			return (j);
 		}
-		else if ((quote_char == '"' && str[*i] == '\'')
-			|| (quote_char == '\'' && str[*i] == '"'))
+		else if ((quote_char == '"' && str[*i] == '\'') || (quote_char == '\''
+				&& str[*i] == '"'))
 			result[j++] = str[(*i)++];
 		else
 			result[j++] = str[(*i)++];
@@ -43,7 +46,7 @@ static int	ft_process_quoted_content(const char *str, int *i, char *result,
 	return (-1);
 }
 
-static int	ft_handle_quote_pair(const char *str, int *i, char *result, int j)
+static int	handle_quote_pair(const char *str, int *i, char *result, int j)
 {
 	char	quote_char;
 	int		quote_start;
@@ -52,13 +55,13 @@ static int	ft_handle_quote_pair(const char *str, int *i, char *result, int j)
 	quote_char = str[*i];
 	quote_start = *i;
 	(*i)++;
-	new_j = ft_process_quoted_content(str, i, result, j, quote_char);
+	new_j = process_quoted_content(str, i, result + j, quote_char);
 	if (new_j == -1)
 	{
 		*i = quote_start + 1;
-		return (ft_handle_unmatched_quote(result, str, quote_start, j));
+		return (handle_unmatched_quote(result, str, quote_start, j));
 	}
-	return (new_j);
+	return (j + new_j);
 }
 
 char	*remove_quotes(const char *str)
@@ -78,8 +81,8 @@ char	*remove_quotes(const char *str)
 	j = 0;
 	while (str[i])
 	{
-		if (ft_is_quote(str[i]))
-			j = ft_handle_quote_pair(str, &i, result, j);
+		if (is_quote(str[i]))
+			j = handle_quote_pair(str, &i, result, j);
 		else
 			result[j++] = str[i++];
 	}

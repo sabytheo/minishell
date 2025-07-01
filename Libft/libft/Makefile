@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
+#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/08 12:50:41 by tsaby             #+#    #+#              #
-#    Updated: 2024/11/18 16:34:37 by tsaby            ###   ########.fr        #
+#    Updated: 2025/06/24 13:21:50 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,12 +32,14 @@ SRCS		:= \
 					ft_split.c\
 					ft_strchr.c\
 					ft_strdup.c\
+					ft_strldup.c\
 					ft_striteri.c\
 					ft_strjoin.c\
 					ft_strlcat.c\
 					ft_strlcpy.c\
 					ft_strlen.c\
 					ft_strmapi.c\
+					ft_strcmp.c\
 					ft_strncmp.c\
 					ft_strnstr.c\
 					ft_strrchr.c\

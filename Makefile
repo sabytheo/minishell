@@ -6,7 +6,7 @@
 #    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/06/19 15:13:44 by egache           ###   ########.fr        #
+#    Updated: 2025/07/01 20:15:26 by egache           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,30 +24,41 @@ SRCS_BUILTINS  :=	builtins/echo.c \
 					builtins/pwd.c \
 					builtins/env.c \
 					builtins/export.c \
+					builtins/export_check.c \
+					builtins/export_list_export.c \
+					builtins/export_utils.c \
 					builtins/unset.c \
 					builtins/exit.c
 
 SRCS		:=		main.c \
 					init.c \
+					init_envp.c \
 					clean.c \
+					clean_lst.c \
+					clean_child.c \
 					tokens.c \
+					chainedlst_totab.c \
 					check_tokens.c \
+					check_cmd.c \
+					cmd_lst_utils.c \
 					format_tokens_utils.c \
 					define_tokens_utils.c \
-					check_tokens_utils.c \
 					expand.c \
 					expand_utils.c \
+					expand_utils_bis.c \
 					debug.c \
 					signals.c \
 					signals_handler.c \
-					exec.c \
+					find_path.c \
 					exec_tokens.c \
 					exec_tokens_utils.c \
-					heredoc.c \
-					heredoc_utils.c \
-					redirection.c \
+					exec_builtins.c \
+					exec_single.c \
 					exec_pipes.c \
 					exec_pipes_utils.c \
+					heredoc.c \
+					heredoc_utils.c \
+					setup_redirections.c \
 					$(SRCS_BUILTINS)
 
 #SRCS_BONUS	:=
@@ -156,7 +167,7 @@ valgrind		:
 				valgrind-listener 4242
 
 run:
-				valgrind $(VFLAGS) ./$(NAME)
+				make && valgrind $(VFLAGS) ./$(NAME)
 
 #re_bonus	:	fclean bonus
 

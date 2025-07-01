@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 12:52:19 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/06/30 09:40:27 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ volatile sig_atomic_t	g_signal_value;
 void	check_args_count(int argc, char **argv, t_minishell *minishell)
 {
 	if (argc > 2)
-		return (clean_error(E_MARGS, minishell));
+		return (free_minishell(minishell, E_MARGS, true));
 	else if (argc == 2)
 	{
 		minishell->launch_mode = SCRIPT_MODES;
 		minishell->input_fd = open(argv[1], O_RDONLY);
 		if (minishell->input_fd == -1)
-			return (clean_error(E_OPENFILE, minishell));
+			return (free_minishell(minishell, E_MARGS, true));
 	}
 	else if (argc == 1)
 		minishell->launch_mode = TTY_MODES;
@@ -74,11 +74,8 @@ int	main(int argc, char **argv, char **envp)
 
 	init_minishell(&minishell, envp);
 	check_args_count(argc, argv, &minishell);
-	signal_initialisation();
-	chainedlst_to_tab(&minishell);
 	while (minishell.is_running == true)
 	{
-		g_signal_value = 0;
 		signal_initialisation();
 		minishell.entry = get_entry(&minishell);
 		if (minishell.entry == NULL)
@@ -92,19 +89,9 @@ int	main(int argc, char **argv, char **envp)
 				free(minishell.entry);
 				continue ;
 			}
-			if (minishell.cmds->args && minishell.cmds->args[0]
-				&& !minishell.cmds->next)
-				{
-					free(minishell.path);
-					minishell.path= NULL;
-				}
-			free_cmds(&minishell.cmds);
-			free_heredoc(&minishell.heredoc);
-			free_tokens(&minishell.tokens);
 		}
-		free(minishell.entry);
-		minishell.errfound = false;
+		free_running_minishell(&minishell);
 	}
-	free_minishell(&minishell);
+	free_minishell(&minishell, NULL, false);
 	return (0);
 }

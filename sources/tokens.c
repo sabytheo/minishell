@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/23 15:24:00 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 15:40:31 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ bool	has_closed_quotes(char *str, bool message)
 	if (message == true)
 	{
 		if (squote == true)
-		ft_putendl_fd("minishell : syntax error : unclosed single quote ", 2);
+			ft_putendl_fd(E_UNCLOSE_SQUOTE, 2);
 		else if (dquote == true)
-		ft_putendl_fd("minishell : syntax error : unclosed double quote ", 2);
+			ft_putendl_fd(E_UNCLOSE_DQUOTE, 2);
 	}
 	return (squote || dquote);
 }
 
-t_token	*define_tokens(char *entry)
+void	define_tokens(char *entry, t_minishell *minishell)
 {
 	t_token			*token;
 	t_token			*new;
@@ -52,40 +52,27 @@ t_token	*define_tokens(char *entry)
 	while (entry[i])
 	{
 		token_str = extract_token(entry, &i);
-		if (!token_str || token_str[0] == '\0')
-		{
-			free(token_str);
-			continue ;
-		}
+		if (!token_str)
+			return (free_minishell(minishell, E_AFAILED, true));
 		type = get_type(token_str);
 		new = create_token(token_str, type);
+		if (!new)
+		{
+			free(token_str);
+			return (free_minishell(minishell, E_AFAILED, true));
+		}
 		add_token_back(&token, new);
 	}
-	return (token);
+	minishell->tokens = token;
 }
 
-bool	*create_expansion_map(char *str)
+static void	cleanup_and_exit(t_minishell *minishell, char *expanded)
 {
-	int		i;
-	bool	*map;
-	bool	in_squote = false;
-	bool	in_dquote = false;
-
-	map = malloc(sizeof(bool) * (ft_strlen(str) + 1));
-	if (!map)
-		return (NULL);
-	i = -1;
-	while (str[++i])
-	{
-		if (str[i] == '\'' && !in_dquote)
-			in_squote = !in_squote;
-		else if (str[i] == '"' && !in_squote)
-			in_dquote = !in_dquote;
-		map[i] = !in_squote;
-	}
-	map[i] = false;
-	return (map);
-
+	if (expanded)
+		free(expanded);
+	if (minishell->expansion_map)
+		free(minishell->expansion_map);
+	return (free_minishell(minishell, E_AFAILED, true));
 }
 
 void	format_tokens(t_token *tokens, t_minishell *minishell)
@@ -96,26 +83,32 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 	while (tokens)
 	{
 		minishell->expansion_map = create_expansion_map(tokens->value);
-		cleaned = remove_quotes(tokens->value);
+		if (!minishell->expansion_map)
+			return (free_minishell(minishell, E_AFAILED, true));
+		expanded = expand_variable(tokens->value, minishell);
+		if (!expanded)
+			return (cleanup_and_exit(minishell, NULL));
+		cleaned = remove_quotes(expanded);
+		if (!cleaned)
+			return (cleanup_and_exit(minishell, expanded));
 		free(tokens->value);
-		expanded = expand_variable(cleaned, minishell);
-		free(cleaned);
+		free(expanded);
 		free(minishell->expansion_map);
 		minishell->expansion_map = NULL;
-		if (expanded)
-			tokens->value = expanded;
+		if (cleaned)
+			tokens->value = cleaned;
 		tokens = tokens->next;
 	}
 }
 
 int	tokens(t_minishell *minishell, char *entry)
 {
-	if (has_closed_quotes(entry,true))
-		return (-1) ;
-	minishell->tokens = define_tokens(entry);
+	if (has_closed_quotes(entry, true))
+		return (-1);
+	define_tokens(entry, minishell);
 	format_tokens(minishell->tokens, minishell);
 	if (check_tokens(minishell) == false)
 		return (-1);
 	exec_tokens(minishell);
-	return(0);
+	return (0);
 }

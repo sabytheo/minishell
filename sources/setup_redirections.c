@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirection.c                                      :+:      :+:    :+:   */
+/*   setup_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 13:04:59 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/19 14:44:33 by egache           ###   ########.fr       */
+/*   Updated: 2025/06/24 13:57:32 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,49 @@ int	redir_append(t_minishell *minishell, t_token *current, bool cmdfound)
 	return (0);
 }
 
+void	reset_redir(t_minishell *minishell)
+{
+	if (minishell->saved_inputfd > 2)
+	{
+		if (dup2(minishell->saved_inputfd, STDIN_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->saved_inputfd);
+		}
+		close(minishell->saved_inputfd);
+		minishell->saved_inputfd = -1;
+	}
+	if (minishell->saved_outputfd > 2)
+	{
+		if (dup2(minishell->saved_outputfd, STDOUT_FILENO) < 0)
+		{
+			perror("dup2");
+			close(minishell->saved_outputfd);
+		}
+		close(minishell->saved_outputfd);
+		minishell->saved_outputfd = -1;
+	}
+}
+
+int	setup_redirections(t_token *current, t_minishell *minishell, bool cmdfound)
+{
+	int	errfound;
+
+	errfound = 0;
+	while (current)
+	{
+		if (current->type == T_REDIR_IN || current->type == T_HEREDOC)
+			errfound = redir_in(minishell, current, cmdfound);
+		else if (current->type == T_REDIR_OUT)
+			errfound = redir_out(minishell, current, cmdfound);
+		else if (current->type == T_APPEND)
+			errfound = redir_append(minishell, current, cmdfound);
+		if (errfound < 0)
+			return (-1);
+		current = current->next;
+	}
+	return (0);
+}
 // static char	*get_filename(t_minishell *minishell)
 // {
 // 	t_heredoc	*current;

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 13:00:48 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 15:59:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,12 @@ static char	**fill_args(t_token **current)
 {
 	char	**args;
 	int		i;
-	int		size;
 
 	i = 0;
-	size = get_cmds_size((*current));
-	args = malloc(sizeof(char *) * (size + 1));
+	args = malloc(sizeof(char *) * (get_cmds_size((*current)) + 1));
 	if (args == NULL)
-		return (NULL); // NEED FREE ?
-	args[size] = NULL;
+		return (NULL);
+	args[get_cmds_size((*current))] = NULL;
 	while ((*current) != NULL && (*current)->type != T_PIPE)
 	{
 		if ((*current)->type >= T_REDIR_IN && (*current)->type <= T_HEREDOC)
@@ -32,39 +30,56 @@ static char	**fill_args(t_token **current)
 		{
 			args[i] = ft_strdup((*current)->value);
 			if (args[i] == NULL)
-				return (NULL); // NEED FREE ?
+			{
+				free(args);
+				return (NULL);
+			}
 			i++;
 		}
 		(*current) = (*current)->next;
 	}
 	return (args);
 }
-t_token	*extract_redirections(t_token **current, t_token *redir_head)
+
+static int	create_redir_token(t_token **current, t_token **redir_token_copy,
+		t_token **file_token_copy)
 {
+	(*redir_token_copy) = duplicate_token(*current);
+	if (!(*redir_token_copy))
+		return (-1);
+	*current = (*current)->next;
+	(*file_token_copy) = duplicate_token(*current);
+	if (!(*file_token_copy))
+		return (-1);
+	*current = (*current)->next;
+	(*redir_token_copy)->next = (*file_token_copy);
+	(*file_token_copy)->next = NULL;
+	return (0);
+}
+
+t_token	*extract_redirections(t_token **current, t_minishell *minishell,
+		t_cmds *new)
+{
+	t_token	*redir_head;
 	t_token	*redir_tail;
 	t_token	*redir_token_copy;
 	t_token	*file_token_copy;
 
 	redir_tail = NULL;
+	redir_head = NULL;
 	while (*current && (*current)->type != T_PIPE)
 	{
 		if ((*current)->type >= T_REDIR_IN && (*current)->type <= T_HEREDOC)
 		{
-			redir_token_copy = duplicate_token(*current);
-			if(!redir_token_copy)
-				return(NULL); // NEED FREE
-			*current = (*current)->next;
-			file_token_copy = duplicate_token(*current);
-			if(!file_token_copy)
-				return(NULL); // NEED FREE
-			*current = (*current)->next;
-			redir_token_copy->next = file_token_copy;
-			file_token_copy->next = NULL;
-			if (!redir_head)
-				redir_head = redir_token_copy;
-			else
-				redir_tail->next = redir_token_copy;
-			redir_tail = file_token_copy;
+			if (create_redir_token(current, &redir_token_copy,
+					&file_token_copy) < 0)
+			{
+				free_tab(new->args);
+				free(new);
+				return (free_minishell(minishell, E_AFAILED, true), NULL);
+			}
+			add_redir_to_list(&redir_head, &redir_tail, redir_token_copy,
+				file_token_copy);
 		}
 		else
 			(*current) = (*current)->next;
@@ -72,164 +87,32 @@ t_token	*extract_redirections(t_token **current, t_token *redir_head)
 	return (redir_head);
 }
 
-void  check_ifcmdempty(t_minishell *minishell)
-{
-	int	i;
-
-    if (!minishell || !minishell->cmds || !minishell->cmds->args)
-        return ;
-    if (!minishell->cmds->args[0])
-        return ;
-    if (minishell->cmds->args[0][0] == '\0')
-    {
-        free(minishell->cmds->args[0]);
-        i = 0;
-        while (minishell->cmds->args[i + 1] != NULL)
-        {
-            minishell->cmds->args[i] = minishell->cmds->args[i + 1];
-            i++;
-        }
-        minishell->cmds->args[i] = NULL;
-    }
-}
 void	split_tokens(t_minishell *minishell)
 {
 	t_token	*current_args;
-	t_token	*redir_head;
 	t_token	*current_redir;
 	t_cmds	*new;
 	char	**args;
 
-	redir_head = NULL;
 	current_args = minishell->tokens;
 	current_redir = minishell->tokens;
 	while (current_args && current_redir)
 	{
 		args = fill_args(&current_args);
+		if (!args)
+			return (free_minishell(minishell, E_AFAILED, true));
 		new = create_cmds(args);
-		new->redirs = extract_redirections(&current_redir, redir_head);
-		add_cmds_back(&minishell->cmds, new);
-		check_ifcmdempty(minishell);
-		if (minishell->cmds->args && minishell->cmds->args[0] != NULL)
-			new->cmdfound = check_cmd(minishell, args[0]);
-		if (current_args != NULL)
-			current_args = current_args->next;
-		if (current_redir != NULL)
-			current_redir = current_redir->next;
-		else
+		if (!new)
+		{
+			free_tab(args);
+			return (free_minishell(minishell, E_AFAILED, true));
+		}
+		new->redirs = extract_redirections(&current_redir, minishell, new);
+		add_and_lastcheck(minishell, new, args);
+		next_tokens(&current_args, &current_redir);
+		if (!current_redir)
 			return ;
 	}
-	return ;
-}
-
-int	setup_redirections(t_token *current, t_minishell *minishell, bool cmdfound)
-{
-	int	errfound;
-
-	errfound = 0;
-	while (current)
-	{
-		if (current->type == T_REDIR_IN || current->type == T_HEREDOC)
-			errfound = redir_in(minishell, current, cmdfound);
-		else if (current->type == T_REDIR_OUT)
-			errfound = redir_out(minishell, current, cmdfound);
-		else if (current->type == T_APPEND)
-			errfound = redir_append(minishell, current, cmdfound);
-		if (errfound < 0)
-			return (-1);
-		current = current->next;
-	}
-	return (0);
-}
-
-void	reset_redir(t_minishell *minishell)
-{
-	if (minishell->saved_inputfd > 2)
-	{
-		if (dup2(minishell->saved_inputfd, STDIN_FILENO) < 0)
-		{
-			perror("dup2");
-			close(minishell->saved_inputfd);
-		}
-		close(minishell->saved_inputfd);
-		minishell->saved_inputfd = -1;
-	}
-	if (minishell->saved_outputfd > 2)
-	{
-		if (dup2(minishell->saved_outputfd, STDOUT_FILENO) < 0)
-		{
-			perror("dup2");
-			close(minishell->saved_outputfd);
-		}
-		close(minishell->saved_outputfd);
-		minishell->saved_outputfd = -1;
-	}
-}
-
-void	wait_thechild(pid_t pid, t_minishell *minishell)
-{
-	int	status;
-
-	status = 0;
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		minishell->error_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		minishell->error_code = 128 + WTERMSIG(status);
-}
-int	before_builtins(t_cmds *cmds, t_minishell *minishell)
-{
-	if (cmds->cmdfound == false)
-	{
-		setup_redirections(cmds->redirs, minishell, cmds->cmdfound);
-		return (-1);
-	}
-	if (is_a_builtins(cmds->args[0]))
-	{
-		if (setup_redirections(cmds->redirs, minishell, cmds->cmdfound) < 0)
-		{
-			reset_redir(minishell);
-			return (-1);
-		}
-		exec_builtins(minishell, cmds);
-		reset_redir(minishell);
-		return (-1);
-	}
-	return (0);
-}
-void	execute_single_command(t_minishell *minishell)
-{
-	pid_t	pid;
-	t_cmds	*cmds;
-	char	*path;
-
-	cmds = minishell->cmds;
-	if (prepare_heredocs(minishell, cmds) < 0)
-		return ;
-	if (before_builtins(cmds, minishell) < 0)
-		return ;
-	signal_ignore();
-	pid = fork();
-	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		if (setup_redirections(cmds->redirs, minishell, cmds->cmdfound) < 0)
-			exit_and_clear_child(minishell->error_code, minishell);
-		if (cmds->cmdfound == true)
-		{
-			if (ft_strnstr(cmds->args[0], "/", ft_strlen(cmds->args[0])) != NULL)
-				path = cmds->args[0];
-			else
-				path = find_path(cmds->args[0], minishell->envp_tab, 0);
-			execve(path, cmds->args, minishell->envp_tab);
-			perror("execve");
-			if(ft_strncmp(cmds->args[0],"../",3) != 0)
-				free(path);
-			exit_and_clear_child(minishell->error_code, minishell);
-		}
-	}
-	wait_thechild(pid, minishell);
-	cleanup_heredocs(minishell);
 	return ;
 }
 

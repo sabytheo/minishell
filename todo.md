@@ -7,7 +7,12 @@
 - Faire des tests
 - Valider minishell
 
+#REFACTO R1 :
+
+CLEAN.C
+ - 2/3 fichiers
+
 isatty pour ./minishell | ./minishell
 
 
-ft_strnstr(minishell.entry, "|",ft_strlen(minishell.entry)) == NULL
+PWD peut etre nul attention a pas dereferencé

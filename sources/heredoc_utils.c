@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 10:19:50 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/23 16:04:10 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 15:48:22 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,18 @@ void	cleanup_heredocs(t_minishell *minishell)
 		free(tmp);
 	}
 	minishell->heredoc = NULL;
+}
+
+int	create_list(char *filename, t_minishell *minishell)
+{
+	t_heredoc	*new;
+
+	new = create_heredoc_node(filename);
+	if (!new)
+	{
+		unlink(filename);
+		return (-1);
+	}
+	add_heredoc_back(&minishell->heredoc, new);
+	return (0);
 }

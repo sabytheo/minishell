@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 19:23:14 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 20:25:05 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	dup_pipes(t_minishell *minishell, int cmd_index)
+static int	dup_pipes(t_minishell *minishell, int cmd_index)
 {
-	if (cmd_index > 0) // Pas la première commande
+	if (cmd_index > 0)
 	{
 		if (dup2(minishell->pipes[cmd_index - 1][0], STDIN_FILENO) == -1)
 		{
@@ -23,7 +23,7 @@ int	dup_pipes(t_minishell *minishell, int cmd_index)
 			return (-1);
 		}
 	}
-	if (cmd_index < minishell->cmds_count - 1) // Pas la dernière commande
+	if (cmd_index < minishell->cmds_count - 1)
 	{
 		if (dup2(minishell->pipes[cmd_index][1], STDOUT_FILENO) == -1)
 		{
@@ -34,10 +34,11 @@ int	dup_pipes(t_minishell *minishell, int cmd_index)
 	}
 	return (0);
 }
-void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
+
+static void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 		int cmd_index)
 {
-	char *path;
+	char	*path;
 
 	if (dup_pipes(minishell, cmd_index) < 0)
 		exit_and_clear_child(minishell->error_code, minishell);
@@ -49,49 +50,44 @@ void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 		if (is_a_builtins(cmd->args[0]))
 		{
 			exec_builtins(minishell, cmd);
-			exit_and_clear_child(minishell->error_code, minishell);
+			exit_and_clear_child_pipe(minishell->error_code, minishell);
 		}
 		else
 		{
-			if (ft_strnstr(cmd->args[0],"/", ft_strlen(cmd->args[0])) != NULL)
+			if (ft_strnstr(cmd->args[0], "/", ft_strlen(cmd->args[0])) != NULL)
 				path = cmd->args[0];
 			else
-				path = find_path(cmd->args[0], minishell->envp_tab, 0);
-			execve(path, cmd->args,minishell->envp_tab);
-			perror("execve");
+				path = find_path(cmd->args[0], minishell->envp_tab);
+			execve(path, cmd->args, minishell->envp_tab);
 		}
 	}
-	exit_and_clear_child(minishell->error_code, minishell);
+	exit_and_clear_child_pipe(minishell->error_code, minishell);
 }
 
-int	init_pipes_and_pids(t_minishell *minishell)
+static int	init_pipes_and_pids(t_minishell *minishell)
 {
 	int	i;
 
 	minishell->pids = malloc(sizeof(pid_t) * minishell->cmds_count);
-	minishell->pipes = malloc(sizeof(int *) * (minishell->cmds_count - 1));
-	if (!minishell->pipes || !minishell->pids)
-	{
-		perror("malloc");
+	if (!minishell->pids)
 		return (-1);
-	}
+	minishell->pipes = malloc(sizeof(int *) * (minishell->cmds_count - 1));
+	if (!minishell->pipes)
+		return (-1);
 	i = 0;
 	while (i < minishell->cmds_count - 1)
 	{
 		minishell->pipes[i] = malloc(sizeof(int *));
-		if (pipe(minishell->pipes[i]) == -1)
-		{
-			perror("pipe");
-			cleanup_pipes(minishell->pipes, i);
-			free(minishell->pids);
+		if (!minishell->pipes[i])
 			return (-1);
-		}
+		if (pipe(minishell->pipes[i]) == -1)
+			return (-1);
 		i++;
 	}
 	return (0);
 }
 
-void	wait_allchild(t_minishell *minishell)
+static void	wait_allchild(t_minishell *minishell)
 {
 	int	i;
 	int	status;
@@ -119,10 +115,9 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 
 	current = cmds;
 	getcmd_count(minishell);
-	if (prepare_heredocs(minishell, cmds) < 0)
-		return ;
-	if (init_pipes_and_pids(minishell) < 0)
-		return ;
+	if (prepare_heredocs(minishell, cmds) < 0
+		|| init_pipes_and_pids(minishell) < 0)
+		return (free_minishell(minishell, E_AFAILED, true));
 	i = 0;
 	while (i < minishell->cmds_count)
 	{
@@ -136,7 +131,6 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 		i++;
 	}
 	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
-	// close_pipes_inchild(minishell);
 	wait_allchild(minishell);
 	free(minishell->pids);
 	minishell->pids = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/06/24 19:29:17 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/01 20:23:56 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,52 +67,6 @@ char	*check_syntax(t_minishell *minishell)
 	return (NULL);
 }
 
-bool	check_cmd(t_minishell *minishell, char *arg)
-{
-	struct stat	fs;
-
-	if (ft_strcmp(arg,".") == 0)
-		{
-			ft_printf_fd(2,"minishell: %s : check the usage\n",arg);
-			return(false);
-		}
-	else if (ft_strncmp("./", arg, 2) == 0 || ft_strncmp("/", arg, 1) == 0 || ft_strncmp("../", arg, 3) == 0)
-	{
-		if (stat(arg, &fs) == 0 && !S_ISREG(fs.st_mode))
-		{
-			ft_printf_fd(2, E_IS_DIR, arg);
-			minishell->error_code = 126;
-			return (false);
-		}
-		if (is_valid_cmd(arg, minishell) == true)
-			return (true);
-		if (ft_strnstr(arg, "/", ft_strlen(arg)) != NULL)
-		{
-			access(arg, X_OK);
-			if (errno == 13)
-				ft_printf_fd(2, E_NO_PERM, arg);
-			else if (errno == 2)
-				ft_printf_fd(2, E_NSFOD, arg);
-			else if (errno == 0)
-				return (true);
-			minishell->error_code = 127;
-			return (false);
-		}
-	}
-	else
-	{
-		if (arg[0] != '\0')
-		{
-			if (is_valid_cmd(arg, minishell) == true)
-				return (true);
-			ft_printf_fd(2, E_PARS_CMD_NF, arg);
-			minishell->error_code = 127;
-			return (false);
-		}
-	}
-	return (false);
-}
-
 bool	check_tokens(t_minishell *minishell)
 {
 	char	*syntax_error;
@@ -121,7 +75,7 @@ bool	check_tokens(t_minishell *minishell)
 	if (syntax_error != NULL)
 	{
 		minishell->error_code = 2;
-		clean_error(syntax_error, minishell);
+		ft_printf_fd(2, "%s", syntax_error);
 		return (false);
 	}
 	return (true);

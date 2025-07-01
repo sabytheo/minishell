@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 20:18:49 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/01 20:34:17 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,31 @@ void	*free_variables_tab(char **var)
 {
 	free_tab(var);
 	return (NULL);
+}
+
+bool	replace_node_envp(t_minishell *minishell, t_denvp *current, char *arg)
+{
+	int	size1;
+	int	size2;
+
+	size1 = ft_strlen_equal(arg);
+	size2 = ft_strlen(arg) - size1;
+	while (current && current->var)
+	{
+		if (ft_strncmp(arg, current->var[0], size1) == 0)
+		{
+			if (arg[size1] != '\0')
+			{
+				free(current->var[1]);
+				current->var[1] = ft_strldup(&arg[size1], size2);
+				if (current->var[1] == NULL)
+					free_minishell(minishell, E_AFAILED, true);
+			}
+			return (true);
+		}
+		current = current->next;
+	}
+	return (false);
 }
 
 void	export_add_envp(t_minishell *minishell, t_denvp **envp, char *arg)
@@ -48,31 +73,6 @@ char	**fill_variables_envp(char *value)
 	else
 		var[1] = NULL;
 	return (var);
-}
-
-bool	replace_node_envp(t_minishell *minishell, t_denvp *current, char *arg)
-{
-	int	size1;
-	int	size2;
-
-	size1 = ft_strlen_equal(arg);
-	size2 = ft_strlen(arg) - size1;
-	while (current && current->var)
-	{
-		if (ft_strncmp(arg, current->var[0], size1) == 0)
-		{
-			if (arg[size1] != '\0')
-			{
-				free(current->var[1]);
-				current->var[1] = ft_strldup(&arg[size1], size2);
-				if (current->var[1] == NULL)
-					free_minishell(minishell, E_AFAILED, true);
-			}
-			return (true);
-		}
-		current = current->next;
-	}
-	return (false);
 }
 
 int	ft_export(t_minishell *minishell, t_cmds *cmds)

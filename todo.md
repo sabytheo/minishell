@@ -16,3 +16,14 @@ isatty pour ./minishell | ./minishell
 
 
 PWD peut etre nul attention a pas dereferencé
+
+
+Double prompt when ctrl+c in pipe command
+
+whitespaces must be 1 space
+
+redirecting directories leak
+
+ECHO :
+
+Handle -nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn

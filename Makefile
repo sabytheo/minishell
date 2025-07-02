@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+         #
+#    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2025/07/01 20:15:26 by egache           ###   ########.fr        #
+#    Updated: 2025/07/02 13:22:11 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,6 @@ SRCS		:=		main.c \
 					define_tokens_utils.c \
 					expand.c \
 					expand_utils.c \
-					expand_utils_bis.c \
 					debug.c \
 					signals.c \
 					signals_handler.c \

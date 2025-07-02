@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:04:02 by egache            #+#    #+#             */
-/*   Updated: 2025/06/26 11:58:39 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 13:21:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ static void	explore_token(char *entry, int *i)
 			if (entry[*i])
 				(*i)++;
 		}
-		else if (entry[*i] == ' ' || (entry[*i] == '|' || entry[*i] == '<'
-				|| entry[*i] == '>'))
+		else if (entry[*i] == ' ' || ((entry[*i] >= 9 && entry[*i] <= 13))
+			|| (entry[*i] == '|' || entry[*i] == '<' || entry[*i] == '>'))
 			break ;
 		else
 			(*i)++;
@@ -40,13 +40,14 @@ char	*extract_token(char *entry, int *i)
 {
 	int	start;
 
-	while (entry[*i] && entry[*i] == ' ')
+	while (entry[*i] && (entry[*i] == ' ' || (entry[*i] >= 9
+				&& entry[*i] <= 13)))
 		(*i)++;
 	if (entry[*i] == '|' || entry[*i] == '<' || entry[*i] == '>')
 	{
 		start = *i;
-		if ((entry[*i] == '<' || entry[*i] == '>')
-			&& entry[*i] == entry[*i + 1])
+		if ((entry[*i] == '<' || entry[*i] == '>') && entry[*i] == entry[*i
+			+ 1])
 		{
 			*i += 2;
 			return (ft_substr(entry, start, 2));

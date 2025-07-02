@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/01 15:40:31 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 11:44:36 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ static void	cleanup_and_exit(t_minishell *minishell, char *expanded)
 {
 	if (expanded)
 		free(expanded);
-	if (minishell->expansion_map)
-		free(minishell->expansion_map);
 	return (free_minishell(minishell, E_AFAILED, true));
 }
 
@@ -82,9 +80,6 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 
 	while (tokens)
 	{
-		minishell->expansion_map = create_expansion_map(tokens->value);
-		if (!minishell->expansion_map)
-			return (free_minishell(minishell, E_AFAILED, true));
 		expanded = expand_variable(tokens->value, minishell);
 		if (!expanded)
 			return (cleanup_and_exit(minishell, NULL));
@@ -93,8 +88,6 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 			return (cleanup_and_exit(minishell, expanded));
 		free(tokens->value);
 		free(expanded);
-		free(minishell->expansion_map);
-		minishell->expansion_map = NULL;
 		if (cleaned)
 			tokens->value = cleaned;
 		tokens = tokens->next;

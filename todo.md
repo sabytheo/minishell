@@ -20,9 +20,9 @@ PWD peut etre nul attention a pas dereferencé
 
 Double prompt when ctrl+c in pipe command
 
-whitespaces must be 1 space
+<!-- whitespaces must be 1 space
 
-redirecting directories leak
+redirecting directories leak -->
 
 ECHO :
 

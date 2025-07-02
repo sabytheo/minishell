@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 20:18:21 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 11:50:52 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ typedef struct s_minishell
 	char						*error_item;
 	char						**envp_tab;
 	int							envp_countline;
-	bool						*expansion_map;
 	int							fd;
 	int							cmds_count;
 	int							**pipes;
@@ -178,10 +177,8 @@ char							*expand_variable(char *str,
 // utils_expand.c --->
 int								is_valid_var_char(char c, int len);
 char							*append_char(t_expand *expand, char c);
-bool							should_expand(char *str, int i,
-									t_minishell *minishell);
+bool							should_expand(char *str, int i);
 char							*append_and_free(char *base, char *addition);
-bool							*create_expansion_map(char *str);
 
 // chainedlst_totab.c --->
 void							chainedlst_to_tab(t_minishell *minishell);

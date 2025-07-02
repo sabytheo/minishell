@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/01 15:48:17 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 13:18:57 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,7 @@ int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
 
 static int	process_heredoc_line(char *line, int fd, t_minishell *minishell)
 {
-	minishell->expansion_map = create_expansion_map(line);
-	if (!minishell->expansion_map)
-		return (-1);
 	line = expand_variable(line, minishell);
-	free(minishell->expansion_map);
 	if (!line)
 		return (-1);
 	write(fd, line, ft_strlen(line));

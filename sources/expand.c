@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:49:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/01 16:32:02 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 11:50:27 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static char	*handle_expand(char *str, int *i, t_minishell *minishell,
 {
 	char	*result;
 
-	if (should_expand(str, *i, minishell) == true)
+	if (should_expand(str, *i) == true)
 	{
 		result = expand_variable_at_pos(str, i, minishell, expand);
 		return (result);

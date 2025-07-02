@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 10:10:12 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/01 15:47:54 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 13:08:45 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,17 @@ void	close_fds(t_minishell *minishell)
 		close(minishell->saved_outputfd);
 		minishell->saved_outputfd = -1;
 	}
-	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
-	free(minishell->pids);
-	minishell->pids = NULL;
+	if (minishell->cmds_count != 0)
+	{
+		cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
+		free(minishell->pids);
+		minishell->pids = NULL;
+	}
 }
 
 int	exit_and_clear_child_pipe(int error_code, t_minishell *minishell)
 {
+	close_fds(minishell);
 	if (!minishell->cmds->next)
 		free(minishell->path);
 	if (minishell->tokens)
@@ -47,7 +51,6 @@ int	exit_and_clear_child_pipe(int error_code, t_minishell *minishell)
 		free_tab(minishell->envp_tab);
 	if (minishell->heredoc)
 		free_heredoc(&minishell->heredoc);
-	close_fds(minishell);
 	exit(error_code);
 }
 

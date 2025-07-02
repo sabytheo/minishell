@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 13:04:59 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/24 13:57:32 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 17:23:05 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,44 +131,3 @@ int	setup_redirections(t_token *current, t_minishell *minishell, bool cmdfound)
 	}
 	return (0);
 }
-// static char	*get_filename(t_minishell *minishell)
-// {
-// 	t_heredoc	*current;
-// 	char		*filename;
-
-// 	current = minishell->heredoc;
-// 	if (!current)
-// 		return (NULL);
-// 	filename = current->filename;
-// 	minishell->heredoc = current->next;
-// 	free(current);
-// 	return (filename);
-// }
-// int	redir_heredoc(t_minishell *minishell, bool cmdfound)
-// {
-// 	char	*filename;
-
-// 	filename = get_filename(minishell);
-// 	if (!filename)
-// 	{
-// 		perror("filename missing");
-// 		return (-1);
-// 	}
-// 	minishell->input_fd = open(filename, O_RDONLY);
-// 	if (minishell->input_fd < 0)
-// 		return (-1);
-// 	if (minishell->saved_inputfd == -1)
-// 		minishell->saved_inputfd = dup(STDIN_FILENO);
-// 	if (cmdfound == true)
-// 	{
-// 		if (dup2(minishell->input_fd, STDIN_FILENO) < 0)
-// 		{
-// 			perror("dup2");
-// 			close(minishell->input_fd);
-// 			return (-1);
-// 		}
-// 	}
-// 	close(minishell->input_fd);
-// 	unlink(filename);
-// 	return (0);
-// }

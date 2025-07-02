@@ -6,25 +6,13 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 14:07:43 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 16:50:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 17:26:57 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-Bash builtins return an exit status of zero
-if they succeed and a non-zero status on failure
-*/
-
-/*
-Check if arg is numeric value
-	If not ret is 2 and print bash: exit: hello: numeric argument required
-Check nbr of arg
-	if > 2 ret is 1 and print "bash: exit: too many arguments\n"
-
-*/
-bool	is_numeric_argument(char *str)
+static bool	is_numeric_argument(char *str)
 {
 	int	i;
 

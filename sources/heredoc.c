@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/02 13:18:57 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 17:32:50 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ static char	*generate_tmp_filename(void)
 	return (tmp);
 }
 
-int	create_heredoc(char *limiter, t_minishell *minishell, t_token *redir)
+static int	create_heredoc(char *limiter, t_minishell *minishell,
+		t_token *redir)
 {
 	char	*tmp_filename;
 

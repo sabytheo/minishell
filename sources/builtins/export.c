@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 14:31:58 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 15:17:58 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,10 @@ int	ft_export(t_minishell *minishell, t_cmds *cmds)
 		else if (export_parsing(cmds->args[i]) == 2)
 			export_add_export(minishell, &minishell->export, cmds->args[i]);
 		else
+		{
 			ft_printf_fd(2, E_EXPORT_ARG, cmds->args[i]);
+			return (1);
+		}
 		i++;
 	}
 	chainedlst_to_tab(minishell);

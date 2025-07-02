@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 14:36:29 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 15:20:44 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,20 @@ static bool	find_newline(char *str)
 
 	i = 1;
 	len = 2;
-	if (ft_strncmp(str, "-n", len) == 0)
+	if (str != NULL)
 	{
-		while (str[i] != '\0')
+
+		if (ft_strncmp(str, "-n", len) == 0)
 		{
-			if (str[i] != 'n')
+			while (str[i] != '\0')
+			{
+				if (str[i] != 'n')
 				return (false);
-			i++;
+				i++;
+			}
+			return (true);
 		}
-		return (true);
+		return (false);
 	}
 	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:00:24 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 20:23:56 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 19:27:03 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*check_operators(t_token *tokens, t_minishell *minishell)
 
 static char	*check_pipes(t_token *tokens)
 {
-	if (tokens->next == NULL)
+	if (tokens->next == NULL || tokens->next->type == T_PIPE)
 		return (E_PARS_PIPE);
 	else
 		return (NULL);

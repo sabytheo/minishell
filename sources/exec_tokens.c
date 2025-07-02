@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 14:23:37 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 17:16:36 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	create_redir_token(t_token **current, t_token **redir_token_copy,
 	return (0);
 }
 
-t_token	*extract_redirections(t_token **current, t_minishell *minishell,
+static t_token	*extract_redirections(t_token **current, t_minishell *minishell,
 		t_cmds *new)
 {
 	t_token	*redir_head;
@@ -87,7 +87,7 @@ t_token	*extract_redirections(t_token **current, t_minishell *minishell,
 	return (redir_head);
 }
 
-void	split_tokens(t_minishell *minishell)
+static void	split_tokens(t_minishell *minishell)
 {
 	t_token	*current_args;
 	t_token	*current_redir;

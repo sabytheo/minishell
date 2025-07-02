@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:32:19 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 15:45:44 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 17:07:15 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	check_ifcmdempty(t_minishell *minishell)
 	}
 }
 
-bool	check_errno(t_minishell *minishell, char *arg)
+static bool	check_errno(t_minishell *minishell, char *arg)
 {
 	if (errno == 13)
 	{

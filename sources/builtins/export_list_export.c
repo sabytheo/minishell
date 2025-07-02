@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   export_list_export.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 20:12:27 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 14:30:22 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 17:30:16 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**join_and_dup_export(char **var, char *value, int size1, int size2)
+static char	**join_and_dup_export(char **var, char *value, int size1, int size2)
 {
 	char	*tmp;
 
@@ -37,7 +37,7 @@ void	export_add_export(t_minishell *minishell, t_denvp **export, char *arg)
 		add_to_list_export(minishell, export, arg);
 }
 
-char	*replace_variable_export(char *var, char *arg, int size1, int size2)
+static char	*replace_variable_export(char *var, char *arg, int size1, int size2)
 {
 	char	*tmp;
 
@@ -57,7 +57,8 @@ char	*replace_variable_export(char *var, char *arg, int size1, int size2)
 	return (var);
 }
 
-bool	replace_node_export(t_minishell *minishell, t_denvp *current, char *arg)
+static bool	replace_node_export(t_minishell *minishell, t_denvp *current,
+		char *arg)
 {
 	int	size1;
 	int	size2;

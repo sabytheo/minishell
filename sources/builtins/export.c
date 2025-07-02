@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 15:29:33 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 17:31:41 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	*free_variables_tab_null(char **var)
 	return (NULL);
 }
 
-bool	replace_node_envp(t_minishell *minishell, t_denvp *current, char *arg)
+static bool	replace_node_envp(t_minishell *minishell, t_denvp *current,
+		char *arg)
 {
 	int	size1;
 	int	size2;
@@ -43,7 +44,7 @@ bool	replace_node_envp(t_minishell *minishell, t_denvp *current, char *arg)
 	return (false);
 }
 
-void	export_add_envp(t_minishell *minishell, t_denvp **envp, char *arg)
+static void	export_add_envp(t_minishell *minishell, t_denvp **envp, char *arg)
 {
 	if (replace_node_envp(minishell, (*envp), arg) == false)
 		add_to_list_envp(minishell, envp, arg);

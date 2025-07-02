@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   export_check.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:15:22 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 14:29:45 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 17:28:14 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	free_variables_tab_int(char **var, int ret)
+static int	free_variables_tab_int(char **var, int ret)
 {
 	free_tab(var);
 	return (ret);
@@ -65,7 +65,7 @@ bool	already_exist(t_minishell *minishell, t_denvp *list, char *arg)
 	return (false);
 }
 
-bool	valid_id(char c)
+static bool	valid_id(char c)
 {
 	if (ft_isalnum(c) == 1 || c == '_')
 		return (true);

@@ -3,30 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 12:43:26 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 20:18:56 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 17:26:19 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-RELATIVE PATH :
-
-path DEPUIS le dossier actuel
-	- contient les ../ et ./ etc...
-
-ABSOLUTE PATH
-
-path depuis le root root
-	- /home/egache...
-
-// Verifier nombre arg / INterdit > 2
-*/
-
 #include "minishell.h"
 
-int	do_chdir(char *str)
+static int	do_chdir(char *str)
 {
 	int	cd;
 
@@ -40,7 +26,7 @@ int	do_chdir(char *str)
 	return (0);
 }
 
-int	cd_home(t_minishell *minishell)
+static int	cd_home(t_minishell *minishell)
 {
 	char	*home;
 	t_denvp	*current;

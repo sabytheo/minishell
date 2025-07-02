@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 13:14:04 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/02 17:00:45 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 17:18:03 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static char	*get_a_path(char *path_arg, char *arg)
 	return (path);
 }
 
-char	*find_bin_path(char **path_arg, char *arg)
+static char	*find_bin_path(char **path_arg, char *arg)
 {
 	int		i;
 	char	*path;

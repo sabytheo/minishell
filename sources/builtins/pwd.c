@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:50:34 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 16:04:53 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 17:32:05 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	old_pwd(t_minishell *minishell, t_denvp *list, char *oldpwd)
+static int	old_pwd(t_minishell *minishell, t_denvp *list, char *oldpwd)
 {
 	t_denvp	*current;
 	char	*var;
@@ -40,7 +40,7 @@ int	old_pwd(t_minishell *minishell, t_denvp *list, char *oldpwd)
 	return (0);
 }
 
-int	new_pwd(t_minishell *minishell, t_denvp *list, char *newpwd)
+static int	new_pwd(t_minishell *minishell, t_denvp *list, char *newpwd)
 {
 	t_denvp	*current;
 	char	*oldpwd;

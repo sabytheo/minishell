@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:50:34 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 17:11:56 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 16:04:53 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,10 @@ int	update_pwd(t_minishell *minishell)
 	return (0);
 }
 
-int	ft_pwd(t_minishell *minishell)
+int	ft_pwd(void)
 {
 	char	*pwd;
 
-	(void)minishell;
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
 	{

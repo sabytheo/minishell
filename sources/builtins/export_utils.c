@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:15:43 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 14:17:24 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 15:53:16 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	add_to_list_export(t_minishell *minishell, t_denvp **list, char *arg)
 	new = create_denvp(var);
 	if (new == NULL)
 	{
-		free(var);
+		free_tab(var);
 		free_minishell(minishell, E_AFAILED, true);
 	}
 	add_denvp_back(list, new);
@@ -85,7 +85,7 @@ void	add_to_list_envp(t_minishell *minishell, t_denvp **list, char *arg)
 	new = create_denvp(var);
 	if (new == NULL)
 	{
-		free(var);
+		free_tab(var);
 		free_minishell(minishell, E_AFAILED, true);
 	}
 	add_denvp_back(list, new);

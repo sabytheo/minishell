@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export_envp.c                                      :+:      :+:    :+:   */
+/*   export_list_export.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 20:12:27 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 20:14:43 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 14:30:22 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,22 @@ char	**join_and_dup_export(char **var, char *value, int size1, int size2)
 	tmp = NULL;
 	var[1] = ft_strldup(&value[size1 + 1], size2);
 	if (var[1] == NULL)
-		return (free_variables_tab(var));
+		return (free_variables_tab_null(var));
 	tmp = ft_strjoin("=\"", var[1]);
 	if (tmp == NULL)
-		return (free_variables_tab(var));
+		return (free_variables_tab_null(var));
 	free(var[1]);
 	var[1] = ft_strjoin(tmp, "\"");
 	free(tmp);
 	if (var[1] == NULL)
-		return (free_variables_tab(var));
+		return (free_variables_tab_null(var));
 	return (var);
 }
 
 void	export_add_export(t_minishell *minishell, t_denvp **export, char *arg)
 {
 	if (replace_node_export(minishell, (*export), arg) == false)
-		add_to_list(minishell, export, arg);
+		add_to_list_export(minishell, export, arg);
 }
 
 char	*replace_variable_export(char *var, char *arg, int size1, int size2)

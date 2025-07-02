@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   define_tokens_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:04:02 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 13:21:24 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 14:36:07 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ char	*extract_token(char *entry, int *i)
 	if (entry[*i] == '|' || entry[*i] == '<' || entry[*i] == '>')
 	{
 		start = *i;
-		if ((entry[*i] == '<' || entry[*i] == '>') && entry[*i] == entry[*i
-			+ 1])
+		if ((entry[*i] == '<' || entry[*i] == '>')
+			&& entry[*i] == entry[*i + 1])
 		{
 			*i += 2;
 			return (ft_substr(entry, start, 2));

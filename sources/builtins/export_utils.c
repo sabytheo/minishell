@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:15:43 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 17:11:41 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 14:17:24 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,7 @@ void	add_denvp_back(t_denvp **list_denvp, t_denvp *new)
 	tmp->next = new;
 }
 
-bool	valid_id(char c)
-{
-	if (ft_isalnum(c) == 1 || c == '_')
-		return (true);
-	else
-		return (false);
-}
-
-void	add_to_list(t_minishell *minishell, t_denvp **list, char *arg)
+void	add_to_list_export(t_minishell *minishell, t_denvp **list, char *arg)
 {
 	t_denvp	*current;
 	t_denvp	*new;
@@ -67,6 +59,27 @@ void	add_to_list(t_minishell *minishell, t_denvp **list, char *arg)
 	while (current != NULL && current->next != NULL)
 		current = current->next;
 	var = fill_variables_export(arg);
+	if (var == NULL)
+		free_minishell(minishell, E_AFAILED, true);
+	new = create_denvp(var);
+	if (new == NULL)
+	{
+		free(var);
+		free_minishell(minishell, E_AFAILED, true);
+	}
+	add_denvp_back(list, new);
+}
+
+void	add_to_list_envp(t_minishell *minishell, t_denvp **list, char *arg)
+{
+	t_denvp	*current;
+	t_denvp	*new;
+	char	**var;
+
+	current = *list;
+	while (current != NULL && current->next != NULL)
+		current = current->next;
+	var = fill_variables_envp(arg);
 	if (var == NULL)
 		free_minishell(minishell, E_AFAILED, true);
 	new = create_denvp(var);

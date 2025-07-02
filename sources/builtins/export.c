@@ -6,13 +6,13 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 20:34:17 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 14:31:58 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	*free_variables_tab(char **var)
+void	*free_variables_tab_null(char **var)
 {
 	free_tab(var);
 	return (NULL);
@@ -46,7 +46,7 @@ bool	replace_node_envp(t_minishell *minishell, t_denvp *current, char *arg)
 void	export_add_envp(t_minishell *minishell, t_denvp **envp, char *arg)
 {
 	if (replace_node_envp(minishell, (*envp), arg) == false)
-		add_to_list(minishell, envp, arg);
+		add_to_list_envp(minishell, envp, arg);
 }
 
 char	**fill_variables_envp(char *value)
@@ -63,12 +63,12 @@ char	**fill_variables_envp(char *value)
 	var[2] = NULL;
 	var[0] = ft_strldup(value, size1);
 	if (var[0] == NULL)
-		return (free_variables_tab(var));
+		return (free_variables_tab_null(var));
 	if (value[size1] != '\0')
 	{
 		var[1] = ft_strldup(&value[size1], size2);
 		if (var[1] == NULL)
-			return (free_variables_tab(var));
+			return (free_variables_tab_null(var));
 	}
 	else
 		var[1] = NULL;
@@ -82,11 +82,14 @@ int	ft_export(t_minishell *minishell, t_cmds *cmds)
 	i = 1;
 	if (export_display(minishell) == true)
 		return (0);
-	while (already_exist(minishell, minishell->export, cmds->args[i]) == true)
-		i++;
 	while (cmds->args[i] != NULL)
 	{
-		if (export_parsing(cmds->args[i]) == 0)
+		if (already_exist(minishell, minishell->export, cmds->args[i]) == true)
+		{
+			i++;
+			continue ;
+		}
+		else if (export_parsing(cmds->args[i]) == 0)
 		{
 			export_add_export(minishell, &minishell->export, cmds->args[i]);
 			export_add_envp(minishell, &minishell->envp, cmds->args[i]);

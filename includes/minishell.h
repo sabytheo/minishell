@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 11:50:52 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 14:29:10 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ void							ft_exit(t_minishell *minishell, int state);
 // export.c --->
 int								ft_export(t_minishell *minishell, t_cmds *cmds);
 char							**fill_variables_envp(char *value);
-void							*free_variables_tab(char **var);
+void							*free_variables_tab_null(char **var);
 
 // export_list_export.c --->
 char							**join_and_dup_export(char **var, char *value,
@@ -235,7 +235,9 @@ t_denvp							*create_denvp(char **var);
 void							add_denvp_back(t_denvp **list_denvp,
 									t_denvp *new);
 bool							valid_id(char c);
-void							add_to_list(t_minishell *minishell,
+void							add_to_list_envp(t_minishell *minishell,
+									t_denvp **list, char *arg);
+void							add_to_list_export(t_minishell *minishell,
 									t_denvp **list, char *arg);
 // find_path.c --->
 char							*find_path(char *arg, char **envp);

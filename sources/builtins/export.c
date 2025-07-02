@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:47:35 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 15:17:58 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 15:29:33 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,29 +79,26 @@ int	ft_export(t_minishell *minishell, t_cmds *cmds)
 {
 	int	i;
 
-	i = 1;
+	i = 0;
 	if (export_display(minishell) == true)
 		return (0);
-	while (cmds->args[i] != NULL)
+	while (cmds->args[++i] != NULL)
 	{
-		if (already_exist(minishell, minishell->export, cmds->args[i]) == true)
+		if (already_exist(minishell, minishell->export, cmds->args[i]) == false)
 		{
-			i++;
-			continue ;
+			if (export_parsing(cmds->args[i]) == 0)
+			{
+				export_add_export(minishell, &minishell->export, cmds->args[i]);
+				export_add_envp(minishell, &minishell->envp, cmds->args[i]);
+			}
+			else if (export_parsing(cmds->args[i]) == 2)
+				export_add_export(minishell, &minishell->export, cmds->args[i]);
+			else
+			{
+				ft_printf_fd(2, E_EXPORT_ARG, cmds->args[i]);
+				return (1);
+			}
 		}
-		else if (export_parsing(cmds->args[i]) == 0)
-		{
-			export_add_export(minishell, &minishell->export, cmds->args[i]);
-			export_add_envp(minishell, &minishell->envp, cmds->args[i]);
-		}
-		else if (export_parsing(cmds->args[i]) == 2)
-			export_add_export(minishell, &minishell->export, cmds->args[i]);
-		else
-		{
-			ft_printf_fd(2, E_EXPORT_ARG, cmds->args[i]);
-			return (1);
-		}
-		i++;
 	}
 	chainedlst_to_tab(minishell);
 	return (0);

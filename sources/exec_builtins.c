@@ -3,14 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 20:46:38 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 18:29:11 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 15:45:06 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+bool	is_a_builtins(char *cmd)
+{
+	int	len;
+
+	len = ft_strlen(cmd);
+	if (ft_strncmp(cmd, "cd", len) == 0 && len == 2)
+		return (true);
+	if (ft_strncmp(cmd, "echo", len) == 0 && len == 4)
+		return (true);
+	if (ft_strncmp(cmd, "env", len) == 0 && len == 3)
+		return (true);
+	if (ft_strncmp(cmd, "exit", len) == 0 && len == 4)
+		return (true);
+	if (ft_strncmp(cmd, "export", len) == 0 && len == 6)
+		return (true);
+	if (ft_strncmp(cmd, "pwd", len) == 0 && len == 3)
+		return (true);
+	if (ft_strncmp(cmd, "unset", len) == 0 && len == 5)
+		return (true);
+	return (false);
+}
 
 int	exec_builtins(t_minishell *minishell, t_cmds *cmds)
 {

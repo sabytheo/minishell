@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:32:19 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 15:28:07 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 15:45:44 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,22 @@ void	check_ifcmdempty(t_minishell *minishell)
 	}
 }
 
+bool	check_errno(t_minishell *minishell, char *arg)
+{
+	if (errno == 13)
+	{
+		ft_printf_fd(2, E_NO_PERM, arg);
+		minishell->error_code = 126;
+		return (false);
+	}
+	else if (errno == 2)
+		ft_printf_fd(2, E_NSFOD, arg);
+	else if (errno == 0)
+		return (true);
+	minishell->error_code = 127;
+	return (false);
+}
+
 bool	check_filetype(t_minishell *minishell, char *arg)
 {
 	struct stat	fs;
@@ -53,37 +69,10 @@ bool	check_filetype(t_minishell *minishell, char *arg)
 	if (ft_strnstr(arg, "/", ft_strlen(arg)) != NULL)
 	{
 		access(arg, X_OK);
-		if (errno == 13)
-			ft_printf_fd(2, E_NO_PERM, arg);
-		else if (errno == 2)
-			ft_printf_fd(2, E_NSFOD, arg);
-		else if (errno == 0)
-			return (true);
-		minishell->error_code = 127;
-		return (false);
+		if (check_errno(minishell, arg) == false)
+			return (false);
+		return (true);
 	}
-	return (false);
-}
-
-bool	is_a_builtins(char *cmd)
-{
-	int	len;
-
-	len = ft_strlen(cmd);
-	if (ft_strncmp(cmd, "cd", len) == 0 && len == 2)
-		return (true);
-	if (ft_strncmp(cmd, "echo", len) == 0 && len == 4)
-		return (true);
-	if (ft_strncmp(cmd, "env", len) == 0 && len == 3)
-		return (true);
-	if (ft_strncmp(cmd, "exit", len) == 0 && len == 4)
-		return (true);
-	if (ft_strncmp(cmd, "export", len) == 0 && len == 6)
-		return (true);
-	if (ft_strncmp(cmd, "pwd", len) == 0 && len == 3)
-		return (true);
-	if (ft_strncmp(cmd, "unset", len) == 0 && len == 5)
-		return (true);
 	return (false);
 }
 

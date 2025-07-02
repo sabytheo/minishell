@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 15:20:44 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 15:45:31 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,12 @@ static bool	find_newline(char *str)
 	len = 2;
 	if (str != NULL)
 	{
-
 		if (ft_strncmp(str, "-n", len) == 0)
 		{
 			while (str[i] != '\0')
 			{
 				if (str[i] != 'n')
-				return (false);
+					return (false);
 				i++;
 			}
 			return (true);

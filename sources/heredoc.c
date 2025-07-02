@@ -6,37 +6,11 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/02 17:32:50 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 18:15:05 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
-{
-	t_cmds	*current;
-	t_token	*token;
-
-	current = cmds;
-	while (current)
-	{
-		token = current->redirs;
-		while (token)
-		{
-			if (token->type == T_HEREDOC)
-			{
-				if (create_heredoc(token->next->value, minishell, token) < 0)
-				{
-					perror("heredoc");
-					return (-1);
-				}
-			}
-			token = token->next;
-		}
-		current = current->next;
-	}
-	return (0);
-}
 
 static int	process_heredoc_line(char *line, int fd, t_minishell *minishell)
 {
@@ -113,7 +87,33 @@ static int	create_heredoc(char *limiter, t_minishell *minishell,
 	}
 	free(redir->next->value);
 	redir->next->value = tmp_filename;
-	if (create_list(tmp_filename, minishell) < 0)
+	if (create_list_heredoc(tmp_filename, minishell) < 0)
 		return (-1);
+	return (0);
+}
+
+int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
+{
+	t_cmds	*current;
+	t_token	*token;
+
+	current = cmds;
+	while (current)
+	{
+		token = current->redirs;
+		while (token)
+		{
+			if (token->type == T_HEREDOC)
+			{
+				if (create_heredoc(token->next->value, minishell, token) < 0)
+				{
+					perror("heredoc");
+					return (-1);
+				}
+			}
+			token = token->next;
+		}
+		current = current->next;
+	}
 	return (0);
 }

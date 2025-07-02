@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:53:58 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 21:55:11 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 14:26:59 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ void	execute_single_command(t_minishell *minishell)
 	}
 	if (single_builtins(cmds, minishell) < 0)
 		return ;
-	signal_ignore();
 	exec_binaries(minishell, cmds);
 	return ;
 }

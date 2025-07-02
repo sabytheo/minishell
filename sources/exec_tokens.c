@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:16:22 by egache            #+#    #+#             */
-/*   Updated: 2025/07/01 15:59:24 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 14:23:37 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ void	exec_tokens(t_minishell *minishell)
 
 	split_tokens(minishell);
 	current = minishell->cmds;
+	signal_ignore();
 	if (current->next == NULL)
 		execute_single_command(minishell);
 	else

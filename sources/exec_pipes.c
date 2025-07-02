@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/01 20:25:05 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 14:27:54 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	execute_child_process(t_minishell *minishell, t_cmds *cmd,
 	exit_and_clear_child_pipe(minishell->error_code, minishell);
 }
 
-static int	init_pipes_and_pids(t_minishell *minishell)
+static int	pipes_and_pids(t_minishell *minishell)
 {
 	int	i;
 
@@ -115,8 +115,7 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 
 	current = cmds;
 	getcmd_count(minishell);
-	if (prepare_heredocs(minishell, cmds) < 0
-		|| init_pipes_and_pids(minishell) < 0)
+	if (prepare_heredocs(minishell, cmds) < 0 || pipes_and_pids(minishell) < 0)
 		return (free_minishell(minishell, E_AFAILED, true));
 	i = 0;
 	while (i < minishell->cmds_count)
@@ -124,6 +123,7 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 		minishell->pids[i] = fork();
 		if (minishell->pids[i] == 0)
 		{
+			signal(SIGINT, SIG_DFL);
 			execute_child_process(minishell, current, i);
 			exit_and_clear_child(minishell->error_code, minishell);
 		}

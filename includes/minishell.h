@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 17:33:33 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/02 17:39:47 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,6 +305,5 @@ void							define_tokens(char *line,
 void							format_tokens(t_token *tokens,
 									t_minishell *minishell);
 int								tokens(t_minishell *minishell, char *entry);
-//=================================================================================================================//
 
 #endif

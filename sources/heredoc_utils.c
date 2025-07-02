@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 10:19:50 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/01 15:48:22 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/02 17:19:43 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	cleanup_heredocs(t_minishell *minishell)
 	minishell->heredoc = NULL;
 }
 
-int	create_list(char *filename, t_minishell *minishell)
+int	create_list_heredoc(char *filename, t_minishell *minishell)
 {
 	t_heredoc	*new;
 

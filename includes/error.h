@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:33:48 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/03 14:36:31 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/03 14:41:53 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 # define E_MARGS "Error :\nYou have too many arguments\n"
 # define E_OPENFILE "Error :\nSomething went wrong with SCRIPT FILE\n"
 # define E_PARS_PIPE "minishell: syntax error near unexpected token '|'\n"
-# define E_PARS_OPE_D "minishell: syntax error near unexpected token 'redirection'\n"
+# define E_PARS_OPE_D "minishell: syntax error near unexpected token \
+'redirection'\n"
 # define E_PARS_OPE_E "minishell: syntax error near unexpected token '\\n'\n"
 # define E_PARS_CMD_NF "minishell: %s: command not found\n"
 # define E_EXPORT_ARG "minishell: export '%s': not a valid identifier\n"
@@ -27,7 +28,8 @@
 # define E_UNCLOSE_DQUOTE "minishell : syntax error : unclosed double quote\n"
 # define E_AFAILED "Error : alloc failed\n"
 # define E_NOPWD "%s: error retrieving current directory\n"
-# define E_CHDIR "chdir: error retrieving current directory: \
+# define E_CHDIR \
+	"chdir: error retrieving current directory: \
 getcwd: cannot access parent directories: No such file or directory\n"
 # define E_NOHOME "minishell: cd: HOME not set\n"
 # define E_TMANYCMDS "minishell: too many cmds\n"

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 12:43:26 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 17:26:19 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/03 14:47:13 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	cd_home(t_minishell *minishell)
 	current = minishell->envp;
 	while (current != NULL)
 	{
-		if (strcmp("HOME", current->var[0]) == 0)
+		if (ft_strcmp("HOME", current->var[0]) == 0)
 			home = current->var[1] + 1;
 		current = current->next;
 	}

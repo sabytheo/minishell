@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/07/03 12:16:20 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/03 14:36:59 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,10 @@ typedef struct s_minishell
 	char						*error_item;
 	char						**envp_tab;
 	int							envp_countline;
-	int							fd;
 	int							cmds_count;
 	int							**pipes;
 	pid_t						*pids;
 	bool						is_running;
-	bool						errfound;
-	bool						cmdfound;
 	int							shlvl;
 	char						*entry;
 	char						*path;

@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:19:44 by egache            #+#    #+#             */
-/*   Updated: 2025/06/25 15:02:16 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/03 14:37:40 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,3 @@ void	disable_control_echo(void)
 	term.c_lflag &= ~ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
-
-/*
-CTRL - C - SIGINT
-Quitte l'execution en cours
-Display une nouvelle ligne si aucune execution en cours
-
-CTRL - \ - SIGQUIT
-
-CTRL - D
-Envoie un EOF a stdin
-*/

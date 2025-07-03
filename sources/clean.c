@@ -6,7 +6,7 @@
 /*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/01 20:24:39 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/03 14:37:19 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	free_running_minishell(t_minishell *minishell)
 	}
 	free(minishell->entry);
 	minishell->cmds_count = 0;
-	minishell->errfound = false;
 }
 
 void	free_minishell(t_minishell *minishell, char *error_message,

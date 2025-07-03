@@ -6,13 +6,13 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 11:15:23 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/02 13:03:42 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/03 12:34:37 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	getcmd_count(t_minishell *minishell)
+int	getcmd_count(t_minishell *minishell)
 {
 	t_cmds	*current;
 	int		size;
@@ -24,7 +24,13 @@ void	getcmd_count(t_minishell *minishell)
 		size++;
 		current = current->next;
 	}
+	if (size > 500)
+	{
+		ft_printf_fd(2, E_TMANYCMDS);
+		return (-1);
+	}
 	minishell->cmds_count = size;
+	return (0);
 }
 
 void	cleanup_pipes(int **pipes, int pipe_count)

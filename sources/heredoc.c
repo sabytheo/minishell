@@ -6,24 +6,21 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/02 18:15:05 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/03 12:55:06 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	process_heredoc_line(char *line, int fd, t_minishell *minishell)
+static int	process_heredoc_line(char *line, int fd)
 {
-	line = expand_variable(line, minishell);
-	if (!line)
-		return (-1);
 	write(fd, line, ft_strlen(line));
 	write(fd, "\n", 1);
 	free(line);
 	return (0);
 }
 
-static int	handle_heredoc_input(int fd, char *limiter, t_minishell *minishell)
+static int	handle_heredoc_input(int fd, char *limiter)
 {
 	char	*line;
 
@@ -39,8 +36,7 @@ static int	handle_heredoc_input(int fd, char *limiter, t_minishell *minishell)
 			free(line);
 			break ;
 		}
-		if (process_heredoc_line(line, fd, minishell) < 0)
-			return (-1);
+		process_heredoc_line(line, fd);
 	}
 	rl_event_hook = NULL;
 	signal(SIGINT, signal_handler);
@@ -77,7 +73,7 @@ static int	create_heredoc(char *limiter, t_minishell *minishell,
 		minishell->input_fd = -1;
 		return (-1);
 	}
-	if (handle_heredoc_input(minishell->h_fd, limiter, minishell) < 0)
+	if (handle_heredoc_input(minishell->h_fd, limiter) < 0)
 	{
 		unlink(tmp_filename);
 		if (ft_strcmp(tmp_filename, ".heredoc_tmp_1") == 0)

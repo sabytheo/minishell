@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:08:34 by tsaby             #+#    #+#             */
-/*   Updated: 2025/06/30 09:40:27 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/03 13:01:56 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 
 volatile sig_atomic_t	g_signal_value;
 
-/*
-** check args, and define launch_mode.
-** TTY_MODES and SCRIPT_MODES.
-** For SCRIPT_MODES , set input_fd.
-*/
 void	check_args_count(int argc, char **argv, t_minishell *minishell)
 {
 	if (argc > 2)
@@ -28,18 +23,13 @@ void	check_args_count(int argc, char **argv, t_minishell *minishell)
 		minishell->launch_mode = SCRIPT_MODES;
 		minishell->input_fd = open(argv[1], O_RDONLY);
 		if (minishell->input_fd == -1)
-			return (free_minishell(minishell, E_MARGS, true));
+			return (free_minishell(minishell, E_OPENFILE, true));
 	}
 	else if (argc == 1)
 		minishell->launch_mode = TTY_MODES;
 	return ;
 }
 
-/*
-** Use readline for TTY_MODES.
-** Use get_next_line for HERE_DOC_MODES and SCRIPT_MODES.
-**  For gnl, need to trim "\n" before return.
-*/
 char	*get_entry(t_minishell *minishell)
 {
 	char	*entry;
@@ -62,11 +52,6 @@ char	*get_entry(t_minishell *minishell)
 		return (entry);
 	}
 }
-
-/*
-** Main function of minishell.
-** Init,check args.. (A COMPLETER)
-*/
 
 int	main(int argc, char **argv, char **envp)
 {

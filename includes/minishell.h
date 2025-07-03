@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 17:39:47 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/03 12:16:20 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ int								exec_builtins(t_minishell *minishell,
 bool							is_a_builtins(char *cmd);
 
 // exec_pipes_utils.c
-void							getcmd_count(t_minishell *minishell);
+int								getcmd_count(t_minishell *minishell);
 void							cleanup_pipes(int **pipes, int pipe_count);
 void							close_pipes_inchild(t_minishell *minishell);
 

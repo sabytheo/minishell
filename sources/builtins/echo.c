@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 21:56:46 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 15:45:31 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/03 13:19:46 by egache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,11 @@ int	ft_echo(t_cmds **cmds)
 	int		i;
 
 	newline = false;
-	i = 1;
+	i = 0;
 	if ((*cmds) == NULL)
 		return (1);
-	newline = find_newline((*cmds)->args[i]);
-	if (newline == true)
-		i++;
+	while (find_newline((*cmds)->args[++i]) == true)
+		newline = true;
 	while ((*cmds)->args[i] != NULL)
 	{
 		ft_putstr_fd((*cmds)->args[i], STDOUT_FILENO);

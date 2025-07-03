@@ -54,3 +54,5 @@ dkms.conf
 minishell_tester/
 
 .vscode/
+
+README.md

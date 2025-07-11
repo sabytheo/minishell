@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/03 12:34:42 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/08 12:11:57 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,37 +87,36 @@ static int	pipes_and_pids(t_minishell *minishell)
 	return (0);
 }
 
-static void	wait_allchild(t_minishell *minishell)
+static int init_piped_exec(t_minishell *minishell, t_cmds *cmds)
 {
-	int	i;
-	int	status;
+	int ret ;
 
-	status = 0;
-	i = 0;
-	while (i < minishell->cmds_count)
+	ret = 0;
+	if (getcmd_count(minishell) < 0)
 	{
-		waitpid(minishell->pids[i], &status, 0);
-		if (i == minishell->cmds_count - 1)
-		{
-			if (WIFEXITED(status))
-				minishell->error_code = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				minishell->error_code = 128 + WTERMSIG(status);
-		}
-		i++;
+		ret = -2;
+		return (ret);
 	}
+	ret = prepare_heredocs(minishell, cmds);
+	if ( ret < 0 || pipes_and_pids(minishell) < 0)
+		return (ret);
+	return (ret);
 }
+
 
 void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 {
-	t_cmds	*current;
 	int		i;
+	int ret;
 
-	current = cmds;
-	if (getcmd_count(minishell) < 0)
-		return ;
-	if (prepare_heredocs(minishell, cmds) < 0 || pipes_and_pids(minishell) < 0)
+	ret = 0;
+	ret = init_piped_exec(minishell, cmds);
+	if (ret < 0)
+	{
+		if (ret == -2)
+			return;
 		return (free_minishell(minishell, E_AFAILED, true));
+	}
 	i = -1;
 	while (++i < minishell->cmds_count)
 	{
@@ -125,14 +124,10 @@ void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 		if (minishell->pids[i] == 0)
 		{
 			signal(SIGINT, SIG_DFL);
-			execute_child_process(minishell, current, i);
+			execute_child_process(minishell, cmds, i);
 			exit_and_clear_child(minishell->error_code, minishell);
 		}
-		current = current->next;
+		cmds = cmds->next;
 	}
-	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
-	wait_allchild(minishell);
-	free(minishell->pids);
-	minishell->pids = NULL;
-	cleanup_heredocs(minishell);
+	clean_and_close(minishell);
 }

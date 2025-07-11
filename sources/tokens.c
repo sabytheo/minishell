@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:40:27 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/02 11:44:36 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/11 16:23:49 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,20 @@ static void	cleanup_and_exit(t_minishell *minishell, char *expanded)
 	return (free_minishell(minishell, E_AFAILED, true));
 }
 
+bool 	has_quotes(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
 void	format_tokens(t_token *tokens, t_minishell *minishell)
 {
 	char	*cleaned;
@@ -83,13 +97,21 @@ void	format_tokens(t_token *tokens, t_minishell *minishell)
 		expanded = expand_variable(tokens->value, minishell);
 		if (!expanded)
 			return (cleanup_and_exit(minishell, NULL));
-		cleaned = remove_quotes(expanded);
-		if (!cleaned)
-			return (cleanup_and_exit(minishell, expanded));
+		if (has_quotes(tokens->value))
+		{
+			cleaned = remove_quotes(expanded);
+			if (!cleaned)
+				return (cleanup_and_exit(minishell, expanded));
+		}
+		else
+		{
+			cleaned = ft_strdup(expanded);
+			if (!cleaned)
+				return (cleanup_and_exit(minishell, expanded));
+		}
 		free(tokens->value);
 		free(expanded);
-		if (cleaned)
-			tokens->value = cleaned;
+		tokens->value = cleaned;
 		tokens = tokens->next;
 	}
 }

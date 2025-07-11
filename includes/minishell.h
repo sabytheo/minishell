@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/07/03 14:36:59 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/08 11:47:29 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include "error.h"
 # include "expand.h"
 # include "ft_printf.h"
@@ -26,7 +27,6 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdbool.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/time.h>
@@ -203,6 +203,7 @@ bool							is_a_builtins(char *cmd);
 int								getcmd_count(t_minishell *minishell);
 void							cleanup_pipes(int **pipes, int pipe_count);
 void							close_pipes_inchild(t_minishell *minishell);
+void clean_and_close(t_minishell *minishell);
 
 // exec_pipes.c
 void							execute_piped_command(t_minishell *minishell,
@@ -257,6 +258,7 @@ int								create_list_heredoc(char *filename,
 // heredoc.c
 int								prepare_heredocs(t_minishell *minishell,
 									t_cmds *cmds);
+int								handle_heredoc_input(int fd, char *limiter);
 
 // init_envp.c
 int								fill_envp(t_minishell *minishell, char **envp);

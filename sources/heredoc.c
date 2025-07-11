@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/04 15:06:45 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/08 12:02:31 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	process_heredoc_line(char *line, int fd)
 	return (0);
 }
 
-static int	handle_heredoc_input(int fd, char *limiter)
+int	handle_heredoc_input(int fd, char *limiter)
 {
 	char	*line;
 	int	interrupted;
@@ -32,7 +32,7 @@ static int	handle_heredoc_input(int fd, char *limiter)
 	{
 		if (g_signal_value == 1)
 		{
-			interrupted = -1;
+			interrupted = -2;
 			break ;
 		}
 		line = readline("> ");
@@ -62,12 +62,29 @@ static char	*generate_tmp_filename(void)
 	free(id);
 	return (tmp);
 }
+int handle_heredoc(int fd, char *limiter, char *tmp_filename)
+{
+	int ret;
 
+	ret = 0;
+	ret = handle_heredoc_input(fd, limiter);
+	if (ret < 0)
+	{
+		unlink(tmp_filename);
+		// if (ft_strcmp(tmp_filename, ".heredoc_tmp_1") == 0)
+		// 	close(fd);
+		free(tmp_filename);
+		return (ret);
+	}
+	return (ret);
+}
 static int	create_heredoc(char *limiter, t_minishell *minishell,
 		t_token *redir)
 {
 	char	*tmp_filename;
+	int ret;
 
+	ret = 0;
 	tmp_filename = generate_tmp_filename();
 	if (!tmp_filename)
 		return (-1);
@@ -78,14 +95,9 @@ static int	create_heredoc(char *limiter, t_minishell *minishell,
 		minishell->input_fd = -1;
 		return (-1);
 	}
-	if (handle_heredoc_input(minishell->h_fd, limiter) < 0)
-	{
-		unlink(tmp_filename);
-		if (ft_strcmp(tmp_filename, ".heredoc_tmp_1") == 0)
-			close(minishell->h_fd);
-		free(tmp_filename);
-		return (-1);
-	}
+	ret = handle_heredoc(minishell->h_fd, limiter, tmp_filename);
+	if (ret < 0)
+		return (ret);
 	free(redir->next->value);
 	redir->next->value = tmp_filename;
 	if (create_list_heredoc(tmp_filename, minishell) < 0)
@@ -95,26 +107,27 @@ static int	create_heredoc(char *limiter, t_minishell *minishell,
 
 int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
 {
-	t_cmds	*current;
 	t_token	*token;
+	int ret;
 
-	current = cmds;
-	while (current)
+	while (cmds)
 	{
-		token = current->redirs;
+		token = cmds->redirs;
 		while (token)
 		{
 			if (token->type == T_HEREDOC)
 			{
-				if (create_heredoc(token->next->value, minishell, token) < 0)
+				ret = create_heredoc(token->next->value, minishell, token);
+				if (ret < 0)
 				{
-					perror("heredoc");
-					return (-1);
+					if (ret == -1)
+						perror("heredoc");
+					return (ret);
 				}
 			}
 			token = token->next;
 		}
-		current = current->next;
+		cmds = cmds->next;
 	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_list_export.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 20:12:27 by egache            #+#    #+#             */
-/*   Updated: 2025/07/02 18:15:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/08 10:04:21 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,7 @@ char	**fill_variables_export(char *value)
 	char	**var;
 	int		size1;
 	int		size2;
-	char	*tmp;
 
-	tmp = NULL;
 	size1 = ft_strlen_equal(value);
 	size2 = ft_strlen(value) - size1;
 	var = malloc(sizeof(char *) * 3);

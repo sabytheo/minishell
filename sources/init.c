@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:33:02 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/03 14:37:31 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/11 18:37:16 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	init_minishell(t_minishell *minishell, char **envp)
 {
 	ft_bzero(minishell, sizeof(t_minishell));
 	minishell->is_running = true;
+	minishell->expanded = false;
 	minishell->error_code = 0;
 	minishell->input_fd = -1;
 	minishell->output_fd = -1;

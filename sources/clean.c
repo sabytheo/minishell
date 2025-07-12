@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:55:46 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/03 14:37:19 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/11 19:01:43 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	free_running_minishell(t_minishell *minishell)
 	}
 	free(minishell->entry);
 	minishell->cmds_count = 0;
+	minishell->expanded = false;
 }
 
 void	free_minishell(t_minishell *minishell, char *error_message,

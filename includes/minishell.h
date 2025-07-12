@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/07/08 11:47:29 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/11 18:35:50 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ typedef struct s_minishell
 	int							**pipes;
 	pid_t						*pids;
 	bool						is_running;
+	bool						expanded;
 	int							shlvl;
 	char						*entry;
 	char						*path;

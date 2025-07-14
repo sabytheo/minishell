@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 13:53:58 by egache            #+#    #+#             */
-/*   Updated: 2025/07/08 11:58:32 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/14 12:46:49 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	exec_binaries(t_minishell *minishell, t_cmds *cmds)
 void	execute_single_command(t_minishell *minishell)
 {
 	t_cmds	*cmds;
-	int ret;
+	int		ret;
 
 	ret = 0;
 	cmds = minishell->cmds;

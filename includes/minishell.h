@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:45:12 by egache            #+#    #+#             */
-/*   Updated: 2025/07/11 18:35:50 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/14 13:35:17 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdio.h>
 # include "error.h"
 # include "expand.h"
 # include "ft_printf.h"
@@ -27,6 +26,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdbool.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/time.h>
@@ -204,7 +204,7 @@ bool							is_a_builtins(char *cmd);
 int								getcmd_count(t_minishell *minishell);
 void							cleanup_pipes(int **pipes, int pipe_count);
 void							close_pipes_inchild(t_minishell *minishell);
-void clean_and_close(t_minishell *minishell);
+void							clean_and_close(t_minishell *minishell);
 
 // exec_pipes.c
 void							execute_piped_command(t_minishell *minishell,
@@ -235,9 +235,9 @@ void							exec_tokens(t_minishell *minishell);
 // expand_utils.c
 int								is_valid_var_char(char c, int len);
 char							*append_char(t_expand *expand, char c);
-bool							should_expand(char *str, int i);
 char							*append_and_free(char *base, char *addition);
-
+char							*extract_var_name(char *str, int *i);
+bool							needs_expansion(char *str);
 // expand.c
 char							*expand_variable(char *str,
 									t_minishell *minishell);
@@ -255,6 +255,7 @@ t_heredoc						*create_heredoc_node(char *filename);
 void							cleanup_heredocs(t_minishell *minishell);
 int								create_list_heredoc(char *filename,
 									t_minishell *minishell);
+char							*generate_tmp_filename(void);
 
 // heredoc.c
 int								prepare_heredocs(t_minishell *minishell,

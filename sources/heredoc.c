@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 08:43:05 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/08 12:02:31 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/14 15:25:14 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	process_heredoc_line(char *line, int fd)
 int	handle_heredoc_input(int fd, char *limiter)
 {
 	char	*line;
-	int	interrupted;
+	int		interrupted;
 
 	interrupted = 0;
 	rl_event_hook = stop_readline;
@@ -49,40 +49,26 @@ int	handle_heredoc_input(int fd, char *limiter)
 	return (interrupted);
 }
 
-static char	*generate_tmp_filename(void)
+int	handle_heredoc(int fd, char *limiter, char *tmp_filename)
 {
-	static int	heredoc_id = 1;
-	char		*id;
-	char		*tmp;
-
-	id = ft_itoa(heredoc_id++);
-	if (!id)
-		return (NULL);
-	tmp = ft_strjoin(".heredoc_tmp_", id);
-	free(id);
-	return (tmp);
-}
-int handle_heredoc(int fd, char *limiter, char *tmp_filename)
-{
-	int ret;
+	int	ret;
 
 	ret = 0;
 	ret = handle_heredoc_input(fd, limiter);
 	if (ret < 0)
 	{
 		unlink(tmp_filename);
-		// if (ft_strcmp(tmp_filename, ".heredoc_tmp_1") == 0)
-		// 	close(fd);
 		free(tmp_filename);
 		return (ret);
 	}
 	return (ret);
 }
+
 static int	create_heredoc(char *limiter, t_minishell *minishell,
 		t_token *redir)
 {
 	char	*tmp_filename;
-	int ret;
+	int		ret;
 
 	ret = 0;
 	tmp_filename = generate_tmp_filename();
@@ -108,7 +94,7 @@ static int	create_heredoc(char *limiter, t_minishell *minishell,
 int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
 {
 	t_token	*token;
-	int ret;
+	int		ret;
 
 	while (cmds)
 	{
@@ -122,6 +108,7 @@ int	prepare_heredocs(t_minishell *minishell, t_cmds *cmds)
 				{
 					if (ret == -1)
 						perror("heredoc");
+					cleanup_heredocs(minishell);
 					return (ret);
 				}
 			}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:14:20 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/08 12:11:57 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/14 12:39:44 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,9 @@ static int	pipes_and_pids(t_minishell *minishell)
 	return (0);
 }
 
-static int init_piped_exec(t_minishell *minishell, t_cmds *cmds)
+static int	init_piped_exec(t_minishell *minishell, t_cmds *cmds)
 {
-	int ret ;
+	int	ret;
 
 	ret = 0;
 	if (getcmd_count(minishell) < 0)
@@ -98,23 +98,22 @@ static int init_piped_exec(t_minishell *minishell, t_cmds *cmds)
 		return (ret);
 	}
 	ret = prepare_heredocs(minishell, cmds);
-	if ( ret < 0 || pipes_and_pids(minishell) < 0)
+	if (ret < 0 || pipes_and_pids(minishell) < 0)
 		return (ret);
 	return (ret);
 }
 
-
 void	execute_piped_command(t_minishell *minishell, t_cmds *cmds)
 {
-	int		i;
-	int ret;
+	int	i;
+	int	ret;
 
 	ret = 0;
 	ret = init_piped_exec(minishell, cmds);
 	if (ret < 0)
 	{
 		if (ret == -2)
-			return;
+			return ;
 		return (free_minishell(minishell, E_AFAILED, true));
 	}
 	i = -1;

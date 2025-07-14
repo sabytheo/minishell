@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 11:15:23 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/08 11:06:02 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/07/14 12:49:03 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static void	wait_allchild(t_minishell *minishell)
 	}
 }
 
-void clean_and_close(t_minishell *minishell)
+void	clean_and_close(t_minishell *minishell)
 {
 	cleanup_pipes(minishell->pipes, minishell->cmds_count - 1);
 	wait_allchild(minishell);

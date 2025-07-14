@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egache <egache@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 10:19:50 by tsaby             #+#    #+#             */
-/*   Updated: 2025/07/02 17:38:03 by egache           ###   ########.fr       */
+/*   Updated: 2025/07/14 12:57:45 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,18 @@ int	create_list_heredoc(char *filename, t_minishell *minishell)
 	}
 	add_heredoc_back(&minishell->heredoc, new);
 	return (0);
+}
+
+char	*generate_tmp_filename(void)
+{
+	static int	heredoc_id = 1;
+	char		*id;
+	char		*tmp;
+
+	id = ft_itoa(heredoc_id++);
+	if (!id)
+		return (NULL);
+	tmp = ft_strjoin(".heredoc_tmp_", id);
+	free(id);
+	return (tmp);
 }

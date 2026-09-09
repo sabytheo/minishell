@@ -8,11 +8,13 @@
 
 **minishell** is a minimalistic reimplementation of a Unix shell, written in C and inspired by **bash**.
 
-The goal of the project is to understand how a command interpreter works under the hood: how a raw line of text becomes a running process. Building it means dealing with process creation and synchronisation, file descriptor manipulation, environment handling, and signal management — all of it directly on top of the system calls, without any external help beyond `readline`.
+The goal of the project is to understand how a command interpreter works under the hood: how a raw line of text becomes a running process. Building it means dealing with process creation and synchronisation, file descriptor manipulation, environment handling and signal management — all of it directly on top of the system calls, without any external help beyond `readline`.
 
-The program displays a prompt, reads a command line, splits it into tokens, builds an execution structure, expands variables, and finally runs the resulting commands. It supports pipes, the four redirection types, quoting rules, environment variables, and the seven required builtins, and it reproduces bash's behaviour for interactive signals and exit codes.
+The program displays a prompt, reads a line, splits it into typed tokens, expands the variables it contains, regroups everything into a list of commands with their redirections, and finally executes them. It supports pipes, the four redirection types, quoting rules, environment variables, the seven required builtins, and it reproduces bash's behaviour for interactive signals and exit codes.
 
-In accordance with the subject, the program uses a **single global variable**, dedicated to receiving a signal number, and carrying no other information about the shell's state.
+Beyond the subject, the shell also runs in **script mode**: given a file as its single argument, it reads and executes it line by line instead of opening an interactive prompt.
+
+In accordance with the subject, the program uses a **single global variable**, `g_signal_value`, declared `volatile sig_atomic_t` and used only to carry the number of a received signal. No other state passes through it.
 
 ## Instructions
 
@@ -25,9 +27,6 @@ In accordance with the subject, the program uses a **single global variable**, d
 ```bash
 # Debian / Ubuntu
 sudo apt install libreadline-dev
-
-# macOS (Homebrew)
-brew install readline
 ```
 
 ### Compilation
@@ -44,81 +43,76 @@ make
 | `make clean` | Removes object files |
 | `make fclean` | Removes object files and the binary |
 | `make re` | Full rebuild |
+| `make run` | Builds, then runs the shell under Valgrind, sending its report to a listener |
+| `make valgrind` | Starts the Valgrind listener on port 4242 — run it in another terminal, then `make run` |
+
+The project is compiled with `-Wall -Wextra -Werror -g3` and links against its own Libft, which also provides `ft_printf` and `get_next_line`.
 
 ### Execution
 
 ```bash
-./minishell
+./minishell              # interactive prompt
+./minishell script.sh    # runs the file line by line
 ```
 
-The prompt waits for a command. `exit` or `Ctrl-D` leaves the shell.
+`exit` or `Ctrl-D` leaves the shell. Passing more than one argument is refused.
 
-Memory leaks can be checked with Valgrind. Since `readline()` allocates memory the program cannot free, a suppression file is used:
+Since `readline()` allocates memory the program cannot free, a suppression file is provided at the root of the repository and used by the Valgrind targets:
 
 ```bash
-valgrind --leak-check=full --show-leak-kinds=all \
-         --suppressions=readline.supp ./minishell
+valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
+         --suppressions=ignore_readline.supp ./minishell
 ```
 
 ## Features
 
-- **Interactive prompt** with a working command history
+- **Interactive prompt** with a working history
 - **Executable lookup** through the `PATH`, or by relative / absolute path
-- **Quoting**: single quotes `'` prevent any interpretation, double quotes `"` allow variable expansion
-- **Redirections**
-  - `<` — input from a file
-  - `>` — output to a file (truncate)
-  - `>>` — output to a file (append)
-  - `<<` — heredoc, reading until a delimiter, without adding to the history
-- **Pipes** `|` — the output of one command feeds the input of the next
-- **Expansions** — `$VAR` for environment variables, `$?` for the exit status of the last foreground command
-- **Signals** — `Ctrl-C`, `Ctrl-D` and `Ctrl-\` behave as they do in bash
+- **Quoting**: single quotes prevent any interpretation, double quotes allow variable expansion
+- **Redirections**: `<`, `>`, `>>` and heredoc `<<`, several of them per command
+- **Pipes** `|`, with no limit on the number of commands in the chain
+- **Expansions**: `$VAR` and `$?`
+- **Signals**: `Ctrl-C`, `Ctrl-D` and `Ctrl-\` behave as they do in bash, at the prompt, during a command and inside a heredoc
+- **`SHLVL`** is incremented when the shell starts, as bash does
 
 ### Builtins
 
 | Builtin | Description |
 | --- | --- |
 | `echo` | Prints its arguments, supports the `-n` option |
-| `cd` | Changes the working directory (relative or absolute path) |
+| `cd` | Changes the working directory and updates `PWD` and `OLDPWD` |
 | `pwd` | Prints the working directory |
-| `export` | Sets an environment variable; with no argument, prints the sorted environment |
-| `unset` | Removes an environment variable |
-| `env` | Prints the environment variables that hold a value |
+| `export` | Sets a variable after checking the identifier is valid; with no argument, prints the variables kept in the export list |
+| `unset` | Removes a variable from the environment |
+| `env` | Prints the variables that hold a value |
 | `exit` | Leaves the shell, with an optional exit status |
-
-### Bonus
-
-<!-- Tick what is implemented, or delete this section -->
-
-- [ ] Logical operators `&&` and `||`, with parentheses for priority
-- [ ] Wildcards `*` in the current directory
 
 ## Usage examples
 
 ```bash
-minishell$ echo "Hello $USER"
-Hello theo
+Minishell>echo "Hello $USER"
+Hello tsaby
 
-minishell$ ls -la | grep ".c" | wc -l
+Minishell>ls -la | grep ".c" | wc -l
 12
 
-minishell$ cat < input.txt > output.txt
+Minishell>cat < input.txt > output.txt
 
-minishell$ cat << EOF
+Minishell>cat << EOF
 > first line
 > second line
 > EOF
 first line
 second line
 
-minishell$ export NAME=42
-minishell$ echo $NAME
+Minishell>export NAME=42
+Minishell>echo $NAME
 42
 
-minishell$ ls /doesnotexist
-ls: cannot access '/doesnotexist': No such file or directory
-minishell$ echo $?
-2
+Minishell>ls /doesnotexist
+minishell: '/doesnotexist': No such file or directory
+Minishell>echo $?
+127
 ```
 
 ### Exit codes
@@ -127,73 +121,74 @@ minishell$ echo $?
 | --- | --- |
 | `0` | Success |
 | `1` | General error |
-| `2` | Syntax error |
-| `126` | Command found but not executable |
+| `126` | Found but not executable — permission denied, or not a regular file |
 | `127` | Command not found |
-| `130` | Terminated by `SIGINT` |
-| `131` | Terminated by `SIGQUIT` |
+| `128 + n` | Terminated by signal `n` — `130` for `Ctrl-C`, `131` for `Ctrl-\` |
 
 ## Technical choices
 
-The line is processed in four stages:
+**Tokenizing** — the line is first checked for unbalanced quotes, which is the one syntax error that can be detected before anything is cut. It is then walked once, producing a linked list of tokens, each carrying its value and a type among `T_WORD`, `T_PIPE`, `T_REDIR_IN`, `T_REDIR_OUT`, `T_APPEND` and `T_HEREDOC`. A second pass validates the sequence: an operator with nothing to work on, a pipe in the wrong place, a redirection without a target.
 
-**1. Lexer** — the raw input is split into tokens (words, redirection operators, pipes), while keeping track of open and closed quotes. An unclosed quote is reported as a syntax error.
+**Expanding** — each token value is rewritten by a small state machine that walks it character by character while tracking whether it currently sits inside single or double quotes. A `$` followed by a letter, an underscore or a `?` triggers a lookup; anything else is copied as is. The quote characters themselves are consumed by that same walk, so a token that needed expansion comes out already unquoted. Tokens that contain no `$` skip the machine entirely and go through a dedicated quote-stripping function instead.
 
-**2. Parser** — tokens are validated (misplaced operators, redirections without a target) and assembled into a pipeline structure: a list of commands, each holding its own `argv` and its redirections.
+**Building the commands** — two cursors walk the token list in parallel, one collecting the words that make up `argv`, the other collecting redirections. Each redirection is stored as a duplicated pair — the operator and its target — in a list attached to the command, so a command can carry as many redirections as it needs and the executor never has to look back at the original token list.
 
-**3. Expander** — `$VAR` and `$?` are replaced by their values everywhere except inside single quotes, then the quotes themselves are stripped from the words.
+**Heredocs** — every heredoc in the line is read *before* any process is forked, and written to a temporary file named `.heredoc_tmp_N`. The redirection target is then rewritten to point at that file, which turns a heredoc into an ordinary input redirection for the rest of the pipeline. Interrupting a heredoc with `Ctrl-C` relies on `rl_event_hook`: the handler raises the global signal value, the hook sees it and sets `rl_done`, which makes `readline()` return instead of waiting forever. All temporary files are unlinked once the command has run, and on the interrupted path too.
 
-**4. Executor** — for each command: pipe creation, `fork`, redirection setup with `dup2`, binary resolution through the `PATH`, then `execve`. The parent waits for its children and keeps the exit status of the last one.
+**Executing** — a single command and a pipeline take two different routes. Alone, a builtin runs in the parent process, with the standard input and output saved beforehand and restored afterwards, so that `cd`, `export` and `unset` actually affect the shell. In a pipeline, the `n - 1` pipes are created up front, one `fork` is issued per command, each child duplicates the right ends onto its standard descriptors, closes every pipe descriptor it does not use, applies its own redirections, and either runs the builtin or calls `execve`. The parent then waits for all of them and keeps the status of the pipeline.
 
-Builtins run in the parent process when they stand alone, and in a forked child when they are part of a pipeline, so that a builtin such as `cd` can still affect the shell itself.
+**Exit status** — the status returned by `waitpid` is decoded through `WIFEXITED` and `WIFSIGNALED`, so a command killed by a signal reports `128 + signal` exactly like bash. That value is what `$?` reads.
 
-Every allocation made during a cycle is freed before the prompt is displayed again.
+**Environment** — the environment is kept as a linked list, with a second list for the variables added by `export` that have no value yet. It is flattened back into a `char **` table only when `execve` needs one.
+
+**Signals** — `sigaction` is used rather than `signal`, and `ECHOCTL` is cleared through `termios` so that `^C` is not echoed to the terminal. Handlers are swapped depending on the context: interactive prompt, command running, or heredoc.
+
+**Cleanup** — freeing is split by scope: what belongs to one command cycle, what belongs to a child process, and what belongs to the shell itself. Any allocation failure anywhere in the chain routes to the same exit path, which frees the lists, the environment, the pipes and the heredoc files before leaving.
 
 ## Project structure
-
-<!-- Replace with your own output of: tree -I 'obj|*.o' -->
 
 ```
 minishell/
 ├── Makefile
+├── ignore_readline.supp        # Valgrind suppressions for readline
 ├── includes/
-│   └── minishell.h
-├── libft/
-├── srcs/
-│   ├── main.c
-│   ├── lexer/
-│   ├── parser/
-│   ├── expander/
-│   ├── executor/
-│   ├── builtins/
-│   ├── signals/
-│   └── utils/
-└── README.md
+│   ├── minishell.h             # main structure and prototypes
+│   ├── token.h                 # token and command types
+│   ├── expand.h                # expander state
+│   └── error.h                 # error messages
+└── sources/
+    ├── main.c                  # loop, prompt, launch modes
+    ├── init.c, init_envp.c     # startup, environment, SHLVL
+    ├── tokens.c                # quote check, tokenizing, formatting
+    ├── define_tokens_utils.c   # token extraction and typing
+    ├── format_tokens_utils.c   # quote removal
+    ├── check_tokens.c          # syntax validation
+    ├── expand.c, expand_utils.c
+    ├── exec_tokens.c           # tokens to commands and redirections
+    ├── check_cmd.c             # command resolution and error codes
+    ├── find_path.c             # PATH lookup
+    ├── exec_single.c           # single command
+    ├── exec_pipes.c            # pipelines
+    ├── exec_builtins.c         # builtin dispatch
+    ├── setup_redirections.c
+    ├── heredoc.c, heredoc_utils.c
+    ├── signals.c, signals_handler.c
+    ├── chainedlst_totab.c      # environment list to char **
+    ├── clean*.c                # freeing by scope
+    ├── debug.c                 # token and command dumps
+    └── builtins/               # echo, cd, pwd, env, export, unset, exit
 ```
 
 ## Resources
 
 ### Documentation and references
 
-- `man bash` — the reference for the behaviour we had to reproduce
-- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html) — GNU documentation, especially the chapters on shell operation, quoting and expansions
-- [GNU Readline Library documentation](https://tiswww.case.edu/php/chet/readline/readline.html) — prompt handling and history
-- `man` pages of the allowed functions: `fork`, `execve`, `wait`, `waitpid`, `pipe`, `dup2`, `signal`, `sigaction`, `open`, `unlink`, `stat`, `opendir`
-- [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html) — the standard grammar of a shell, useful for structuring the parser
+- `man bash` — the reference for the behaviour to reproduce, and the source of truth every time our output differed from bash's
+- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html) — in particular the chapters on quoting, expansions and exit status
+- [GNU Readline Library documentation](https://tiswww.case.edu/php/chet/readline/readline.html) — the prompt, the history, and `rl_event_hook` / `rl_done`, without which a heredoc cannot be interrupted
+- `man` pages of the allowed functions: `fork`, `execve`, `waitpid`, `pipe`, `dup2`, `sigaction`, `open`, `unlink`, `stat`, `access`, `tcsetattr`
+- [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html) — the standard grammar, used to structure the token types
 - [Beej's Guide to Unix IPC](https://beej.us/guide/bgipc/) — pipes and inter-process communication
-- *Advanced Programming in the UNIX Environment*, W. Richard Stevens — chapters on processes, signals and file descriptors
 - [42 Docs — minishell](https://harm-smits.github.io/42docs/projects/minishell) — peer-written overview of the subject
+- Valgrind documentation, for `--track-fds` and the suppression file format
 
-### Use of AI
-
-<!-- REPLACE THIS SECTION WITH WHAT YOU ACTUALLY DID.
-     Be specific: which tool, which task, which part of the project.
-     Below are example entries in the expected format. -->
-
-AI assistants (Claude, ChatGPT) were used on this project for the following tasks:
-
-- **Understanding concepts**: explanations of how `dup2` and file descriptor inheritance work across `fork`, and of the difference between `signal` and `sigaction`, before writing the corresponding code ourselves.
-- **Debugging**: reading error messages and Valgrind reports, and narrowing down where a leak or an invalid read came from.
-- **Documentation**: drafting this README file.
-
-No part of the parsing, execution or builtin logic was generated by AI: the architecture and the code were written by us, and every explanation obtained was verified against the `man` pages and bash's actual behaviour before being applied.
